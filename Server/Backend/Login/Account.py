@@ -1,8 +1,8 @@
 class Account:
-    def __init__(self, username, password, eMail, profile_picture, encryption_key, public_key):
+    def __init__(self, username, password, e_mail, profile_picture, encryption_key, public_key):
         self.username = username
         self.password = password
-        self.eMail = eMail
+        self.e_mail = e_mail
         self.profile_picture = profile_picture
-        self.encryptionKey = encryption_key
+        self.encryption_key = encryption_key
         self.public_key = public_key
