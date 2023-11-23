@@ -5,8 +5,11 @@ import os
 
 app = Flask(__name__)
 app.debug = True
-app._staic_folder = os.path.abspath("files/static/")
+app._staic_folder = os.path.abspath("static/")
 
+@app.route('/default-spreadsheet', methods=['GET'])
+def default_spreadsheet_page():
+    return send_from_directory('files', "default-spreadsheet.html")
 
 @app.route('/', methods=['GET'])
 def serve_files():
