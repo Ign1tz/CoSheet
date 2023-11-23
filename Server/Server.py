@@ -2,7 +2,6 @@ from flask import Flask, send_from_directory, request, Response, session, redire
 import os
 
 
-
 app = Flask(__name__)
 app.debug = True
 app._staic_folder = os.path.abspath("Frontend/static/")
