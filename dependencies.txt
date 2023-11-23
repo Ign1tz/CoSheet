@@ -1,1 +1,1 @@
-pip install -U Flask pymongo python-dotenv
+pip install -U Flask pymongo python-dotenv rsa
