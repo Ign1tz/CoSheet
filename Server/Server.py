@@ -5,12 +5,12 @@ import os
 
 app = Flask(__name__)
 app.debug = True
-app._staic_folder = os.path.abspath("files/static/")
+app._staic_folder = os.path.abspath("Frontend/static/")
 
 
 @app.route('/', methods=['GET'])
 def serve_files():
-    return send_from_directory('files', "homepage.html")
+    return send_from_directory('Frontend/files', "homepage.html")
 
 
 if __name__ == '__main__':
