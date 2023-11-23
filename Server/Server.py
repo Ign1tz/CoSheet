@@ -1,6 +1,5 @@
 from flask import Flask, send_from_directory, request, Response, session, redirect, jsonify
 import os
-from Backend.Database.Database import Database as db
 
 
 app = Flask(__name__)
@@ -15,4 +14,3 @@ def serve_files():
 
 if __name__ == '__main__':
     app.run(host='localhost', port=3000, debug=True)
-
