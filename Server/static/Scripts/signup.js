@@ -6,6 +6,6 @@ function signup_function() {
 
         }
     }
-    xhr.open('GET', "profile/signup", true);
+    xhr.open("GET", "profile/signup", true);
     xhr.send();
 }
