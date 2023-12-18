@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <link rel="stylesheet" href="/static/Style/login.css"/>
+  <script src="/static/Scripts/login.js"></script>
+</head>
+<body>
 <form class="form card">
   <div class="card_header">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -15,6 +25,8 @@
     <input class="input" name="user_password" type="password" placeholder="Password" id="password">
   </div>
   <div class="field">
-    <button class="button">Login</button>
+    <button class="button" id="login_button" onclick="login_function()">Login</button>
   </div>
 </form>
+</body>
+</html>
