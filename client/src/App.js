@@ -4,13 +4,13 @@ import Home from "./pages/Home"
 
 
 export default function App() {
-  return (
+    return (
         <div>
             <BrowserRouter>
                 <Routes>
-                    <Route index element={<Home />} />
+                    <Route index element={<Home/>}/>
                 </Routes>
             </BrowserRouter>
         </div>
-  )
+    )
 }
