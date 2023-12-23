@@ -1,1 +1,4 @@
-pip install -U Flask pymongo python-dotenv
+pip install Flask pymongo python-dotenv rsa bcrypt
+
+cd client
+npm install react-router-dom
