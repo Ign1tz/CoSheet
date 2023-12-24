@@ -1,0 +1,84 @@
+.card {
+    height: 190px;
+    width: 254px;
+    border-radius: 20px;
+    background: #f5f5f5;
+    position: relative;
+    padding: 1.8rem;
+    border: 2px solid #c3c6ce;
+    transition: 0.5s ease-out;
+    overflow: visible;
+    float: left;
+    margin: 10px;
+}
+
+.card-details {
+    color: black;
+    height: 100%;
+    gap: .5em;
+    display: grid;
+    place-content: center;
+}
+
+.card-button {
+    transform: translate(-50%, -50%);
+    width: 60%;
+    border-radius: 1rem;
+    border: none;
+    background-color: #008bf8;
+    color: #fff;
+    font-size: 1rem;
+    padding: .5rem 1rem;
+    position: relative;
+    left: 50%;
+    bottom: 0;
+    opacity: 0;
+    transition: 0.3s ease-out;
+}
+
+.delete-card-button {
+    width: 2em;
+    height: 2em;
+    border-radius: 100%;
+    background-color: #ff0000;
+    position: absolute;
+    right: 30px;
+}
+
+.text-body {
+    color: rgb(134, 134, 134);
+}
+
+/*Text*/
+.text-title {
+    width: 60%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 1.5em;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    text-align: left;
+
+}
+
+/*Hover*/
+.card:hover {
+    border-color: #008bf8;
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+}
+
+.card:hover .card-button {
+    transform: translate(-50%, 50%);
+    opacity: 1;
+}
+
+.card-button:hover {
+    background: #054f86;
+}
+
+
+.text-title:hover {
+    overflow-wrap: break-word;
+}
+

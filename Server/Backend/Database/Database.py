@@ -14,7 +14,11 @@ class Database:
         self.user_spreadsheet_database = temp_spreadsheet_DB["UserSpreadsheets"]
 
     def get_from_database(self, database, key_pair):
-        return database.find(key_pair)
+        found = database.find(key_pair)
+        list = []
+        for i in found:
+            list.append(i)
+        return list
 
     def add_one_to_database(self, database, entry):
         database.insert_one(entry)
@@ -28,4 +32,4 @@ class Database:
 
 if __name__ == "__main__":
     data = Database()
-    data.add_one_to_database(data.profile_database, {"Username": "tester2"})
+    print(data.get_from_database(data.user_spreadsheet_database, {"Username": "tester2"}))
