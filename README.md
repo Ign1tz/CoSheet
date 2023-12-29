@@ -4,7 +4,7 @@ Every Feature creates a new branch
 
 Pages:
 - Homepage
-- Login
+- Signup
 - Spreadsheets (Owner-View)
 - Spreadsheets (Guest-View) 
 - Spreadsheet-Settings 
