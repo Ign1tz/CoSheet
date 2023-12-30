@@ -35,8 +35,30 @@ class SignUp:
             return True
         else:
             return False
-#password vergleichen mit second password
-#password zu lang oder zu kurz
-#darf nur bestimmte zeichen/buchstaben beeinhalten
-#checks im frontend und backend
+
+    def password_choose_rules(self, password):
+        min_length = 8
+        max_length = 40
+        not_allowed_characters = ["(", ")", "[", "]", "|", "¬", "'", "¦", "§", "$", "^", "°", "&", "*", "~", "<", ">", ":", ";",
+        "#", "_", "-", "+", "=", "@", ",", "%", "£", "."]
+
+        if password >= min_length and max_length <= 40:
+            if any(not_allowed_characters not in password):
+                return True
+            # oder Password?
+            else:
+                print("You are not allowed to use these characters: ()[]{}|¬'¦§$%&°^*~<>:;#_-+=@,%£.")
+                return False
+        if (password < min_length):
+            print("The password has to be at least 8 characters long.")
+            return False
+        else:
+            print("The password can only be a maximum of 40 characters long-")
+            return False
+
+    def proof_passwords_equality(self, password, password_second):
+        if password == password_second:
+            return True
+        else:
+            return False
 #comment code
