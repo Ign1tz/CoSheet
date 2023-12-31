@@ -61,4 +61,16 @@ class SignUp:
             return True
         else:
             return False
+
+    def username_length_rule(self, username):
+        min = 1
+        max = 30
+        if (username < 1):
+            print("Username is too short.")
+            return False;
+
+        if (username > max):
+            print("Username is too long.")
+            return False;
+
 #comment code

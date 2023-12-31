@@ -4,6 +4,7 @@ from flask_cors import CORS
 import os
 import json
 from Backend.Login.SignUp import SignUp
+from Backend.Login.Login import Login
 
 app = Flask(__name__)
 app.debug = True
@@ -32,21 +33,43 @@ def signup():
     sign_up = SignUp()
     correct_username = sign_up.prohibit_double_username(username)
     correct_email = sign_up.prohibit_double_eMail(email)
-    #correct_password
+    password_equality = sign_up.proof_passwords_equality(password, second_password)
+    password_rules = sign_up.password_choose_rules(password)
 
-    if correct_username and correct_email:
+    if correct_username and correct_email and password_rules and password_equality:
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
     else:
         errors = []
         if not correct_username:
             errors.append("Username is already taken.")
-        if not correct_email:
-            errors.append("Email is already taken.")
-    #   if not correct_password:
-            #erros.append
+        if not correct_email or not password_rules or not password_equality:
+            if not password_equality:
+                errors.append("Passwords are not equal.")
+            if not password_rules():
+                errors.append("Password does not fulfill the requirements.")
+            if not correct_email:
+                errors.append("Email is not correct.")
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
 
+@app.route('/login', methods=['GET'])
+def login():
+    data = request.get_json()
+    username = data['username']
+    email = data['email']
+    password = data['password']
+
+    username_password_match = login.username_password_match(username, password)
+    email_password_match = login.email_password_match(email, password)
+
+    if username_password_match or email_password_match:
+        response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
+    else:
+        errors = []
+        if not username_password_match:
+            errors.append("Username or password is not correct.")
+        if not email_password_match:
+            errors.append("Email or password is not correct.")
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)
