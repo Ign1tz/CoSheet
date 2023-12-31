@@ -1,5 +1,5 @@
 from Server.Backend.Database.Database import Database
-from Server.Backend.Account.Account import Account
+from Server.Backend.Login.Account import Account
 from Server.Backend.Encryption.Encryption import Encryption
 
 class Login:
@@ -17,7 +17,7 @@ class Login:
 
         encrypted_password = encryption.encrypt(password, public_key)
 
-        if password_databse == encrypted_password:
+        if password_database == encrypted_password:
             return True
         else:
             return False

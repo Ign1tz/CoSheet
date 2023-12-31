@@ -3,3 +3,5 @@ pip install Flask pymongo python-dotenv rsa bcrypt
 
 cd client
 npm install react-router-dom
+
+npm i -S react react-url
