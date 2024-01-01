@@ -51,5 +51,14 @@ def return_spreadsheets_titles():
     return Response(response=json.dumps({"titles": titles}), status=200, mimetype="application/json")"""
 
 
+@app.route("/deleteSpreadsheet", methods=["DELETE"])
+def delete_spreadsheet():
+    data = request.get_json()
+    username = session.get('username')
+    spreadsheet = data["spreadsheet"]
+    db = Database()
+    db.delete_from_database(db.spreadsheet_database, username, spreadsheet)
+
+
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)

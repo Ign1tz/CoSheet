@@ -12,7 +12,7 @@ export default function Dashboard() {
             //console.log(data)
         })
     }, []);
-    console.log(data)
+    //console.log(data)
 
     let cards=[]
     if (typeof data.titles === "undefined") {
@@ -22,7 +22,7 @@ export default function Dashboard() {
             cards.push(<Card title={title} />)
         }
     }
-    console.log(cards)
+    //console.log(cards)
     return (
         <section>
             <h1>Hallo</h1>

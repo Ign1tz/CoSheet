@@ -11,7 +11,7 @@ class Database:
         self.profile_cluster = temp_client["ProfileDatabase"]
         self.profile_database = temp_profile_DB["Profiles"]
         self.spreadsheet_cluster = temp_client["SpreadsheetDatabase"]
-        self.user_spreadsheet_database = temp_spreadsheet_DB["UserSpreadsheets"]
+        self.spreadsheet_database = temp_spreadsheet_DB["UserSpreadsheets"]
 
     def get_from_database(self, database, key_pair):
         found = database.find(key_pair)
@@ -23,8 +23,13 @@ class Database:
     def add_one_to_database(self, database, entry):
         database.insert_one(entry)
 
-    def remove_one_from_database(self, database, username, password):
-        database.delete_one({"Username": username, "Password": password})
+    def remove_account(self, username, password):
+        db = Database()
+        db.profile_database.delete_one({"Username": username, "Password": password})
+
+    def remove_spreadsheet(self, username, spreadsheet):
+        db = Database()
+        db.spreadsheet_database.delete_one({"Owner": username, "Title": spreadsheet})
 
     def update_one_entry(self, database, old_entry, entry):
         database.update_one(old_entry, entry)
@@ -32,4 +37,4 @@ class Database:
 
 if __name__ == "__main__":
     data = Database()
-    print(data.get_from_database(data.user_spreadsheet_database, {"Username": "tester2"}))
+    print(data.get_from_database(data.spreadsheet_database, {"Username": "tester2"}))
