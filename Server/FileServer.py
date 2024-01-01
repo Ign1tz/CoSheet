@@ -32,7 +32,7 @@ def serve_login():
 @app.route("/get-spreadsheet-titles", methods=["GET"])
 def return_spreadsheets_titles():
     print("test")
-    response = Response(status=200, response=json.dumps({"titles": ["1", "2"]}), mimetype="application/json")
+    response = Response(status=200, response=json.dumps({"titles": ["Elternsprechtag", "BBQ"]}), mimetype="application/json")
     return response
 
     """session["username"] = "test"

@@ -18,6 +18,7 @@
     gap: .5em;
     display: grid;
     place-content: center;
+
 }
 
 .card-button {
@@ -59,7 +60,7 @@
     position: absolute;
     top: 0;
     text-align: left;
-
+    cursor: default;
 }
 
 /*Hover*/
@@ -80,5 +81,27 @@
 
 .text-title:hover {
     overflow-wrap: break-word;
+}
+
+
+.button {
+    width:20px;
+    height:20px;
+    right: 30px;
+    top: 25px;
+    position: absolute;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+.can {
+    height: 1.25em;
+    width: 1.25em;
+    right: 30px;
+    top: 30px;
+    position: absolute;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
 }
 

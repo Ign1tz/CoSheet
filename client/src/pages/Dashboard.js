@@ -27,9 +27,6 @@ export default function Dashboard() {
         <section>
             <h1>Hallo</h1>
             {cards}
-            <Card
-                title={"testsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"}/>
-            <Card class="scard" title={"test2"}/>
             <AddNewCard/>
         </section>
     )
