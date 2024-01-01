@@ -28,6 +28,14 @@ def default_spreadsheet_page():
 def serve_login():
     return send_from_directory("files", "login.html")
 
+@app.route("/getUser", methods=["GET"])
+def get_user():
+    if session.get("username"):
+        response = Response(status=200, response=json.dumps({"username": session.get("username")}), mimetype="application/json")
+    else:
+        response = Response(status=406, response=json.dumps({"username": "noone logged in"}), mimetype="application/json")
+    return response
+
 
 @app.route("/get-spreadsheet-titles", methods=["GET"])
 def return_spreadsheets_titles():

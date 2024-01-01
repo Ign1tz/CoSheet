@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import Card from "../components/Card"
 import "../Style/card.css"
 import AddNewCard from "../components/AddNewCard";
+import Header from "../components/Header"
 
 export default function Dashboard() {
     const [data, setData] = useState([{}])
@@ -25,7 +26,7 @@ export default function Dashboard() {
     //console.log(cards)
     return (
         <section>
-            <h1>Hallo</h1>
+            <Header />
             {cards}
             <AddNewCard/>
         </section>
