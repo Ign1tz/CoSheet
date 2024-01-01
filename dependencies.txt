@@ -1,5 +1,5 @@
 
-pip install Flask pymongo python-dotenv rsa bcrypt
+pip install Flask pymongo python-dotenv rsa bcrypt flask_session flask_cors
 
 cd client
 npm install react-router-dom
