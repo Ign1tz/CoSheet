@@ -1,6 +1,8 @@
 from Server.Backend.Login.Account import Account
 from Server.Backend.Encryption.Encryption import Encryption
 from Server.Backend.Database.Database import Database
+import re
+
 class SignUp:
     def __init__(self):
         pass
@@ -39,15 +41,13 @@ class SignUp:
     def password_choose_rules(self, password):
         min_length = 8
         max_length = 40
-        not_allowed_characters = ["(", ")", "[", "]", "|", "¬", "'", "¦", "§", "$", "^", "°", "&", "*", "~", "<", ">", ":", ";",
-        "#", "_", "-", "+", "=", "@", ",", "%", "£", "."]
+        allowed_characters = re.compile('a-zA-Z0-9%_/.]*$')
 
         if password >= min_length and max_length <= 40:
-            if any(not_allowed_characters not in password):
+            if allowed_characters.match(password):
                 return True
-            # oder Password?
             else:
-                print("You are not allowed to use these characters: ()[]{}|¬'¦§$%&°^*~<>:;#_-+=@,%£.")
+                print("You used an unsupported character.")
                 return False
         if (password < min_length):
             print("The password has to be at least 8 characters long.")

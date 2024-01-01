@@ -2,6 +2,8 @@ import "./Signup.css"
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 
+
+
 export default function Signup() {
     const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
@@ -58,17 +60,17 @@ export default function Signup() {
     function handlePasswordRules() {
         const min_length = 8;
         const max_length = 40;
-        const not_allowed_characters = ["(", ")", "[", "]", "|", "¬", "'", "¦", "§", "$", "^", "°", "&", "*", "~", "<", ">", ":", ";",
-            "#", "_", "-", "+", "=", "@", ",", "%", "£", "."]
+        const allowed_characters = new RegExp('a-zA-Z0-9%_/.]*$')
+
         if (!password){
             return alert("Please enter a password.");
         }
         else if (password.length >= min_length && password.length <= max_length) {
-            if (not_allowed_characters instanceof password) {
-                return true;
-            } else {
-                return alert("You are not allowed to use these characters: ()[]{}|¬'¦§$%&°^*~<>:;#_-+=@,%£.");
-            }
+                if (allowed_characters.includes(password)) {
+                    return true;
+                } else {
+                    return alert("You used an unsupported character.")
+                }
         } else if (password.length < min_length) {
             return alert("The password has to be at least 8 characters long.");
         }

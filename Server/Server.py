@@ -37,6 +37,8 @@ def signup():
     password_rules = sign_up.password_choose_rules(password)
 
     if correct_username and correct_email and password_rules and password_equality:
+        new_account = sign_up.create_new_account(username, password, email)
+        sign_up.save_new_account(new_account)
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
     else:
         errors = []
@@ -70,6 +72,8 @@ def login():
             errors.append("Username or password is not correct.")
         if not email_password_match:
             errors.append("Email or password is not correct.")
+        response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
+    return response
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)
