@@ -6,8 +6,3 @@ npm install react-router-dom
 
 npm i -S react react-url
 
-kurz für Anna:
-allowed characters anstatt not allowed fertig
-
-
-beim singup fehlt das ein account erstellt wird und in die datenbank eingetragen wird
