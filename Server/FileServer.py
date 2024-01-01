@@ -3,8 +3,8 @@ from flask_session import Session
 from flask_cors import CORS
 import os
 import json
-from Backend.Login.SignUp import SignUp
-from Backend.Login.Login import Login
+from Server.Backend.Login.SignUp import SignUp
+from Server.Backend.Login.Login import Login
 
 app = Flask(__name__)
 app.debug = True
@@ -44,13 +44,12 @@ def signup():
         errors = []
         if not correct_username:
             errors.append("Username is already taken.")
-        if not correct_email or not password_rules or not password_equality:
-            if not password_equality:
-                errors.append("Passwords are not equal.")
-            if not password_rules():
-                errors.append("Password does not fulfill the requirements.")
-            if not correct_email:
-                errors.append("Email is not correct.")
+        if not password_equality:
+            errors.append("Passwords are not equal.")
+        if not password_rules:
+            errors.append("Password does not fulfill the requirements.")
+        if not correct_email:
+            errors.append("Email is not correct.")
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
 

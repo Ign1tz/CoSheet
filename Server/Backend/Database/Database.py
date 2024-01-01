@@ -14,7 +14,7 @@ class Database:
         self.user_spreadsheet_database = temp_spreadsheet_DB["UserSpreadsheets"]
 
     def get_from_database(self, database, key_pair):
-        return database.find(key_pair)
+        return list(database.find(key_pair))
 
     def add_one_to_database(self, database, entry):
         database.insert_one(entry)
