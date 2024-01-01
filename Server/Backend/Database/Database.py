@@ -1,6 +1,7 @@
 from pymongo.mongo_client import MongoClient
 from dotenv import load_dotenv
 import os
+from Server.Backend.Login.Account import AccountParser
 class Database:
     def __init__(self):
         load_dotenv()
@@ -17,7 +18,8 @@ class Database:
         return list(database.find(key_pair))
 
     def add_one_to_database(self, database, entry):
-        database.insert_one(entry)
+        account_parser = AccountParser()
+        database.insert_one(account_parser.account_to_json(entry))
 
     def remove_one_from_database(self, database, username, password):
         database.delete_one({"Username": username, "Password": password})
@@ -28,4 +30,4 @@ class Database:
 
 if __name__ == "__main__":
     data = Database()
-    data.add_one_to_database(data.profile_database, {"Username": "tester2"})
+    data.profile_database.insert_one({"username": "tester"})

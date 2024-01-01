@@ -1,4 +1,4 @@
-import "./Signup.css"
+import "../Style/Signup.css"
 import React, {useEffect, useState} from "react";
 import {json, Link} from "react-router-dom";
 
