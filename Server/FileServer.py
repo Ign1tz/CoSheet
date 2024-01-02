@@ -32,9 +32,10 @@ def signup():
     second_password = data['second_password']
     sign_up = SignUp()
     correct_username = sign_up.prohibit_double_username(username)
+    username_rules = sign_up.username_rules(username)
     correct_email = sign_up.prohibit_double_eMail(email)
     password_equality = sign_up.proof_passwords_equality(password, second_password)
-    password_rules = sign_up.password_choose_rules(password)
+    password_rules = sign_up.password_rules(password)
 
     if correct_username and correct_email and password_rules and password_equality:
         new_account = sign_up.create_new_account(username, password, email)
@@ -44,6 +45,8 @@ def signup():
         errors = []
         if not correct_username:
             errors.append("Username is already taken.")
+        if not username_rules:
+            errors.append("A character you chose is not supported.")
         if not password_equality:
             errors.append("Passwords are not equal.")
         if not password_rules:

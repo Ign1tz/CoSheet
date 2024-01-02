@@ -72,6 +72,7 @@ export default function Signup() {
                     return alert("You used an unsupported character.")
                 }
             }
+            return true;
         } else if (password.length < min_length) {
             return alert("The password has to be at least 8 characters long.");
         } else {
@@ -82,13 +83,23 @@ export default function Signup() {
 
     function handleUsernameRules() {
         console.log(userName)
+        const min = 1;
+        const max = 30;
+        const allowed_characters = "abcdefghijklmnopqrstuvwxyz1234567890_."
+
         if (!userName) {
             return alert("Please enter a username.");
-        } else if (userName.length >= 1 && userName.length <= 30) {
+        } else if (userName.length >= min && userName.length <= max) {
+            for (let char of userName) {
+                if (!allowed_characters.includes(char)) {
+                    return alert("A character you chose is not supported.");
+                }
+            }
             return true;
-        } else if (userName.length > 30) {
+        } else if (userName.length > max) {
             return alert("The username can only be short than 30 characters.");
         }
+        return true;
     }
 
 

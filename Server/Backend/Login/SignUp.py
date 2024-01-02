@@ -40,7 +40,7 @@ class SignUp:
         else:
             return False
 
-    def password_choose_rules(self, password):
+    def password_rules(self, password):
         min_length = 8
         max_length = 40
         allowed_characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$%!?@#&"
@@ -54,7 +54,7 @@ class SignUp:
         if len(password) < min_length:
             print("The password has to be at least 8 characters long.")
             return False
-        else:
+        if len(password) > max_length:
             print("The password can only be a maximum of 40 characters long.")
             return False
 
@@ -64,16 +64,23 @@ class SignUp:
         else:
             return False
 
-    def username_length_rule(self, username):
+    def username_rules(self, username):
         min = 1
         max = 30
+        allowed_characters = "abcdefghijklmnopqrstuvwxyz1234567890_."
+
+        if len(min < username < max):
+            for element in username:
+                if element not in allowed_characters:
+                    return False
+            return True
         if len(username) < min:
             print("Username is too short.")
             return False
-
         if len(username) > max:
             print("Username is too long.")
             return False
+
 #ToDo:
 # comment code
-# add username charactercheck backend and frontend
+# add profile settings
