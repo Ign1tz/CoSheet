@@ -28,7 +28,7 @@ export default function Dashboard() {
         <section>
             <Header />
             {cards}
-            <AddNewCard/>
+            <AddNewCard />
         </section>
     )
 }
