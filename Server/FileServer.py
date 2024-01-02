@@ -46,7 +46,7 @@ def signup():
         if not correct_username:
             errors.append("Username is already taken.")
         if not username_rules:
-            errors.append("A character you chose is not supported.")
+            errors.append("A character you chose in your username is not supported.")
         if not password_equality:
             errors.append("Passwords are not equal.")
         if not password_rules:

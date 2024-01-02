@@ -92,12 +92,12 @@ export default function Signup() {
         } else if (userName.length >= min && userName.length <= max) {
             for (let char of userName) {
                 if (!allowed_characters.includes(char)) {
-                    return alert("A character you chose is not supported.");
+                    return alert("A character you chose in your username is not supported.");
                 }
             }
             return true;
         } else if (userName.length > max) {
-            return alert("The username can only be short than 30 characters.");
+            return alert("The username has to be shorter than 30 characters.");
         }
         return true;
     }

@@ -55,7 +55,7 @@ class SignUp:
             print("The password has to be at least 8 characters long.")
             return False
         if len(password) > max_length:
-            print("The password can only be a maximum of 40 characters long.")
+            print("The password has to be shorter than 40 characters.")
             return False
 
     def proof_passwords_equality(self, password, password_second):
@@ -65,19 +65,20 @@ class SignUp:
             return False
 
     def username_rules(self, username):
-        min = 1
-        max = 30
+        min_length = 1
+        max_length = 30
         allowed_characters = "abcdefghijklmnopqrstuvwxyz1234567890_."
 
-        if len(min < username < max):
+        if min_length < len(username) < max_length:
             for element in username:
                 if element not in allowed_characters:
+                    print("The username has to be shorter than 30 characters.")
                     return False
             return True
-        if len(username) < min:
+        if len(username) < min_length:
             print("Username is too short.")
             return False
-        if len(username) > max:
+        if len(username) > max_length:
             print("Username is too long.")
             return False
 
