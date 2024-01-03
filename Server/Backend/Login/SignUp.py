@@ -14,7 +14,7 @@ class SignUp:
         whole_key = encrypt.generate_whole_key()
         public_key = encrypt.generate_public_key()
 
-        new_account = Account(username, password, e_mail, None, whole_key, public_key)
+        new_account = Account(username, password, e_mail, "None", whole_key, public_key)
         return new_account
 
     def save_new_account(self, new_account):
@@ -58,8 +58,8 @@ class SignUp:
             print("The password has to be shorter than 40 characters.")
             return False
 
-    def proof_passwords_equality(self, password, password_second):
-        if password == password_second:
+    def proof_passwords_equality(self, password, confirm_password):
+        if password == confirm_password:
             return True
         else:
             return False
@@ -72,7 +72,7 @@ class SignUp:
         if min_length < len(username) < max_length:
             for element in username:
                 if element not in allowed_characters:
-                    print("The username has to be shorter than 30 characters.")
+                    print("Character in username is not supported.")
                     return False
             return True
         if len(username) < min_length:

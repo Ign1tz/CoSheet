@@ -3,6 +3,7 @@ from flask_session import Session
 from flask_cors import CORS
 import os
 import json
+import requests
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
 
@@ -29,12 +30,12 @@ def signup():
     username = data['username']
     email = data['email']
     password = data['password']
-    second_password = data['second_password']
+    confirm_password = data['second_password']
     sign_up = SignUp()
     correct_username = sign_up.prohibit_double_username(username)
     username_rules = sign_up.username_rules(username)
     correct_email = sign_up.prohibit_double_eMail(email)
-    password_equality = sign_up.proof_passwords_equality(password, second_password)
+    password_equality = sign_up.proof_passwords_equality(password, confirm_password)
     password_rules = sign_up.password_rules(password)
 
     if correct_username and correct_email and password_rules and password_equality:
@@ -62,12 +63,20 @@ def login():
     username = data['username']
     email = data['email']
     password = data['password']
+    atSign = "@"
+    login_class = Login()
 
-    username_password_match = login.username_password_match(username, password)
-    email_password_match = login.email_password_match(email, password)
+    username_password_match = False
+    email_password_match = False
+
+    if atSign not in username:
+        username_password_match = login_class.username_password_match(username, password)
+    else:
+        email_password_match = login_class.email_password_match(password, email)
 
     if username_password_match or email_password_match:
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
+        session["name"] = request.form.get("name")
     else:
         errors = []
         if not username_password_match:
@@ -76,6 +85,7 @@ def login():
             errors.append("Email or password is not correct.")
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
+
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)
