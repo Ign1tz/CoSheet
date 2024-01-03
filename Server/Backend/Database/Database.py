@@ -11,13 +11,13 @@ class Database:
         r = requests.get("http://menews.site/get-profile",
                          data=json.dumps(key_pair), headers={
                 "Content-Type": "application/json"})
-        return r.text
+        return json.loads(r.text)["profiles"]
 
     def get_spreadsheet(self, key_pair):
         r = requests.get("http://menews.site/get-spreadsheet",
                          data=json.dumps(key_pair), headers={
                 "Content-Type": "application/json"})
-        return r.json()["spreadsheets"]
+        return json.loads(r.text)["spreadsheets"]
 
     def add_profile(self, profile):
         r = requests.post("http://menews.site/add-profile",
@@ -33,7 +33,6 @@ class Database:
         r = requests.post("http://menews.site/remove-profile",
                           data=json.dumps({"username": username, "password": password}), headers={
                 "Content-Type": "application/json"})
-        return r
 
     def delete_spreadsheet(self, title, owner):
         r = requests.post("http://menews.site/remove-spreadsheet",
@@ -77,4 +76,4 @@ class Database:
 
 if __name__ == "__main__":
     data = Database()
-    print(data.delete_profile("test3","test"))
+    print(data.get_profile({"username":"test"}))
