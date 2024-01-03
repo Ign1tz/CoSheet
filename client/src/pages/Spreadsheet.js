@@ -23,7 +23,7 @@ export default function Spreadsheet() {
 
     return (
         <div className="container">
-            <p className="test">test</p>
+            <h1 className="test">test</h1>
         </div>
     );
 }
