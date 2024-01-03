@@ -4,8 +4,8 @@ from flask_cors import CORS
 import os
 import json
 import requests
-from Server.Backend.Login.SignUp import SignUp
-from Server.Backend.Login.Login import Login
+from FileServer.Backend.Login.SignUp import SignUp
+from FileServer.Backend.Login.Login import Login
 
 app = Flask(__name__)
 app.debug = True
@@ -57,7 +57,7 @@ def signup():
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     username = data['username']
@@ -76,7 +76,7 @@ def login():
 
     if username_password_match or email_password_match:
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
-        session["name"] = request.form.get("name")
+        session[username] = request.form.get(username)
     else:
         errors = []
         if not username_password_match:

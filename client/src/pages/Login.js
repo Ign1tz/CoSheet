@@ -6,18 +6,17 @@ export default function Login() {
 
     const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
-    const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
 
     function handleLogin(e) {
         e.preventDefault()
 
-        const data = {"username": userName, "password": password, "confirm_password": confirm_password, "email": email};
-
+        const data = {"password": password, "email": email, "username": username};
         try {
             const response = async () => {
                 const request = await fetch("http://localhost:5000/login", {
-                    method: 'GET',
+                    method: 'POST',
                     body: JSON.stringify(data),
                     headers: {
                         'Accept': 'application/json, text/plain',
@@ -33,6 +32,8 @@ export default function Login() {
             response();
         } catch (error) {
             console.error("Something went wrong.", error)
+            //let password_empty = document.getElementById("password")
+            //password_empty = " "
             setPassword('')
         }
     }
@@ -42,9 +43,8 @@ export default function Login() {
         <div className="container">
             <div className="heading">Login</div>
             <form action="" className="form">
-                <input required="" className="input" type="email" name="emailorusername" id="emailorusername"
+                <input required="" className="input" type="email" name="email" id="email"
                        placeholder="e-mail or username"
-                       onChange={(e) => setUserName(e.target.value)}
                        onChange={(e) => setEmail(e.target.value)}/>
                 <input required="" className="input" type="password" name="password" id="password"
                        placeholder="password" onChange={(e) => setPassword(e.target.value)}/>
