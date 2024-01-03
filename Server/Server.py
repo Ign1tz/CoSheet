@@ -24,6 +24,11 @@ def serve_files():
     return send_from_directory('files', "homepage.html")
 
 
+@app.route("/settings", methods=['GET'])
+def settings():
+    return send_from_directory('files', "SpreadsheetSettings.html")
+
+
 @app.route("/login", methods=["GET"])
 def serve_login():
     return send_from_directory("files", "login.html")
