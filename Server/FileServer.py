@@ -13,6 +13,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+
 @app.route('/default-spreadsheet', methods=['GET'])
 def default_spreadsheet_page():
     return send_from_directory('files', "default-spreadsheet.html")
