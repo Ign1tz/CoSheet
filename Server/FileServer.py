@@ -4,8 +4,8 @@ from flask_cors import CORS
 import os
 import json
 import requests
-from FileServer.Backend.Login.SignUp import SignUp
-from FileServer.Backend.Login.Login import Login
+from Server.Backend.Login.SignUp import SignUp
+from Server.Backend.Login.Login import Login
 
 app = Flask(__name__)
 app.debug = True
