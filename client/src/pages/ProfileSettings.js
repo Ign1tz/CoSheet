@@ -7,6 +7,10 @@ export default function ProfileSettings() {
     function saveChanges() {
         alert('Save changes successful!');
     }
+
+    function GoBack() {
+        alert('Go Back.');
+    }
     return (
         <div className="container">
             <h1>Profile Settings</h1>
@@ -17,6 +21,9 @@ export default function ProfileSettings() {
 
                 <button className="saveChanges" onClick={saveChanges}>
                     Save Changes
+                </button>
+                <button className="GoBack" onClick={GoBack}>
+                    Go Back
                 </button>
                 <button className="logout-btn" onClick={logout}>
                     Logout
