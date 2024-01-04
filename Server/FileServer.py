@@ -3,6 +3,7 @@ from flask_session import Session
 from flask_cors import CORS
 import os
 import json
+from Backend.Database.Database import Database
 import requests
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
@@ -14,6 +15,7 @@ CORS(app, support_credentials=True)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
 
 @app.route('/default-spreadsheet', methods=['GET'])
 def default_spreadsheet_page():
