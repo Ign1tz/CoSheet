@@ -1,7 +1,7 @@
 .spreadsheetContainer {
     margin-left: 8em;
     margin-right: 8em;
-    margin-top: 4em;
+    margin-top: 1em;
     overflow-x: auto;
     display: flex;
     align-items: flex-start;
@@ -63,4 +63,20 @@
     display: inline-block;
     margin-right: 0.5em;
     font-size: 16px;
+}
+
+.spreadsheet-title {
+    text-align: center;
+    font-size: 1.5em;
+    margin: 0.5em;
+}
+
+.spreadsheet-description {
+    text-align: center;
+    margin: 0;
+}
+
+.apply-button button:active {
+    transform: scale(0.98);
+    opacity: 0.8;
 }
