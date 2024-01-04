@@ -7,12 +7,11 @@ export default function Login() {
     const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
 
     function handleLogin(e) {
         e.preventDefault()
 
-        const data = {"password": password, "email": email, "username": username};
+        const data = {"password": password, "email": email};
         try {
             const response = async () => {
                 const request = await fetch("http://localhost:5000/login", {

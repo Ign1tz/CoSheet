@@ -20,7 +20,7 @@ class SignUp:
     def save_new_account(self, new_account):
         database = Database()
         profile_database = database.profile_database
-        database.add_one_to_database(profile_database, new_account)
+        database.add_profile(profile_database, new_account)
 
     def prohibit_double_username(self, username):
         database = Database()
