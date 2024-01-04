@@ -3,6 +3,7 @@ import {BrowserRouter, Routes, Route} from "react-router-dom"
 import Home from "./pages/Home"
 import Signup from "./pages/Signup"
 import Login from "./pages/Login"
+import ProfileSettings from "./pages/ProfileSettings";
 
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
                     <Route index element={<Home/>}/>
                     <Route path="/signup" element={<Signup/>}/>
                     <Route path="/login" element={<Login/>}/>
+                    <Route path="/ProfileSettings" element={<ProfileSettings/>}/>
                 </Routes>
             </BrowserRouter>
         </div>
