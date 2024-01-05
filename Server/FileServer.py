@@ -68,7 +68,6 @@ def login():
     atSign = "@"
     login_class = Login()
 
-
     username_password_match = False
     email_password_match = False
 
