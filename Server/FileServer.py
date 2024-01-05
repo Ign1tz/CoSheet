@@ -32,7 +32,7 @@ def signup():
     username = data['username']
     email = data['email']
     password = data['password']
-    confirm_password = data['second_password']
+    confirm_password = data['confirm_password']
     sign_up = SignUp()
     correct_username = sign_up.prohibit_double_username(username)
     username_rules = sign_up.username_rules(username)
@@ -62,8 +62,8 @@ def signup():
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    username = data['username']
     email = data['email']
+    username = data['username']
     password = data['password']
     atSign = "@"
     login_class = Login()

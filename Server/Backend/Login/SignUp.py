@@ -1,6 +1,7 @@
 from Server.Backend.Login.Account import Account
 from Server.Backend.Encryption.Encryption import Encryption
 from Server.Backend.Database.Database import Database
+from Server.Backend.Login.Account import AccountParser
 import re
 
 
@@ -8,32 +9,35 @@ class SignUp:
     def __init__(self):
         pass
 
-    def create_new_account(self, username, password, e_mail):
+    def create_new_account(self, username, password, email):
         encrypt = Encryption()
-
+        account = AccountParser()
         whole_key = encrypt.generate_whole_key()
         public_key = encrypt.generate_public_key()
 
-        new_account = Account(username, password, e_mail, "None", whole_key, public_key)
+        new_account = Account(username, password, email, "None", whole_key, public_key)
+        account.account_to_json(new_account)
         return new_account
 
     def save_new_account(self, new_account):
         database = Database()
-        profile_database = database.profile_database
-        database.add_profile(profile_database, new_account)
+        # profile_database = database.profile_database
+        database.add_profile({"new_account": new_account})
 
     def prohibit_double_username(self, username):
         database = Database()
-        get_username_database = database.get_from_database(database.profile_database, {"username": username})
+        # get_username_database = database.get_from_database(database.profile_database, {"username": username})
+        get_username_database = database.get_profile({"username": username})
 
         if not len(get_username_database):
             return True
         else:
             return False
 
-    def prohibit_double_eMail(self, e_mail):
+    def prohibit_double_eMail(self, email):
         database = Database()
-        get_e_mail_database = database.get_from_database(database.profile_database, {"e_mail": e_mail})
+        # get_e_mail_database = database.get_from_database(database.profile_database, {"e_mail": e_mail})
+        get_e_mail_database = database.get_profile({"email": email})
 
         if not len(get_e_mail_database):
             return True

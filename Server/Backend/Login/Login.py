@@ -10,7 +10,7 @@ class Login:
         encryption = Encryption()
         accountParser = AccountParser()
 
-        username_database_json = database.get_from_database(database.profile_database, {"username": username})
+        username_database_json = database.get_profile({"username": username})
 
         if len(username_database_json) is 0:
             return False
@@ -33,7 +33,7 @@ class Login:
         encryption = Encryption()
         accountParser = AccountParser()
 
-        email_database_json = database.get_from_database(database.profile_database, {"email": email})
+        email_database_json = database.get_profile({"email": email})
 
         if len(email_database_json) is 0:
             return False
