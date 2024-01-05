@@ -77,4 +77,4 @@ class Database:
 if __name__ == "__main__":
     data = Database()
     print(data.get_profile({"username":"test"}))
-    print(data.delete_profile("test3","test"))
+    #print(data.delete_profile("test3","test"))
