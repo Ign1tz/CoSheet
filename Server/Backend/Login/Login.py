@@ -11,19 +11,20 @@ class Login:
         accountParser = AccountParser()
 
         username_database_json = database.get_profile({"username": username})
+        print(username_database_json)
 
-        if len(username_database_json) is 0:
+        if len(username_database_json) == 0:
             return False
         for element in username_database_json:
             username_database = accountParser.json_to_account(element)
 
             password_database = username_database.password
 
-            public_key = username_database.public_key
+            salt = bytes(username_database.salt[2:-1], "ascii")
 
-            encrypted_password = encryption.encrypt(password, public_key)
+            hashed_password = str(encryption.hash_password(password, salt))
 
-            if password_database == encrypted_password:
+            if password_database == hashed_password:
                 return True
         return False
 
@@ -35,18 +36,18 @@ class Login:
 
         email_database_json = database.get_profile({"email": email})
 
-        if len(email_database_json) is 0:
+        if len(email_database_json) == 0:
             return False
         for element in email_database_json:
             email_database = accountParser.json_to_account(element)
 
             password_database = email_database.password
 
-            public_key = email_database.public_key
+            salt = bytes(email_database.salt[2:-1], "ascii")
 
-            encrypted_password = encryption.encrypt(password, public_key)
+            hashed_password = str(encryption.hash_password(password, salt))
 
-            if password_database == encrypted_password:
+            if password_database == hashed_password:
                 return True
         return False
 # kommentieren vom code

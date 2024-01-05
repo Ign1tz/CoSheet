@@ -31,6 +31,7 @@ def signup():
     data = request.get_json()
     username = data['username']
     email = data['email']
+    print(email)
     password = data['password']
     confirm_password = data['confirm_password']
     sign_up = SignUp()
@@ -63,22 +64,22 @@ def signup():
 def login():
     data = request.get_json()
     email = data['email']
-    username = data['username']
     password = data['password']
     atSign = "@"
     login_class = Login()
 
+
     username_password_match = False
     email_password_match = False
 
-    if atSign not in username:
-        username_password_match = login_class.username_password_match(username, password)
+    if atSign not in email:
+        username_password_match = login_class.username_password_match(password, email)
     else:
         email_password_match = login_class.email_password_match(password, email)
 
     if username_password_match or email_password_match:
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
-        session[username] = request.form.get(username)
+        session[email] = request.form.get(email)
     else:
         errors = []
         if not username_password_match:

@@ -12,17 +12,21 @@ class SignUp:
     def create_new_account(self, username, password, email):
         encrypt = Encryption()
         account = AccountParser()
-        whole_key = encrypt.generate_whole_key()
-        public_key = encrypt.generate_public_key()
+       # whole_key = encrypt.generate_whole_key()
+        #public_key = encrypt.generate_public_key()
+        salt = encrypt.gen_salt()
 
-        new_account = Account(username, password, email, "None", whole_key, public_key)
-        account.account_to_json(new_account)
+        hashed_password = encrypt.hash_password(password, salt)
+
+        new_account = Account(username, str(hashed_password), email, "None", str(salt))
+
+        new_account = account.account_to_json(new_account)
         return new_account
 
     def save_new_account(self, new_account):
         database = Database()
         # profile_database = database.profile_database
-        database.add_profile({"new_account": new_account})
+        database.add_profile(new_account)
 
     def prohibit_double_username(self, username):
         database = Database()

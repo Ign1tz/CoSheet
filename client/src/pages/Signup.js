@@ -113,7 +113,8 @@ export default function Signup() {
                         <input type="text" className="input" name="username" placeholder="Username" required
                                value={userName}
                                onChange={(e) => setUserName(e.target.value)}/>
-                        <input type="email" className="input" name="email" placeholder="Email" required/>
+                        <input type="email" className="input" name="email" placeholder="Email" required value={email}
+                               onChange={(e) => setEmail(e.target.value)}/>
                         <input type="password" className="input" name="password" placeholder="Password"
                                required value={password} onChange={(e) => setPassword(e.target.value)}/>
                         <input type="password" className="input" name="password2" placeholder="Confirm Password"
