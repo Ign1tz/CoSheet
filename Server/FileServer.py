@@ -79,7 +79,7 @@ def login():
 
     if username_password_match or email_password_match:
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
-        session[email] = request.form.get(email)
+        session["username"] = email
     else:
         errors = []
         if not username_password_match:
