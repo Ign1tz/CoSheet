@@ -16,8 +16,12 @@ h1 {
     font-size: 30px;
     color: rgb(16, 137, 211);
 }
+h3 {
+    font-size: 20px;
+    color: rgb(16, 137, 211);
+}
 form {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 input {
@@ -26,7 +30,7 @@ input {
     border: none;
     padding: 15px 20px;
     border-radius: 20px;
-    margin-top: 15px;
+    margin-top: 10px;
     margin-left: -15px;
     box-shadow: #cff0ff 0px 10px 10px -5px;
     border-inline: 2px solid transparent;
@@ -47,7 +51,7 @@ input:focus {
 
 button {
     display: block;
-    width: 100%;
+    width: 60%;
     font-weight: bold;
     background: linear-gradient(45deg, rgb(16, 137, 211) 0%, rgb(18, 177, 209) 100%);
     color: white;
