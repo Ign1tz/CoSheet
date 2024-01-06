@@ -5,6 +5,7 @@ import os
 import json
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
+from Backend.Database.Database import Database
 
 app = Flask(__name__)
 app.debug = True
@@ -13,6 +14,7 @@ CORS(app, support_credentials=True)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
 
 @app.route('/default-spreadsheet', methods=['GET'])
 def default_spreadsheet_page():
