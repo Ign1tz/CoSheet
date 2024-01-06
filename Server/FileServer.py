@@ -3,9 +3,13 @@ from flask_session import Session
 from flask_cors import CORS
 import os
 import json
+from Backend.Database.Database import Database
+import requests
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
+=========
 from Backend.Database.Database import Database
+>>>>>>>>> Temporary merge branch 2
 
 app = Flask(__name__)
 app.debug = True
@@ -15,7 +19,10 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+<<<<<<<<< Temporary merge branch 1
+=========
 
+>>>>>>>>> Temporary merge branch 2
 @app.route('/default-spreadsheet', methods=['GET'])
 def default_spreadsheet_page():
     return send_from_directory('files', "default-spreadsheet.html")
@@ -25,18 +32,19 @@ def default_spreadsheet_page():
 def serve_files():
     return send_from_directory('files', "homepage.html")
 
+<<<<<<<<< Temporary merge branch 1
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
     username = data['username']
     email = data['email']
     password = data['password']
-    second_password = data['second_password']
+    confirm_password = data['confirm_password']
     sign_up = SignUp()
     correct_username = sign_up.prohibit_double_username(username)
     username_rules = sign_up.username_rules(username)
     correct_email = sign_up.prohibit_double_eMail(email)
-    password_equality = sign_up.proof_passwords_equality(password, second_password)
+    password_equality = sign_up.proof_passwords_equality(password, confirm_password)
     password_rules = sign_up.password_rules(password)
 
     if correct_username and correct_email and password_rules and password_equality:
@@ -58,18 +66,26 @@ def signup():
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     username = data['username']
     email = data['email']
     password = data['password']
+    atSign = "@"
+    login_class = Login()
 
-    username_password_match = login.username_password_match(username, password)
-    email_password_match = login.email_password_match(email, password)
+    username_password_match = False
+    email_password_match = False
+
+    if atSign not in email:
+        username_password_match = login_class.username_password_match(password, email)
+    else:
+        email_password_match = login_class.email_password_match(password, email)
 
     if username_password_match or email_password_match:
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
+        session["username"] = email
     else:
         errors = []
         if not username_password_match:
@@ -78,6 +94,7 @@ def login():
             errors.append("Email or password is not correct.")
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
+=========
 
 @app.route('/profileSettings', methods=['POST'])
 def profileSettings():

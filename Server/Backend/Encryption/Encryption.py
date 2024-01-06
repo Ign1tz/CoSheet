@@ -1,4 +1,6 @@
 import time
+
+import bcrypt
 import rsa
 
 
@@ -9,11 +11,11 @@ class Encryption:
         pass
 
     def generate_whole_key(self):
-        return rsa.newkeys(4096)
+        return rsa.newkeys(1028)
 
     def generate_public_key(self):
         print("a")
-        (public_key, _) = rsa.newkeys(4096)
+        (public_key, _) = rsa.newkeys(1028)
         return public_key
 
     def encrypt(self, text, key):
@@ -25,6 +27,11 @@ class Encryption:
         except:
             return False
 
+    def gen_salt(self):
+        return bcrypt.gensalt()
+
+    def hash_password(self, password, salt):
+        return bcrypt.hashpw(bytes(password, 'utf-8'), salt)
 
 if __name__ == "__main__":
     e = Encryption()

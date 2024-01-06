@@ -6,7 +6,7 @@ import {json, Link} from "react-router-dom";
 export default function Signup() {
     const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
-    const [password2, setPassword2] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
 
@@ -26,7 +26,7 @@ export default function Signup() {
             return;
         }
 
-        const data = {"username": userName, "password": password, "second_password": password2, "email": email};
+        const data = {"username": userName, "password": password, "confirm_password": confirmPassword, "email": email};
 
         try {
             const response = async () => {
@@ -52,7 +52,7 @@ export default function Signup() {
 
     function handlePasswordEqual() {
 
-        if (password === password2) {
+        if (password === confirmPassword) {
             return true;
         } else {
             return alert("Passwords do not match");
@@ -113,11 +113,12 @@ export default function Signup() {
                         <input type="text" className="input" name="username" placeholder="Username" required
                                value={userName}
                                onChange={(e) => setUserName(e.target.value)}/>
-                        <input type="email" className="input" name="email" placeholder="Email" required/>
+                        <input type="email" className="input" name="email" placeholder="Email" required value={email}
+                               onChange={(e) => setEmail(e.target.value)}/>
                         <input type="password" className="input" name="password" placeholder="Password"
                                required value={password} onChange={(e) => setPassword(e.target.value)}/>
                         <input type="password" className="input" name="password2" placeholder="Confirm Password"
-                               required value={password2} onChange={(e) => setPassword2(e.target.value)}/>
+                               required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
                     </div>
                     <button onClick={handleSubmit}>Sign up</button>
                 </form>
