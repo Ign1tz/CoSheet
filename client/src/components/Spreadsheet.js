@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Spreadsheet.css';
 
-export default function Spreadsheet({ numberOfRows, numberOfColumns }) {
+export default function Spreadsheet({ numberOfRows, numberOfColumns, cellFormatting, onCellSelect, selectedCell}) {
     const [spreadsheetRows, setSpreadsheetRows] = useState([]);
 
     useEffect(() => {
@@ -18,6 +18,10 @@ export default function Spreadsheet({ numberOfRows, numberOfColumns }) {
             rows.push(columns);
         }
         setSpreadsheetRows(rows);
+    };
+
+    const handleCellClick = (rowIndex, colIndex) => {
+        onCellSelect(rowIndex, colIndex);
     };
 
     const getColumnName = (columnNumber) => {
@@ -49,13 +53,23 @@ export default function Spreadsheet({ numberOfRows, numberOfColumns }) {
                     {spreadsheetRows.map((row, rowIndex) => (
                         <tr key={`row-${rowIndex}`}>
                             <th>{rowIndex + 1}</th>
-                            {row.map((_, colIndex) => (
-                                <td
-                                    key={`${rowIndex}-${colIndex}`}
-                                    contentEditable
-                                    className="cell"
-                                ></td>
-                            ))}
+                            {row.map((_, colIndex) => {
+                                const cellId = `${rowIndex}-${colIndex}`;
+                                const formatting = cellFormatting[cellId] || {};
+                                return (
+                                    <td
+                                        key={cellId}
+                                        onClick={() => handleCellClick(rowIndex, colIndex)}
+                                        contentEditable
+                                        className={`cell ${selectedCell && selectedCell.row === rowIndex && selectedCell.col === colIndex ? 'selected' : ''}`}
+                                        style={{
+                                            fontWeight: formatting.bold ? 'bold' : 'normal',
+                                            backgroundColor: formatting.backgroundColor || 'transparent',
+                                        }}
+                                    >
+                                    </td>
+                                );
+                            })}
                         </tr>
                     ))}
                 </tbody>

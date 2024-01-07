@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/SpreadsheetSettings.css';
 
-export default function SpreadsheetSettings({ onSettingsChange }) {
+export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell }) {
     const [showSettings, setShowSettings] = useState(false);
     const [title, setTitle] = useState('Default Title');
     const [editEmptyOnly, setEditEmptyOnly] = useState(false);
@@ -11,6 +11,8 @@ export default function SpreadsheetSettings({ onSettingsChange }) {
     const [description, setDescription] = useState('This is a small description for the default spreadsheet.');
     const [allowLoggedInEdit, setAllowLoggedInEdit] = useState(false);
     const [cellWidth, setCellWidth] = useState(50);
+    const [isTextBold, setIsTextBold] = useState(false);
+    const [cellBackgroundColor, setCellBackgroundColor] = useState('#FFFFFF');
 
     function validateTitle(title) {
         return typeof title === 'string' && title.trim() !== '';
@@ -41,6 +43,15 @@ export default function SpreadsheetSettings({ onSettingsChange }) {
     function validateAllowLoggedInEdit(allowLoggedInEdit) {
         return typeof allowLoggedInEdit === 'boolean';
     }
+
+    const applyFormatting = () => {
+        if (selectedCell) {
+            onApplyFormatting({
+                bold: isTextBold,
+                backgroundColor: cellBackgroundColor,
+            });
+        }
+    };
 
     function applySettings(e) {
         e.preventDefault();
@@ -74,6 +85,8 @@ export default function SpreadsheetSettings({ onSettingsChange }) {
             return;
         }
 
+        applyFormatting()
+
         onSettingsChange({
             title,
             editEmptyOnly,
@@ -82,9 +95,10 @@ export default function SpreadsheetSettings({ onSettingsChange }) {
             columnHeaders,
             description,
             allowLoggedInEdit,
+            isTextBold,
+            cellBackgroundColor,
         });
     }
-
 
     return (
         <div className="ribbon-container">
@@ -119,6 +133,20 @@ export default function SpreadsheetSettings({ onSettingsChange }) {
                     </div>
                     <div className="setting-group">
                         <label>Only empty cells can be edited <input type="checkbox" checked={editEmptyOnly} onChange={(e) => setEditEmptyOnly(e.target.checked)} /></label>
+                    </div>
+                    <div className="setting-group">
+                        <button
+                            onClick={() => setIsTextBold(!isTextBold)}
+                            className={isTextBold ? 'button-active' : ''}
+                        >
+                            Bold
+                        </button>
+                        <input
+                            type="color"
+                            value={cellBackgroundColor}
+                            onChange={(e) => setCellBackgroundColor(e.target.value)}
+                            title="Change cell background color"
+                        />
                     </div>
                     <div className="apply-button">
                         <button onClick={applySettings}>Apply Changes</button>
