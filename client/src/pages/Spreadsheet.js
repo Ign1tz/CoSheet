@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../Spreadsheet.css';
+import '../Style/Spreadsheet.css';
 
 export default function Spreadsheet() {
     const [numberOfRows, setNumberOfRows] = useState(20);
