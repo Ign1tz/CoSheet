@@ -18,12 +18,12 @@ export default function SpreadsheetSettings({ onSettingsChange }) {
 
     function validateNumColumns(numColumns) {
         const number = parseInt(numColumns, 10);
-        return !isNaN(number) && number > 1 && number <= 1000;
+        return !isNaN(number) && number >= 1 && number <= 1000;
     }
 
     function validateNumRows(numRows) {
         const number = parseInt(numRows, 10);
-        return !isNaN(number) && number > 1 && number <= 1000;
+        return !isNaN(number) && number >= 1 && number <= 1000;
     }
 
     function validateColumnHeaders(columnHeaders) {
