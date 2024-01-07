@@ -1,15 +1,14 @@
 .ribbon-container {
     font-family: 'Segoe UI', 'Calibri', sans-serif;
-    border-bottom: 1px solid lightgrey;
+    border-bottom: 0.08em solid lightgrey;
     background-color: #f3f3f3;
-    width: 100%;
-
+    width: auto;
 }
 
 .ribbon-header {
     display: flex;
     justify-content: center;
-    padding: 8px;
+    padding: 1em;
 }
 
 .ribbon-header button {
@@ -17,9 +16,9 @@
     color: white;
     padding: 6px 12px;
     border: none;
-    border-radius: 3px;
+    border-radius: 0.15em;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 1em;
 }
 
 .ribbon-settings {
@@ -27,31 +26,31 @@
     justify-content: start;
     align-items: center;
     background-color: #f3f3f3;
-    padding: 10px;
-    border-top: 1px solid lightgrey;
+    padding: 0.8em;
+    border-top: 0.08em solid lightgrey;
 }
 
 .setting-group {
-    margin-right: 20px;
+    margin-right: 1.5em;
     display: flex;
     flex-direction: column;
 }
 
 .setting-group label {
-    font-size: 14px;
-    margin-bottom: 5px;
+    font-size: 0.8em;
+    margin-bottom: 0.3em;
 }
 
 .setting-group input[type="text"],
 .setting-group input[type="number"] {
-    padding: 6px;
-    border: 1px solid #ccc;
+    padding: 0.45em;
+    border: 0.08em solid #ccc;
     border-radius: 3px;
     font-size: 14px;
 }
 
 .range-values {
-    font-size: 12px;
+    font-size: 0.7em;
     color: #666;
     text-align: center;
 }
@@ -65,9 +64,9 @@
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 3px;
+    border-radius: 0.15em;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.8em;
 }
 
 .setting-group button {
@@ -75,10 +74,10 @@
     color: white;
     padding: 6px 12px;
     border: none;
-    border-radius: 3px;
+    border-radius: 0.1em;
     cursor: pointer;
-    font-size: 14px;
-    margin-top: 5px;
+    font-size: 0.9em;
+    margin-top: 0.25em;
     margin-bottom: 0.5em;
 }
 
@@ -86,19 +85,17 @@
     background-color: #444;
 }
 
-/* Color Input Styling */
 .setting-group input[type="color"] {
-    height: 2em; /* Adjust height to match other inputs */
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    height: 2em;
+    border: 0.08em solid #ccc;
+    border-radius: 0.2em;
     padding: 0;
-    width: 3.8em; /* Full width within its container */
+    width: 3.8em;
     cursor: pointer;
 }
 
-/* Adjustments to other input types for consistent appearance */
 .setting-group input[type="text"],
 .setting-group input[type="number"],
 .setting-group input[type="range"] {
-    margin-bottom: 10px;
+    margin-bottom: 0.9em;
 }
