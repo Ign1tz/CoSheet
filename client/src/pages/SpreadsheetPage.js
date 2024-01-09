@@ -8,7 +8,7 @@ export default function SpreadsheetPage() {
         editEmptyOnly: false,
         numColumns: 4,
         numRows: 20,
-        columnHeaders: 'Default Header',
+        columnHeadersEditable: false,
         description: 'This is a small description for the default spreadsheet.',
         allowLoggedInEdit: false,
     });
@@ -48,8 +48,9 @@ export default function SpreadsheetPage() {
             <Spreadsheet
                 numberOfRows={settings.numRows}
                 numberOfColumns={settings.numColumns}
-                 onCellSelect={handleSelectCell}
+                onCellSelect={handleSelectCell}
                 cellFormatting={cellFormatting}
+                columnHeadersEditable={settings.columnHeadersEditable}
             />
         </div>
     );

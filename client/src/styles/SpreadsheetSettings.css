@@ -99,3 +99,9 @@
 .setting-group input[type="range"] {
     margin-bottom: 0.9em;
 }
+
+@media screen and (max-width: 1240px) {
+    .ribbon-settings {
+        flex-wrap: wrap;
+    }
+}

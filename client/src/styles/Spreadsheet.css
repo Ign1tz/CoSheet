@@ -25,7 +25,9 @@
     height: 1.5em;
     text-align: center;
     min-width: 5em;
-    white-space: nowrap;
+    max-width: 8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .spreadsheetContainer td.editable {
