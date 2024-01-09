@@ -1,5 +1,7 @@
 import json
 import time
+
+import bcrypt
 import rsa
 
 
@@ -26,6 +28,11 @@ class Encryption:
         except:
             return False
 
+    def gen_salt(self):
+        return bcrypt.gensalt()
+
+    def hash_password(self, password, salt):
+        return bcrypt.hashpw(bytes(password, 'utf-8'), salt)
 
 if __name__ == "__main__":
     e = Encryption()

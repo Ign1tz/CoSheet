@@ -11,6 +11,9 @@ class Database:
         r = requests.get("http://menews.site/get-profile",
                          data=json.dumps(key_pair), headers={
                 "Content-Type": "application/json"})
+        data = json.loads(r.text)
+        if data is None:
+            return None
         return json.loads(r.text)["profiles"]
 
     def get_spreadsheet(self, key_pair):
@@ -76,5 +79,4 @@ class Database:
 
 if __name__ == "__main__":
     data = Database()
-    print(data.get_profile({"username":"test"}))
-    #print(data.delete_profile("test3","test"))
+    print(data.get_profile({"username":"anna"}))
