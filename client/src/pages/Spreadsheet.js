@@ -65,7 +65,7 @@ export default function Spreadsheet() {
                         <tr>
                             <th></th>
                             {[...Array(numberOfColumns)].map((_, colIndex) => (
-                                <th key={colIndex} contentEditable className="header">{getColumnName(colIndex)}</th>
+                                <th key={colIndex} contentEditable className="spreadsheetHeader">{getColumnName(colIndex)}</th>
 
                             ))}
                         </tr>
