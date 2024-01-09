@@ -11,6 +11,7 @@ export default function SpreadsheetPage() {
         columnHeaders: 'Default Header',
         description: 'This is a small description for the default spreadsheet.',
         allowLoggedInEdit: false,
+        columnWidths: Array(4).fill(100),
     });
 
     const [selectedCell, setSelectedCell] = useState(null);
@@ -42,6 +43,8 @@ export default function SpreadsheetPage() {
                 onSettingsChange={handleSettingsChange}
                 onApplyFormatting={handleApplyFormatting}
                 selectedCell={selectedCell}
+                columnWidths={settings.columnWidths}
+                onColumnWidthChange={(newWidths) => handleSettingsChange({columnWidths: newWidths})}
             />
             <h2 className="spreadsheet-title">{settings.title}</h2>
             <p className="spreadsheet-description">{settings.description}</p>
@@ -50,6 +53,8 @@ export default function SpreadsheetPage() {
                 numberOfColumns={settings.numColumns}
                  onCellSelect={handleSelectCell}
                 cellFormatting={cellFormatting}
+                columnWidths={settings.columnWidths}
+                onColumnWidthChange={(widths) => handleSettingsChange({columnWidths: widths})}
             />
         </div>
     );

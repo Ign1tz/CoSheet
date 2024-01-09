@@ -1,12 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Spreadsheet.css';
 
-export default function Spreadsheet({ numberOfRows, numberOfColumns, cellFormatting, onCellSelect, selectedCell}) {
+export default function Spreadsheet({ numberOfRows, numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnWidths, onColumnWidthChange}) {
     const [spreadsheetRows, setSpreadsheetRows] = useState([]);
 
     useEffect(() => {
         createSpreadsheet();
     }, [numberOfRows, numberOfColumns]);
+
+    useEffect(() => {
+        onColumnWidthChange(Array(numberOfColumns).fill(100)); // Reset widths to default
+    }, [numberOfColumns, onColumnWidthChange]);
+
+   const startResizing = (colIndex, event) => {
+        event.preventDefault();
+        const startX = event.clientX;
+        const startWidth = columnWidths[colIndex];
+        let newWidth = startWidth;
+
+        const handleMouseMove = (moveEvent) => {
+            const currentX = moveEvent.clientX;
+            newWidth = Math.max(startWidth + (currentX - startX), 10); // Calculate new width but don't set state yet
+        };
+
+        const handleMouseUp = () => {
+            const newColumnWidths = [...columnWidths];
+            newColumnWidths[colIndex] = newWidth; // Update the state on mouse up
+            onColumnWidthChange(newColumnWidths);
+
+            // Cleanup: Remove event listeners
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+   };
+
+
 
     const createSpreadsheet = () => {
         const rows = [];
@@ -42,9 +73,14 @@ export default function Spreadsheet({ numberOfRows, numberOfColumns, cellFormatt
                 <thead>
                     <tr>
                         <th></th>
-                        {[...Array(numberOfColumns)].map((_, colIndex) => (
-                            <th key={colIndex} contentEditable className="header">
+                        {columnWidths.map((width, colIndex) => (
+                            <th key={colIndex} className="header" style={{ width: `${width}px` }}>
                                 {getColumnName(colIndex)}
+                                <div
+                                    className="resize-handle"
+                                    onMouseDown={(e) => startResizing(colIndex, e)}
+                                    style={{ userSelect: 'none' }} // Prevents the resize handle from being selected
+                                ></div>
                             </th>
                         ))}
                     </tr>

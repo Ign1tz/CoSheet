@@ -51,6 +51,7 @@
     text-align: center;
     min-width: 1.5em;
     float: none;
+    position: relative;
 }
 
 .spreadsheetContainer input[type="number"] {
@@ -80,4 +81,25 @@
 .apply-button button:active {
     transform: scale(0.98);
     opacity: 0.8;
+}
+
+@media (max-width: 1400px) {
+    .ribbon-settings {
+        flex-wrap: wrap;
+    }
+}
+.resize-handle {
+    display: inline-block;
+    width: 5px; /* Width of the handle */
+    height: 100%;
+    background: #ccc; /* Color of the handle */
+    cursor: col-resize;
+    position: absolute;
+    right: 0;
+    top: 0;
+    user-select: none; /* Prevent text selection */
+}
+
+.header {
+    position: relative;
 }

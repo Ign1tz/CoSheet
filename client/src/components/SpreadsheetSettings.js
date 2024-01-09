@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/SpreadsheetSettings.css';
 
-export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell }) {
+export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell, columnWidths, onColumnWidthChange }) {
     const [showSettings, setShowSettings] = useState(false);
     const [title, setTitle] = useState('Default Title');
     const [editEmptyOnly, setEditEmptyOnly] = useState(false);
@@ -10,9 +10,15 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
     const [columnHeaders, setColumnHeaders] = useState('Default Header');
     const [description, setDescription] = useState('This is a small description for the default spreadsheet.');
     const [allowLoggedInEdit, setAllowLoggedInEdit] = useState(false);
-    const [cellWidth, setCellWidth] = useState(50);
+    const [cellWidthCheck, setCellWidthCheck] = useState(false)
     const [isTextBold, setIsTextBold] = useState(false);
     const [cellBackgroundColor, setCellBackgroundColor] = useState('#FFFFFF');
+
+    const handleColumnWidthChange = (index, newWidth) => {
+        const newWidths = [...columnWidths];
+        newWidths[index] = newWidth;
+        onColumnWidthChange(newWidths);
+    };
 
     function validateTitle(title) {
         return typeof title === 'string' && title.trim() !== '';
@@ -42,6 +48,10 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
 
     function validateAllowLoggedInEdit(allowLoggedInEdit) {
         return typeof allowLoggedInEdit === 'boolean';
+    }
+
+    function validateCellWidthCheck(cellWidthCheck) {
+        return typeof cellWidthCheck === 'boolean';
     }
 
     const applyFormatting = () => {
@@ -84,6 +94,10 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
             alert('Invalid allow logged in edit setting.');
             return;
         }
+        if (!validateCellWidthCheck(cellWidthCheck)) {
+            alert('Invalid cell width check setting.');
+            return;
+        }
 
         applyFormatting()
 
@@ -97,6 +111,7 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
             allowLoggedInEdit,
             isTextBold,
             cellBackgroundColor,
+            cellWidthCheck,
         });
     }
 
@@ -125,14 +140,13 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
                         <label>Number of Rows <input type="number" min="1" max="1000" value={numRows} onChange={(e) => setNumRows(e.target.value)} /></label>
                     </div>
                     <div className="setting-group">
-                        <label>Cell Width <input type="range" min="1" max="100" value={cellWidth} onChange={(e) => setCellWidth(e.target.value)} /></label>
-                        <div className="range-values">{cellWidth}</div>
+                        <label>Cell width <input type="checkbox" checked={cellWidthCheck} onChange={(e) => setCellWidthCheck(e.target.checked)}/></label>
                     </div>
                     <div className="setting-group">
-                        <label>Only logged-in users can edit <input type="checkbox" checked={allowLoggedInEdit} onChange={(e) => setAllowLoggedInEdit(e.target.checked)} /></label>
+                        <label>Only logged-in <input type="checkbox" checked={allowLoggedInEdit} onChange={(e) => setAllowLoggedInEdit(e.target.checked)} /></label>
                     </div>
                     <div className="setting-group">
-                        <label>Only empty cells can be edited <input type="checkbox" checked={editEmptyOnly} onChange={(e) => setEditEmptyOnly(e.target.checked)} /></label>
+                        <label>Only empty cells <input type="checkbox" checked={editEmptyOnly} onChange={(e) => setEditEmptyOnly(e.target.checked)} /></label>
                     </div>
                     <div className="setting-group">
                         <button
