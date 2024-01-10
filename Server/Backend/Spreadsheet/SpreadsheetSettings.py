@@ -62,25 +62,25 @@ class SpreadsheetSettings:
     def to_json(self):
         return {
             "title": self.title,
-            "cell_width": self.cell_width,
-            "edit_empty_only": self.edit_empty_only,
-            "num_columns": self.num_columns,
-            "num_rows": self.num_rows,
-            "column_headers": self.column_headers,
+            "cellWidth": self.cell_width,
+            "editEmptyOnly": self.edit_empty_only,
+            "numColumns": self.num_columns,
+            "numRows": self.num_rows,
+            "columnHeadersEditable": self.column_headers,
             "description": self.description,
-            "allow_logged_in_edit": self.allow_logged_in_edit,
+            "allowLoggedInEdit": self.allow_logged_in_edit,
         }
 
     def from_json(self, json_data):
         return SpreadsheetSettings(
             json_data["title"],
-            json_data["cell_width"],
-            json_data["edit_empty_only"],
-            json_data["num_columns"],
-            json_data["num_rows"],
-            json_data["column_headers"],
+            json_data["cellWidth"],
+            json_data["editEmptyOnly"],
+            json_data["numColumns"],
+            json_data["numRows"],
+            json_data["columnHeadersEditable"],
             json_data["description"],
-            json_data["allow_logged_in_edit"]
+            json_data["allowLoggedInEdit"]
         )
 
     def update_settings(self, **kwargs):

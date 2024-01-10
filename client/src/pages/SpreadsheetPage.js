@@ -13,6 +13,9 @@ export default function SpreadsheetPage() {
         columnHeadersEditable: false,
         description: 'This is a small description for the default spreadsheet.',
         allowLoggedInEdit: false,
+        cellWidth: 50,
+        isTextBold: false,
+        cellBackgroundColor: '#FFFFFF'
     });
 
     const [selectedCell, setSelectedCell] = useState(null);
