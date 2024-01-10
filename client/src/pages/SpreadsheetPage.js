@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import SpreadsheetSettings from "../components/SpreadsheetSettings";
 import Spreadsheet from "../components/Spreadsheet";
+import '../styles/SpreadsheetPage.css';
+
 
 export default function SpreadsheetPage() {
     const [settings, setSettings] = useState({
@@ -45,12 +47,14 @@ export default function SpreadsheetPage() {
             />
             <h2 className="spreadsheet-title">{settings.title}</h2>
             <p className="spreadsheet-description">{settings.description}</p>
+            <button className="save-button">Save Spreadsheet</button>
             <Spreadsheet
                 numberOfRows={settings.numRows}
                 numberOfColumns={settings.numColumns}
                 onCellSelect={handleSelectCell}
                 cellFormatting={cellFormatting}
                 columnHeadersEditable={settings.columnHeadersEditable}
+                editEmptyOnly={settings.editEmptyOnly}
             />
         </div>
     );

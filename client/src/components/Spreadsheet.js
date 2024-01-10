@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import '../styles/Spreadsheet.css';
 
-export default function Spreadsheet({ numberOfRows, numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable}) {
-    const [spreadsheetRows, setSpreadsheetRows] = useState([]);
+export default function Spreadsheet({ numberOfRows, numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable, editEmptyOnly}) {
+    const [spreadsheetRows, setSpreadsheetRows] = useState([])
 
      useEffect(() => {
             fetchData();
@@ -25,13 +25,25 @@ export default function Spreadsheet({ numberOfRows, numberOfColumns, cellFormatt
     };
 
     const createSpreadsheet = () => {
-        const rows = Array.from({ length: numberOfRows }, () =>
-            Array.from({ length: numberOfColumns }, () => '')
-        );
-        setSpreadsheetRows(rows);
+        setSpreadsheetRows(currentRows => {
+            // Adjust the number of rows
+            const adjustedRows = currentRows.length > numberOfRows
+                ? currentRows.slice(0, numberOfRows)
+                : [...currentRows, ...Array.from({ length: numberOfRows - currentRows.length }, () => Array(numberOfColumns).fill(''))];
+
+            // Adjust the number of columns in each row
+            return adjustedRows.map(row =>
+                row.length > numberOfColumns
+                    ? row.slice(0, numberOfColumns)
+                    : [...row, ...Array(numberOfColumns - row.length).fill('')]
+            );
+        });
     };
 
     const handleCellContentChange = (rowIndex, colIndex, content) => {
+        if (editEmptyOnly && spreadsheetRows[rowIndex][colIndex] !== '') {
+            return;
+        }
         const newRows = [...spreadsheetRows];
         newRows[rowIndex][colIndex] = content;
         setSpreadsheetRows(newRows);
@@ -106,7 +118,7 @@ export default function Spreadsheet({ numberOfRows, numberOfColumns, cellFormatt
                                 return (
                                     <td
                                         key={cellId}
-                                        contentEditable
+                                        contentEditable={!editEmptyOnly || spreadsheetRows[rowIndex][colIndex] === ''}
                                         onClick={() => onCellSelect(rowIndex, colIndex)}
                                         onBlur={(e) => handleCellContentChange(rowIndex, colIndex, e.target.innerText)}
                                         className={`cell ${selectedCell && selectedCell.row === rowIndex && selectedCell.col === colIndex ? 'selected' : ''}`}
