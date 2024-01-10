@@ -1,5 +1,6 @@
 import "../Style/card.css"
 import {Trash} from "react-bootstrap-icons"
+import {Link} from "react-router-dom";
 
 
 
@@ -13,6 +14,7 @@ export default function Card(props) {
         }
     }
     return (
+        //<Link to={spreadsheet}>
         <div className="card">
             <div className="card-details">
                 <p className="text-title">{props.title}</p>
@@ -21,6 +23,7 @@ export default function Card(props) {
             </div>
             <button className="card-button">Show</button>
         </div>
+        //</Link>
     )
 }
 
