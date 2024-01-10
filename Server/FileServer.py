@@ -3,7 +3,8 @@ from flask_session import Session
 from flask_cors import CORS
 import os
 import json
-from Backend.Database.Database import Database
+from Server.Backend.Database.Database import Database
+from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser
 
 app = Flask(__name__)
 app.debug = True
@@ -32,6 +33,25 @@ def settings():
 @app.route("/login", methods=["GET"])
 def serve_login():
     return send_from_directory("files", "login.html")
+
+
+@app.route("/postspreadsheet", methods=["POST"])
+def post_spreadsheets():
+    print("Hallo")
+    parser = SpreadsheetSettingsParser()
+    database = Database()
+    data = request.get_json()
+    spreadsheet_settings = parser.from_json(data["settings"])
+    if spreadsheet_settings.validate_settings():
+        print("test")
+        database.add_spreadsheet(data)
+        pass
+    return Response(status=200, mimetype="application/json")
+
+
+@app.route("/getspreadsheet", methods=["GET"])
+def get_spreadsheet():
+    return Response(status=200)
 
 
 if __name__ == '__main__':

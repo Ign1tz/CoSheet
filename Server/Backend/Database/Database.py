@@ -28,6 +28,7 @@ class Database:
         r = requests.post("http://menews.site/add-spreadsheet",
                           data=json.dumps(spreadsheet), headers={
                 "Content-Type": "application/json"})
+        print(r)
 
     def delete_profile(self, username, password):
         r = requests.post("http://menews.site/remove-profile",
