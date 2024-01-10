@@ -1,6 +1,9 @@
+import uuid
+from Server.Backend.Database.Database import Database
+
 class SpreadsheetSettings:
     def __init__(self, title, cell_width, edit_empty_only, num_columns, num_rows, column_headers, description,
-                 allow_logged_in_edit, link):
+                 allow_logged_in_edit):
         self.title = title  # string
         self.cell_width = cell_width  # percent
         self.edit_empty_only = edit_empty_only  # boolean
@@ -9,9 +12,8 @@ class SpreadsheetSettings:
         self.column_headers = column_headers
         self.description = description  # string
         self.allow_logged_in_edit = allow_logged_in_edit  # boolean
-        self.link = link
-        #self.text_formatting = text_formatting  # maybe split in color, size, weight...
-
+        #self.link = link
+        # self.text_formatting = text_formatting  # maybe split in color, size, weight...
 
     def validate_settings(self):
 
@@ -59,16 +61,27 @@ class SpreadsheetSettings:
 
         return valid
 
-    def to_json(self):
+    def update_settings(self, **kwargs):
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        self.validate_settings()
+
+
+class SpreadsheetSettingsParser:
+    def __init__(self):
+        pass
+
+    def to_json(self, spreadsheetSettings):
         return {
-            "title": self.title,
-            "cellWidth": self.cell_width,
-            "editEmptyOnly": self.edit_empty_only,
-            "numColumns": self.num_columns,
-            "numRows": self.num_rows,
-            "columnHeadersEditable": self.column_headers,
-            "description": self.description,
-            "allowLoggedInEdit": self.allow_logged_in_edit,
+            "title": spreadsheetSettings.title,
+            "cellWidth": spreadsheetSettings.cell_width,
+            "editEmptyOnly": spreadsheetSettings.edit_empty_only,
+            "numColumns": spreadsheetSettings.num_columns,
+            "numRows": spreadsheetSettings.num_rows,
+            "columnHeadersEditable": spreadsheetSettings.column_headers,
+            "description": spreadsheetSettings.description,
+            "allowLoggedInEdit": spreadsheetSettings.allow_logged_in_edit,
         }
 
     def from_json(self, json_data):
@@ -83,40 +96,23 @@ class SpreadsheetSettings:
             json_data["allowLoggedInEdit"]
         )
 
-    def update_settings(self, **kwargs):
-        for key, value in kwargs.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-        self.validate_settings()
 
+class SpreadsheetSettingsLogic:
+    def createLink(self):
+        database = Database()
+        valid = False
+        while not valid:
 
-class SpreadsheetSettingsParser:
-    def __init__(self):
-        pass
+            id = str(uuid.uuid4())
+            basicLink = "http://localhost:5000/spreadsheet/"
+            link = basicLink + id
 
-    def to_json(self, spreadsheet_settings):
-        return {
-            "title": spreadsheet_settings.title,
-            "cell_width": spreadsheet_settings.cell_width,
-            "edit_empty_only": spreadsheet_settings.edit_empty_only,
-            "num_columns": spreadsheet_settings.num_columns,
-            "num_rows": spreadsheet_settings.num_rows,
-            "column_headers": spreadsheet_settings.column_headers,
-            "description": spreadsheet_settings.description,
-            "allow_logged_in_edit": spreadsheet_settings.allow_logged_in_edit,
-        }
+            isthere = database.get_spreadsheet({"link": link})
+            if len(isthere) == 0:
+                valid = True
+            print(isthere)
+        return link
 
-    def from_json(self, json_data):
-        return SpreadsheetSettings(
-            json_data["title"],
-            json_data["cell_width"],
-            json_data["edit_empty_only"],
-            json_data["num_columns"],
-            json_data["num_rows"],
-            json_data["column_headers"],
-            json_data["description"],
-            json_data["allow_logged_in_edit"], "NONE"
-        )
 
 if __name__ == "__main__":
     spreadsheetSettings = SpreadsheetSettings()

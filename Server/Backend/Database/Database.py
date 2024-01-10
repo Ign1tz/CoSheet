@@ -20,6 +20,9 @@ class Database:
         r = requests.get("http://menews.site/get-spreadsheet",
                          data=json.dumps(key_pair), headers={
                 "Content-Type": "application/json"})
+        data = json.loads(r.text)
+        if data is None:
+            return None
         return json.loads(r.text)["spreadsheets"]
 
     def add_profile(self, profile):

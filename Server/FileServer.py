@@ -3,8 +3,8 @@ from flask_session import Session
 from flask_cors import CORS
 import os
 import json
-from Server.Backend.Database.Database import Database
-from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser
+from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, \
+    SpreadsheetSettingsLogic
 from Backend.Database.Database import Database
 import requests
 from Server.Backend.Login.SignUp import SignUp
@@ -27,6 +27,7 @@ def default_spreadsheet_page():
 @app.route('/', methods=['GET'])
 def serve_files():
     return send_from_directory('files', "homepage.html")
+
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -62,6 +63,7 @@ def signup():
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
 
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -72,7 +74,6 @@ def login():
 
     username_password_match = False
     email_password_match = False
-
 
     if atSign not in email:
         username_password_match = login_class.username_password_match(password, email)
@@ -104,6 +105,24 @@ def post_spreadsheets():
         database.add_spreadsheet(data)
         pass
     return Response(status=200, mimetype="application/json")
+
+
+@app.route("/createnewspreadsheet", methods=["GET"])
+def create_new_spreadsheet():
+    spreadsheet_settings_logic = SpreadsheetSettingsLogic()
+    link = spreadsheet_settings_logic.createLink()
+    parser = SpreadsheetSettingsParser()
+    database = Database()
+
+    default_spreadsheet_settings = SpreadsheetSettings(
+        "Default Title", 50, False, 4, 20, False, "This is a small description for the default spreadsheet.",
+        False
+    )
+    json_of_default = parser.to_json(default_spreadsheet_settings)
+
+    default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": "NONE"}
+    database.add_spreadsheet(default_spreadsheet)
+    return Response(status=200)
 
 
 @app.route("/getspreadsheet", methods=["GET"])
