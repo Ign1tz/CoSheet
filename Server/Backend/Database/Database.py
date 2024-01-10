@@ -11,6 +11,9 @@ class Database:
         r = requests.get("http://menews.site/get-profile",
                          data=json.dumps(key_pair), headers={
                 "Content-Type": "application/json"})
+        data = json.loads(r.text)
+        if data is None:
+            return None
         return json.loads(r.text)["profiles"]
 
     def get_spreadsheet(self, key_pair):
@@ -20,6 +23,7 @@ class Database:
         return json.loads(r.text)["spreadsheets"]
 
     def add_profile(self, profile):
+        print(type(profile))
         r = requests.post("http://menews.site/add-profile",
                           data=json.dumps(profile), headers={
                 "Content-Type": "application/json"})
@@ -77,4 +81,4 @@ class Database:
 
 if __name__ == "__main__":
     data = Database()
-    print(data.get_profile({"username":"test"}))
+    print(data.get_profile({"username":"anna"}))
