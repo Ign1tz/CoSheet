@@ -1,6 +1,7 @@
 import uuid
 from Server.Backend.Database.Database import Database
 
+
 class SpreadsheetSettings:
     def __init__(self, title, cell_width, edit_empty_only, num_columns, num_rows, column_headers, description,
                  allow_logged_in_edit):
@@ -12,8 +13,6 @@ class SpreadsheetSettings:
         self.column_headers = column_headers
         self.description = description  # string
         self.allow_logged_in_edit = allow_logged_in_edit  # boolean
-        #self.link = link
-        # self.text_formatting = text_formatting  # maybe split in color, size, weight...
 
     def validate_settings(self):
 

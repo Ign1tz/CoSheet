@@ -122,12 +122,17 @@ def create_new_spreadsheet():
 
     default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": "NONE"}
     database.add_spreadsheet(default_spreadsheet)
-    return Response(status=200)
+    return jsonify(default_spreadsheet), 200
 
 
-@app.route("/getspreadsheet", methods=["GET"])
-def get_spreadsheet():
-    return Response(status=200)
+@app.route("/getspreadsheet/<uuid>", methods=["GET"])
+def get_spreadsheet(uuid):
+    database = Database()
+    spreadsheet = database.get_spreadsheet({"link": f"http://localhost:5000/spreadsheet/{uuid}"})
+    if spreadsheet:
+        return jsonify(spreadsheet), 200
+    else:
+        return jsonify({"error": "Spreadsheet not found"}), 404
 
 
 if __name__ == '__main__':
