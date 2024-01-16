@@ -9,12 +9,23 @@ export default function Card(props) {
 
     function deleteCard() {
         console.log(props.title)
-        const delCard = async () => {
-            const req = await fetch("http://localhost:5000/deleteCard")
+        /*const delCard = async () => {
+            const req = await fetch("http://localhost:5000/deleteCard", {
+                    method: 'DELETE',
+                    body: JSON.stringify({"title": props.title}),
+                    headers: {
+                        'Accept': 'application/json, text/plain',
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    },
+                });
+            const result = await req.json()
+
         }
+        delCard()*/
+        window.location.reload();
     }
     return (
-        //<Link to={spreadsheet}>
+        //<Link to={props.link}>
         <div className="card">
             <div className="card-details">
                 <p className="text-title">{props.title}</p>

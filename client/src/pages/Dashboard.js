@@ -6,18 +6,17 @@ import Header from "../components/Header"
 
 export default function Dashboard() {
     const [data, setData] = useState([{}])
-
-    useEffect(() => {
+    if (typeof data.titles === "undefined"){
         fetch("http://localhost:5000/get-spreadsheet-titles").then(res => res.json()).then(data => {
             setData(data)
             //console.log(data)
         })
-    }, []);
+    }
     //console.log(data)
 
     let cards=[]
     if (typeof data.titles === "undefined") {
-        cards = <p>aaaaa</p>
+        //cards = <p>aaaaa</p>
     }else {
         for (let title of data.titles) {
             cards.push(<Card title={title} />)

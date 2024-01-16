@@ -21,6 +21,7 @@ Session(app)
 def serve_files():
     return send_from_directory('files', "homepage.html")
 
+
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
@@ -55,6 +56,7 @@ def signup():
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
 
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -83,10 +85,12 @@ def login():
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
 
+
 @app.route("/getUser", methods=["GET"])
 def get_user():
     if session.get("username"):
-        response = Response(status=200, response=json.dumps({"username": session.get("username")}), mimetype="application/json")
+        response = Response(status=200, response=json.dumps({"username": session.get("username")}),
+                            mimetype="application/json")
     else:
         response = Response(status=406, response=json.dumps({"username": "noone"}), mimetype="application/json")
     return response
@@ -94,8 +98,19 @@ def get_user():
 
 @app.route("/get-spreadsheet-titles", methods=["GET"])
 def return_spreadsheets_titles():
-    print("test")
-    response = Response(status=200, response=json.dumps({"titles": ["Elternsprechtag", "BBQ"]}), mimetype="application/json")
+    database = Database()
+    key_pair = {"owner": session.get("username")}
+    spreadsheets = database.get_spreadsheet(key_pair)
+    spreadsheet_data = {"titles": [], "links": []}
+    if spreadsheets:
+        for sheet in spreadsheets:
+            spreadsheet_data["titles"].append(sheet["settings"]["title"])
+            spreadsheet_data["links"].append(sheet["link"])
+        response = Response(status=200, response=json.dumps(spreadsheet_data), mimetype="application/json")
+    else:
+        response = Response(status=406)
+    response = Response(status=200, response=json.dumps({"titles": ["Elternsprechtag", "BBQ"]}),
+                        mimetype="application/json")
     return response
 
     """session["username"] = "test"
@@ -117,10 +132,10 @@ def return_spreadsheets_titles():
 @app.route("/deleteSpreadsheet", methods=["DELETE"])
 def delete_spreadsheet():
     data = request.get_json()
-    username = session.get('username')
-    spreadsheet = data["spreadsheet"]
+    owner = session.get('username')
+    title = data["title"]
     db = Database()
-    db.delete_from_database(db.spreadsheet_database, username, spreadsheet)
+    db.delete_spreadsheet(title, owner)
 
 
 if __name__ == '__main__':
