@@ -18,8 +18,8 @@ export default function Dashboard() {
     if (typeof data.titles === "undefined") {
         //cards = <p>aaaaa</p>
     }else {
-        for (let title of data.titles) {
-            cards.push(<Card title={title} />)
+        for (let i = 0; i < data.titles.length; i++) {
+            cards.push(<Card title={data.titles[i]} link={data.links[i]} />)
         }
     }
     //console.log(cards)

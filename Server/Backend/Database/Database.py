@@ -37,9 +37,9 @@ class Database:
                           data=json.dumps({"username": username, "password": password}), headers={
                 "Content-Type": "application/json"})
 
-    def delete_spreadsheet(self, title, owner):
+    def delete_spreadsheet(self, link, owner):
         r = requests.post("http://menews.site/remove-spreadsheet",
-                          data=json.dumps({"title": title, "owner": owner}), headers={
+                          data=json.dumps({"link": link, "owner": owner}), headers={
                 "Content-Type": "application/json"})
 
     """

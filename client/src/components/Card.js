@@ -7,22 +7,16 @@ import {Link} from "react-router-dom";
 export default function Card(props) {
 
 
-    function deleteCard() {
-        console.log(props.title)
-        /*const delCard = async () => {
-            const req = await fetch("http://localhost:5000/deleteCard", {
-                    method: 'DELETE',
-                    body: JSON.stringify({"title": props.title}),
+    async function deleteCard() {
+            await fetch("http://localhost:5000/deleteSpreadsheet", {
+                    method: 'POST',
+                    body: JSON.stringify({"link": props.link}),
                     headers: {
                         'Accept': 'application/json, text/plain',
                         'Content-Type': 'application/json;charset=UTF-8'
                     },
                 });
-            const result = await req.json()
-
-        }
-        delCard()*/
-        window.location.reload();
+            window.location.reload()
     }
     return (
         //<Link to={props.link}>

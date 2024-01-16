@@ -17,6 +17,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 
+
 @app.route('/', methods=['GET'])
 def serve_files():
     return send_from_directory('files', "homepage.html")
@@ -99,7 +100,9 @@ def get_user():
 @app.route("/get-spreadsheet-titles", methods=["GET"])
 def return_spreadsheets_titles():
     database = Database()
-    key_pair = {"owner": session.get("username")}
+    username = session.get("username")
+    username = "Moritz" #TODO: remove
+    key_pair = {"owner": username}
     spreadsheets = database.get_spreadsheet(key_pair)
     spreadsheet_data = {"titles": [], "links": []}
     if spreadsheets:
@@ -109,8 +112,6 @@ def return_spreadsheets_titles():
         response = Response(status=200, response=json.dumps(spreadsheet_data), mimetype="application/json")
     else:
         response = Response(status=406)
-    response = Response(status=200, response=json.dumps({"titles": ["Elternsprechtag", "BBQ"]}),
-                        mimetype="application/json")
     return response
 
     """session["username"] = "test"
@@ -129,14 +130,16 @@ def return_spreadsheets_titles():
     return Response(response=json.dumps({"titles": titles}), status=200, mimetype="application/json")"""
 
 
-@app.route("/deleteSpreadsheet", methods=["DELETE"])
+@app.route("/deleteSpreadsheet", methods=["POST"])
 def delete_spreadsheet():
     data = request.get_json()
     owner = session.get('username')
-    title = data["title"]
+    owner = "Moritz"  #TODO: remove
+    link = data["link"]
     db = Database()
-    db.delete_spreadsheet(title, owner)
+    db.delete_spreadsheet(link, owner)
+    return Response(status=200, mimetype="application/json")
 
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=5000, debug=True)
+    app.run(host='localhost', port=5000, debug=True, threaded=True)
