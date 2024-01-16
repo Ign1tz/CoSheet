@@ -113,6 +113,7 @@ def create_new_spreadsheet():
     link = spreadsheet_settings_logic.createLink()
     parser = SpreadsheetSettingsParser()
     database = Database()
+    owner = "TestOwner"     # change to real owner
 
     default_spreadsheet_settings = SpreadsheetSettings(
         "Default Title", 50, False, 4, 20, False, "This is a small description for the default spreadsheet.",
@@ -120,7 +121,7 @@ def create_new_spreadsheet():
     )
     json_of_default = parser.to_json(default_spreadsheet_settings)
 
-    default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": "NONE"}
+    default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": "NONE", "owner": "NONE"}
     database.add_spreadsheet(default_spreadsheet)
     return jsonify(default_spreadsheet), 200
 
