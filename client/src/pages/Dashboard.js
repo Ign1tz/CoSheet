@@ -3,8 +3,10 @@ import Card from "../components/Card"
 import "../Style/card.css"
 import AddNewCard from "../components/AddNewCard";
 import Header from "../components/Header"
+import Home from "./Home"
 
 export default function Dashboard() {
+
     const [data, setData] = useState([{}])
     if (typeof data.titles === "undefined"){
         fetch("http://localhost:5000/get-spreadsheet-titles").then(res => res.json()).then(data => {
