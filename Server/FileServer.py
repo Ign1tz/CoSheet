@@ -7,9 +7,7 @@ from Backend.Database.Database import Database
 import requests
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
-=========
-from Backend.Database.Database import Database
->>>>>>>>> Temporary merge branch 2
+from Server.Backend.ProfileSettings.ProfileSettings import ProfileSettings
 
 app = Flask(__name__)
 app.debug = True
@@ -19,10 +17,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-<<<<<<<<< Temporary merge branch 1
-=========
-
->>>>>>>>> Temporary merge branch 2
 @app.route('/default-spreadsheet', methods=['GET'])
 def default_spreadsheet_page():
     return send_from_directory('files', "default-spreadsheet.html")
@@ -32,7 +26,6 @@ def default_spreadsheet_page():
 def serve_files():
     return send_from_directory('files', "homepage.html")
 
-<<<<<<<<< Temporary merge branch 1
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
@@ -94,16 +87,31 @@ def login():
             errors.append("Email or password is not correct.")
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
-=========
 
 @app.route('/profileSettings', methods=['POST'])
 def profileSettings():
+    setting = ProfileSettings()
     data = request.get_json()
     username = data['username']
     email = data['email']
     password = data['password']
+    newPassword = data['newPassword']
+    confirm_password = data["confirm_password"]
     profile_picture = data['profile_picture']
-    pass
 
+    username_taken = setting.username_already_taken(username)
+    username_rules = setting.username_rules(username)
+    password_equals = setting.password_equals_previous_password(newPassword, confirm_password) #wirkt falsch
+    password_rules = setting.password_rules(password)
+    confirm_password_check = setting.new_password_equals_confirm_password(newPassword, confirm_password)
+    email_taken = setting.email_already_taken(email)
+
+    if not username_rules or password_equals or password_rules or confirm_password_check:
+        response = Response(status=406, response=json.dumps({'response': "somethin went wrong"}), mimetype="application/json")
+    elif username_taken or email_taken:
+        response = Response(status=406, response=json.dumps({'response': "email or username already taken"}), mimetype="application/json")
+    else:
+        response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
+    return response
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)

@@ -1,12 +1,16 @@
 import '../Style/ProfileSettings.css'
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import "../Style/default.png"
 export default function ProfileSettings() {
     const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
     const [confirm_password, setConfirmPassword] = useState('');
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const[profile_picture, setProfilePicture] = useState('');
+    let history = useNavigate();
     function handleProfileSettings(){
         const data = {"username": userName, "password": password, "confirm_password": confirm_password,
             "profile_picture": profile_picture, "email": email};
@@ -31,18 +35,16 @@ export default function ProfileSettings() {
         } catch (error) {
             console.error("Something went wrong.", error)
         }
-    }
-    function logout() {
-            alert('Logout successful!');
+};
 
+    function logout() {
+            window.location.href = '/'
     }
     function saveChanges() {
         alert('Save changes successful!');
     }
 
-    function GoBack() {
-        alert('Go Back.');
-    }
+
     return (
         <div className="container">
             <h1>Profile Settings</h1>
@@ -60,11 +62,11 @@ export default function ProfileSettings() {
                 <input type="confirm_password" id="confirm_password" name="confirm_password" placeholder="Confirm new password"
                        required value={confirm_password} onChange={(e) => setConfirmPassword(e.target.value)}/>
                 <h3>profile picture</h3>
-
+                <img src={require('../Style/default.png')} alt={"default"}/>
                 <button className="saveChanges" onClick={saveChanges}>
                     Save Changes
                 </button>
-                <button className="GoBack" onClick={GoBack}>
+                <button className="GoBack" onClick={() => history(-1)}>
                     Go Back
                 </button>
                 <button className="logout-btn" onClick={logout}>

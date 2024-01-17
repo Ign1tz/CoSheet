@@ -49,6 +49,10 @@ input:focus {
     border-inline: 2px solid #12B1D1;
 }
 
+img {
+    width: 30%;
+}
+
 button {
     display: block;
     width: 60%;
