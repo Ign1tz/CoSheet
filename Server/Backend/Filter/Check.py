@@ -1,3 +1,4 @@
+import base64
 import json
 import requests
 
@@ -38,6 +39,17 @@ class Check:
 
 if __name__ == "__main__":
     check = Check()
+
+    with open("CoSheet logo idea.png", "rb") as file:
+        a = str(file.read())
+        #print(a)
+        #print()
+
+    with open("test.png", "wb") as file:
+        a = a[2:-1]
+        a = bytes(a, "utf-8")
+        print(type(a))
+        file.write(a)
     pass
     """image = Image.open("./CoSheet logo idea.png")
     image_bytes = image.tobytes("xbm", "rgb")
