@@ -1,7 +1,7 @@
 import '../Style/ProfileSettings.css'
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import "../Style/default.png"
+import "../../public/default.png"
 export default function ProfileSettings() {
     const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
@@ -62,7 +62,7 @@ export default function ProfileSettings() {
                 <input type="confirm_password" id="confirm_password" name="confirm_password" placeholder="Confirm new password"
                        required value={confirm_password} onChange={(e) => setConfirmPassword(e.target.value)}/>
                 <h3>profile picture</h3>
-                <img src={require('../Style/default.png')} alt={"default"}/>
+                <img src={require('../../public/default.png')} alt={"default"}/>
                 <button className="saveChanges" onClick={saveChanges}>
                     Save Changes
                 </button>
