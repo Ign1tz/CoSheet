@@ -1,43 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import '../styles/Spreadsheet.css';
 
-export default function Spreadsheet({ numberOfRows, numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable, editEmptyOnly, setSpreadsheetRows, spreadsheetRows}) {
-
-     useEffect(() => {
-            fetchData();
-     }, [numberOfRows, numberOfColumns]);
-
-    const fetchData = async () => {
-        try {
-            const response = await fetch('http://localhost:5000/getspreadsheet');
-
-            const data = await response.json();
-            if (data) {
-                setSpreadsheetRows(data);
-            } else {
-                createSpreadsheet();
-            }
-        } catch (error) {
-            console.error('Failed to fetch data:', error);
-            createSpreadsheet();
-        }
-    };
-
-    const createSpreadsheet = () => {
-        setSpreadsheetRows(currentRows => {
-            // Adjust the number of rows
-            const adjustedRows = currentRows.length > numberOfRows
-                ? currentRows.slice(0, numberOfRows)
-                : [...currentRows, ...Array.from({ length: numberOfRows - currentRows.length }, () => Array(numberOfColumns).fill(''))];
-
-            // Adjust the number of columns in each row
-            return adjustedRows.map(row =>
-                row.length > numberOfColumns
-                    ? row.slice(0, numberOfColumns)
-                    : [...row, ...Array(numberOfColumns - row.length).fill('')]
-            );
-        });
-    };
+export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable, editEmptyOnly, setSpreadsheetRows, spreadsheetRows }) {
 
     const handleCellContentChange = (rowIndex, colIndex, content) => {
         if (editEmptyOnly && spreadsheetRows[rowIndex][colIndex] !== '') {

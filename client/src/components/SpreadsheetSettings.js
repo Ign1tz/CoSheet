@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/SpreadsheetSettings.css';
 
-export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell }) {
+export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell, settingsProps }) {
     const [showSettings, setShowSettings] = useState(false);
-    const [title, setTitle] = useState('Default Title');
-    const [editEmptyOnly, setEditEmptyOnly] = useState(false);
-    const [numColumns, setNumColumns] = useState(4);
-    const [numRows, setNumRows] = useState(20);
-    const [columnHeadersEditable, setColumnHeadersEditable] = useState(false);
-    const [description, setDescription] = useState('This is a small description for the default spreadsheet.');
-    const [allowLoggedInEdit, setAllowLoggedInEdit] = useState(false);
-    const [cellWidth, setCellWidth] = useState(50);
-    const [isTextBold, setIsTextBold] = useState(false);
-    const [cellBackgroundColor, setCellBackgroundColor] = useState('#FFFFFF');
+
+    const [title, setTitle] = useState(settingsProps.title);
+    const [editEmptyOnly, setEditEmptyOnly] = useState(settingsProps.editEmptyOnly);
+    const [numColumns, setNumColumns] = useState(settingsProps.numColumns);
+    const [numRows, setNumRows] = useState(settingsProps.numRows);
+    const [columnHeadersEditable, setColumnHeadersEditable] = useState(settingsProps.columnHeadersEditable);
+    const [description, setDescription] = useState(settingsProps.description);
+    const [allowLoggedInEdit, setAllowLoggedInEdit] = useState(settingsProps.allowLoggedInEdit);
+    const [cellWidth, setCellWidth] = useState(settingsProps.cellWidth);
+    const [isTextBold, setIsTextBold] = useState(settingsProps.isTextBold);
+    const [cellBackgroundColor, setCellBackgroundColor] = useState(settingsProps.cellBackgroundColor);
+
+    useEffect(() => {
+        setTitle(settingsProps.title);
+        setEditEmptyOnly(settingsProps.editEmptyOnly);
+        setNumColumns(settingsProps.numColumns);
+        setNumRows(settingsProps.numRows);
+        setColumnHeadersEditable(settingsProps.columnHeadersEditable);
+        setDescription(settingsProps.description);
+        setAllowLoggedInEdit(settingsProps.allowLoggedInEdit);
+        setCellWidth(settingsProps.cellWidth);
+        setIsTextBold(settingsProps.isTextBold);
+        setCellBackgroundColor(settingsProps.cellBackgroundColor);
+    }, [settingsProps]);
 
     function validateTitle(title) {
         return typeof title === 'string' && title.trim() !== '';

@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SpreadsheetSettings from "../components/SpreadsheetSettings";
 import Spreadsheet from "../components/Spreadsheet";
 import '../styles/SpreadsheetPage.css';
 
 
 export default function SpreadsheetPage() {
+
+    const uuid = "test";
+
+    useEffect(() => {
+        fetchSpreadsheetData(uuid);
+    }, []);
+
+
+    const createSpreadsheet = () => {
+        setSpreadsheetRows(() => {
+            return Array.from({ length: settings.numRows }, () =>
+                Array(settings.numColumns).fill('')
+            );
+        });
+    };
+
+
     const [settings, setSettings] = useState({
         title: 'Default Title',
         editEmptyOnly: false,
@@ -22,13 +39,44 @@ export default function SpreadsheetPage() {
     const [cellFormatting, setCellFormatting] = useState({});
     const [spreadsheetRows, setSpreadsheetRows] = useState([])
 
+    const handleSelectCell = (rowIndex, colIndex) => {
+        setSelectedCell({ row: rowIndex, col: colIndex });
+    };
+
+    const fetchSpreadsheetData = async (uuid) => {
+        try {
+            let response = await fetch(`http://localhost:5000/getspreadsheet/${uuid}`);
+            if (!response.ok) {
+                response = await fetch(`http://localhost:5000/createnewspreadsheet`);
+                if (!response.ok) {
+                    console.error("Failed to create a new spreadsheet.");
+                }
+                createSpreadsheet()     // should not be needed
+            }
+            const data = await response.json();
+            console.log("data:", data)
+            updateSpreadsheetData(data);
+        } catch (error) {
+            console.error('Error fetching spreadsheet data:', error);
+        }
+    };
+
+    const updateSpreadsheetData = (data) => {
+        if (data) {
+            const spreadsheetInfo = data[0];
+            setSettings(spreadsheetInfo.settings || {});
+            const normalizeSpreadsheet = spreadsheetInfo.spreadsheet.map(row =>
+                row.map(cell => cell.content)
+            )
+            setSpreadsheetRows(normalizeSpreadsheet)
+        } else {
+            console.error("No data received to update spreadsheet.")
+        }
+
+    };
 
     const handleSettingsChange = (newSettings) => {
         setSettings({ ...settings, ...newSettings });
-    };
-
-    const handleSelectCell = (rowIndex, colIndex) => {
-        setSelectedCell({ row: rowIndex, col: colIndex });
     };
 
     const prepareDataForBackend = () => {
@@ -87,6 +135,7 @@ export default function SpreadsheetPage() {
                 onSettingsChange={handleSettingsChange}
                 onApplyFormatting={handleApplyFormatting}
                 selectedCell={selectedCell}
+                settingsProps={settings}
             />
             <h2 className="spreadsheet-title">{settings.title}</h2>
             <p className="spreadsheet-description">{settings.description}</p>

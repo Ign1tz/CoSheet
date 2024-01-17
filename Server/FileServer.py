@@ -95,13 +95,12 @@ def login():
 
 @app.route("/postspreadsheet", methods=["POST"])
 def post_spreadsheets():
-    print("Hallo")
     parser = SpreadsheetSettingsParser()
     database = Database()
     data = request.get_json()
+    print(data)
     spreadsheet_settings = parser.from_json(data["settings"])
     if spreadsheet_settings.validate_settings():
-        print("test")
         database.add_spreadsheet(data)
         pass
     return Response(status=200, mimetype="application/json")
