@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams} from "react-router-dom";
 import SpreadsheetSettings from "../components/SpreadsheetSettings";
 import Spreadsheet from "../components/Spreadsheet";
 import '../styles/SpreadsheetPage.css';
@@ -7,6 +8,7 @@ import '../styles/SpreadsheetPage.css';
 export default function SpreadsheetPage() {
 
     const uuid = "test";
+    //const uuid = useParams();
 
     useEffect(() => {
         fetchSpreadsheetData(uuid);
