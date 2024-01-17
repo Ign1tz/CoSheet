@@ -1,8 +1,8 @@
 #ToDo:
-#   frontend: change profile picture
-#          display current profile settings + option to change them
-#   wenn 'LogOut' Session in Fileserver muss auf "nichts" gesetzt werden/"gelöscht" werden
+# frontend: change profile picture
+# wenn 'LogOut' Session in Fileserver muss auf "nichts" gesetzt werden/"gelöscht" werden
 # wenn username geändert dann session name ändern
+
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Database.Database import Database
 class ProfileSettings:
@@ -41,5 +41,4 @@ class ProfileSettings:
         sign_up = SignUp()
         sign_up.prohibit_double_eMail(email)
 
-    def update_settings(self):
-        pass
+

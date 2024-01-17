@@ -91,6 +91,7 @@ def login():
 @app.route('/profileSettings', methods=['POST'])
 def profileSettings():
     setting = ProfileSettings()
+    database = Database()
     data = request.get_json()
     username = data['username']
     email = data['email']
@@ -111,6 +112,7 @@ def profileSettings():
     elif username_taken or email_taken:
         response = Response(status=406, response=json.dumps({'response': "email or username already taken"}), mimetype="application/json")
     else:
+        database.update_profile(username, email, password, profile_picture)
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
     return response
 if __name__ == '__main__':
