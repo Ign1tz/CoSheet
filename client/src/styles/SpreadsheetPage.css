@@ -1,6 +1,26 @@
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.title-description-container {
+    text-align: center;
+    width: 100%;
+}
+
+.spreadsheet-title, .spreadsheet-description {
+    margin: 0.8em;
+}
+
 .save-button {
-    padding: 10px 20px;
-    margin: 10px;
+    position: absolute;
+    right: 1em;
     color: white;
     background-color: red;
+    padding: 1em 2em;
+    margin-right: 4.5em;
+    border: red;
+    border-radius: 0.15em;
 }

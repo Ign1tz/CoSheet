@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Spreadsheet.css';
 
-export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable, editEmptyOnly, setSpreadsheetRows, spreadsheetRows }) {
+export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable, editEmptyOnly, setSpreadsheetRows, spreadsheetRows, cellWidth }) {
 
     const handleCellContentChange = (rowIndex, colIndex, content) => {
         if (editEmptyOnly && spreadsheetRows[rowIndex][colIndex] !== '') {
@@ -24,11 +24,13 @@ export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSele
         return base[num] + columnName;
     };
 
-
+    const tableStyle = {
+        tableLayout: cellWidth ? 'fixed' : 'auto'
+    };
 
     return (
         <div className="spreadsheetContainer">
-            <table className="table">
+            <table className="table" style={tableStyle}>
                 <thead>
                     <tr>
                         <th></th>
@@ -56,6 +58,7 @@ export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSele
                                         style={{
                                             fontWeight: formatting.bold ? 'bold' : 'normal',
                                             backgroundColor: formatting.backgroundColor || 'transparent',
+                                            fontFamily: formatting.fontFamily || 'inherit',
                                         }}
                                     >
                                         {cellContent}

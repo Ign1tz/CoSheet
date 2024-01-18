@@ -14,6 +14,7 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
     const [cellWidth, setCellWidth] = useState(settingsProps.cellWidth);
     const [isTextBold, setIsTextBold] = useState(settingsProps.isTextBold);
     const [cellBackgroundColor, setCellBackgroundColor] = useState(settingsProps.cellBackgroundColor);
+    const [selectedFont, setSelectedFont] = useState(settingsProps.selectedFont);
 
     useEffect(() => {
         setTitle(settingsProps.title);
@@ -26,6 +27,7 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
         setCellWidth(settingsProps.cellWidth);
         setIsTextBold(settingsProps.isTextBold);
         setCellBackgroundColor(settingsProps.cellBackgroundColor);
+        setSelectedFont(settingsProps.selectedFont)
     }, [settingsProps]);
 
     function validateTitle(title) {
@@ -63,6 +65,7 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
             onApplyFormatting({
                 bold: isTextBold,
                 backgroundColor: cellBackgroundColor,
+                fontFamily: selectedFont,
             });
         }
     };
@@ -109,8 +112,10 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
             columnHeadersEditable,
             description,
             allowLoggedInEdit,
+            cellWidth,
             isTextBold,
             cellBackgroundColor,
+            selectedFont,
         });
     }
 
@@ -130,14 +135,13 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
                         <label>Description <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" /></label>
                     </div>
                     <div className="setting-group">
-                        <label>Number of Columns <input type="number" min="1" max="1000" value={numColumns} onChange={(e) => setNumColumns(e.target.value)} /></label>
+                        <label>Columns <input type="number" min="1" max="1000" value={numColumns} onChange={(e) => setNumColumns(e.target.value)} /></label>
                     </div>
                     <div className="setting-group">
-                        <label>Number of Rows <input type="number" min="1" max="1000" value={numRows} onChange={(e) => setNumRows(e.target.value)} /></label>
+                        <label>Rows <input type="number" min="1" max="1000" value={numRows} onChange={(e) => setNumRows(e.target.value)} /></label>
                     </div>
                     <div className="setting-group">
-                        <label>Cell Width <input type="range" min="1" max="100" value={cellWidth} onChange={(e) => setCellWidth(e.target.value)} /></label>
-                        <div className="range-values">{cellWidth}</div>
+                        <label>Cell Width fixed<input type="checkbox" checked={cellWidth} onChange={(e) => setCellWidth(e.target.checked)} /></label>
                     </div>
                     <div className="setting-group">
                         <label>Headers editable<input type="checkbox" checked={columnHeadersEditable} onChange={(e) => setColumnHeadersEditable(e.target.checked)} /></label>
@@ -147,6 +151,20 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
                     </div>
                     <div className="setting-group">
                         <label>Only empty cells <input type="checkbox" checked={editEmptyOnly} onChange={(e) => setEditEmptyOnly(e.target.checked)} /></label>
+                    </div>
+                     <div className="setting-group">
+                        <label>Font
+                            <select value={selectedFont} onChange={(e) => setSelectedFont(e.target.value)}>
+                                <option value="Arial">Arial</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Tahoma">Tahoma</option>
+                                <option value="Comic Sans MS">Comic Sans MS</option>
+                                <option value="Impact">Impact</option>
+                                <option value="Brush Script MT">Brush Script MT</option>
+                            </select>
+                        </label>
                     </div>
                     <div className="setting-group">
                         <button

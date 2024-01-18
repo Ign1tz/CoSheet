@@ -135,5 +135,25 @@ def get_spreadsheet(uuid):
         return jsonify({"error": "Spreadsheet not found"}), 406
 
 
+@app.route("/updatespreadsheet", methods=["POST"])
+def update_spreadsheet():
+    database = Database()
+    data = request.get_json()
+    print("data:", data)
+
+    if not data or 'old' not in data or 'new' not in data:
+        return jsonify({"error": "Invalid data provided"}), 400
+
+    old_data = data['old']
+    new_data = data['new']
+
+    success = database.update_spreadsheet(old_data, new_data)
+
+    if success:
+        return jsonify({"message": "Spreadsheet updated successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to update spreadsheet"}), 500
+
+
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)

@@ -8,6 +8,9 @@ export default function SpreadsheetPage() {
 
     let uuid = window.location.pathname.replace('/spreadsheet/', '');
 
+    const [spreadsheetExists, setSpreadsheetExists] = useState(false);
+    const [oldSpreadsheetData, setOldSpreadsheetData] = useState(null);
+
     useEffect(() => {
         fetchSpreadsheetData(uuid);
     }, []);
@@ -29,9 +32,10 @@ export default function SpreadsheetPage() {
         columnHeadersEditable: false,
         description: 'This is a small description for the default spreadsheet.',
         allowLoggedInEdit: false,
-        cellWidth: 50,
+        cellWidth: false,
         isTextBold: false,
-        cellBackgroundColor: '#FFFFFF'
+        cellBackgroundColor: '#FFFFFF',
+        selectedFont: 'Arial',
     });
 
     const [selectedCell, setSelectedCell] = useState(null);
@@ -47,15 +51,19 @@ export default function SpreadsheetPage() {
             let response = await fetch(`http://localhost:5000/getspreadsheet/`+uuid);
             console.log("response:", response)
             if (!response.ok) {
+                setSpreadsheetExists(false);
                 response = await fetch(`http://localhost:5000/createnewspreadsheet`);
                 if (!response.ok) {
                     console.error("Failed to create a new spreadsheet.");
                 }
                 createSpreadsheet()
+            } else {
+                setSpreadsheetExists(true);
+                const data = await response.json();
+                console.log("data:", data)
+                setOldSpreadsheetData(data);
+                updateSpreadsheetData(data);
             }
-            const data = await response.json();
-            console.log("data:", data)
-            updateSpreadsheetData(data);
         } catch (error) {
             console.error('Error fetching spreadsheet data:', error);
         }
@@ -100,18 +108,32 @@ export default function SpreadsheetPage() {
 
 
     const sendDataToBackend = async () => {
-        const data = prepareDataForBackend();
-        console.log("dataofsend", data)
+        const newData = prepareDataForBackend();
+        console.log("newData:", newData)
+        let requestBody;
+        const endpoint = spreadsheetExists ? 'updatespreadsheet' : 'postspreadsheet';
+
+        if (spreadsheetExists) {
+            const oldData = oldSpreadsheetData;
+            console.log("oldData:", oldData)
+            requestBody = JSON.stringify({ old: oldData, new: newData});
+        } else {
+            requestBody = JSON.stringify(newData);
+        }
+        console.log("old and new:", requestBody)
+
         try {
-            const response = await fetch('http://localhost:5000/postspreadsheet', {
+            const response = await fetch(`http://localhost:5000/${endpoint}`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json, text/plain',
                     'Content-Type': 'application/json;charset=UTF-8'
                 },
-                body: JSON.stringify(data)
+                body: requestBody
             });
-
+            if (!response.ok) {
+            console.error("Failed to send data to the backend.");
+        }
         } catch (error) {
             console.error('Failed to send data to the backend:', error);
         }
@@ -137,9 +159,13 @@ export default function SpreadsheetPage() {
                 selectedCell={selectedCell}
                 settingsProps={settings}
             />
-            <h2 className="spreadsheet-title">{settings.title}</h2>
-            <p className="spreadsheet-description">{settings.description}</p>
-            <button className="save-button" onClick={sendDataToBackend}>Save Spreadsheet</button>
+            <div className="header-container">
+                <div className="title-description-container">
+                    <h2 className="spreadsheet-title">{settings.title}</h2>
+                    <p className="spreadsheet-description">{settings.description}</p>
+                </div>
+                <button className="save-button" onClick={sendDataToBackend}>Save Spreadsheet</button>
+            </div>
             <Spreadsheet
                 numberOfRows={settings.numRows}
                 numberOfColumns={settings.numColumns}
@@ -149,6 +175,7 @@ export default function SpreadsheetPage() {
                 editEmptyOnly={settings.editEmptyOnly}
                 spreadsheetRows={spreadsheetRows}
                 setSpreadsheetRows={setSpreadsheetRows}
+                cellWidth={settings.cellWidth}
             />
         </div>
     );

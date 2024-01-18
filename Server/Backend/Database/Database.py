@@ -53,7 +53,7 @@ class Database:
 
     def update_spreadsheet(self, old, new):
         r = requests.post("http://menews.site/update-spreadsheet", data=json.dumps({"old": old, "new": new}), headers={
-                "Content-Type": "application/json"})#
+                "Content-Type": "application/json"})
     """
     deprecated
     def __init__(self):
