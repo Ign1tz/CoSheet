@@ -12,8 +12,6 @@ class SignUp:
     def create_new_account(self, username, password, email):
         encrypt = Encryption()
         account = AccountParser()
-       # whole_key = encrypt.generate_whole_key()
-        #public_key = encrypt.generate_public_key()
         salt = encrypt.gen_salt()
 
         hashed_password = encrypt.hash_password(password, salt)
@@ -33,17 +31,16 @@ class SignUp:
         # get_username_database = database.get_from_database(database.profile_database, {"username": username})
         get_username_database = database.get_profile({"username": username})
 
-        if not len(get_username_database):
+        if len(get_username_database) == 0:
             return True
         else:
             return False
 
     def prohibit_double_eMail(self, email):
         database = Database()
-        # get_e_mail_database = database.get_from_database(database.profile_database, {"e_mail": e_mail})
         get_e_mail_database = database.get_profile({"email": email})
 
-        if not len(get_e_mail_database):
+        if len(get_e_mail_database) == 0:
             return True
         else:
             return False
@@ -90,6 +87,8 @@ class SignUp:
             print("Username is too long.")
             return False
 
+    def email_rules(self, email):
+        ad = "Q"
 #ToDo:
 # comment code
 # add profile settings

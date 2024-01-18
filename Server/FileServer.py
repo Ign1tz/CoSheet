@@ -36,11 +36,11 @@ def signup():
     sign_up = SignUp()
     correct_username = sign_up.prohibit_double_username(username)
     username_rules = sign_up.username_rules(username)
-    correct_email = sign_up.prohibit_double_eMail(email)
+    double_email = sign_up.prohibit_double_eMail(email)
     password_equality = sign_up.proof_passwords_equality(password, confirm_password)
     password_rules = sign_up.password_rules(password)
 
-    if correct_username and correct_email and password_rules and password_equality:
+    if correct_username and double_email and password_rules and password_equality:
         new_account = sign_up.create_new_account(username, password, email)
         sign_up.save_new_account(new_account)
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
@@ -54,7 +54,7 @@ def signup():
             errors.append("Passwords are not equal.")
         if not password_rules:
             errors.append("Password does not fulfill the requirements.")
-        if not correct_email:
+        if not double_email:
             errors.append("Email is not correct.")
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
@@ -112,7 +112,7 @@ def profileSettings():
     elif username_taken or email_taken:
         response = Response(status=406, response=json.dumps({'response': "email or username already taken"}), mimetype="application/json")
     else:
-        database.update_profile(username, email, password, profile_picture)
+        database.update_profileSettings(username, email, password, profile_picture)
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
     return response
 if __name__ == '__main__':

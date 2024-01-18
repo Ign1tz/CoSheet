@@ -18,6 +18,7 @@ class ProfileSettings:
     def username_rules(self, username):
         sign_up = SignUp()
         sign_up.username_rules(username)
+
     def password_equals_previous_password(self, new_password, password):
         database = Database()
 
