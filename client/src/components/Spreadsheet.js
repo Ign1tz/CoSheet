@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../styles/Spreadsheet.css';
 
-export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable, editEmptyOnly, setSpreadsheetRows, spreadsheetRows, cellWidth }) {
+export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable, editEmptyOnly, setSpreadsheetRows, spreadsheetRows, cellWidth, setColumnHeaders, columnHeaders }) {
 
     const handleCellContentChange = (rowIndex, colIndex, content) => {
         if (editEmptyOnly && spreadsheetRows[rowIndex][colIndex] !== '') {
@@ -10,18 +10,6 @@ export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSele
         const newRows = [...spreadsheetRows];
         newRows[rowIndex][colIndex] = content;
         setSpreadsheetRows(newRows);
-    };
-
-    const getColumnName = (columnNumber) => {
-        let columnName = '';
-        let base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        let num = columnNumber;
-
-        while (num >= 26) {
-            columnName = base[num % 26] + columnName;
-            num = Math.floor(num / 26) - 1;
-        }
-        return base[num] + columnName;
     };
 
     const tableStyle = {
@@ -35,8 +23,13 @@ export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSele
                     <tr>
                         <th></th>
                         {[...Array(numberOfColumns)].map((_, colIndex) => (
-                            <th key={colIndex} contentEditable={columnHeadersEditable} className="spreadsheetHeader">
-                                {getColumnName(colIndex)}
+                            <th key={colIndex} contentEditable={columnHeadersEditable} className="spreadsheetHeader"
+                                onBlur={(e) => {
+                                    const newHeaders = [...columnHeaders];
+                                    newHeaders[colIndex] = e.target.innerText;
+                                    setColumnHeaders(newHeaders);
+                                }}>
+                                {columnHeaders[colIndex]}
                             </th>
                         ))}
                     </tr>

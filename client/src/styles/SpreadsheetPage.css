@@ -21,6 +21,11 @@
     background-color: red;
     padding: 1em 2em;
     margin-right: 4.5em;
-    border: red;
+    border: none;
     border-radius: 0.15em;
+}
+
+.save-button:active {
+    transform: scale(0.95);
+    background-color: #FF324D;
 }

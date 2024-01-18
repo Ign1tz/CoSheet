@@ -8,22 +8,6 @@ export default function SpreadsheetPage() {
 
     let uuid = window.location.pathname.replace('/spreadsheet/', '');
 
-    const [spreadsheetExists, setSpreadsheetExists] = useState(false);
-    const [oldSpreadsheetData, setOldSpreadsheetData] = useState(null);
-
-    useEffect(() => {
-        fetchSpreadsheetData(uuid);
-    }, []);
-
-    const createSpreadsheet = () => {
-        setSpreadsheetRows(() => {
-            return Array.from({ length: settings.numRows }, () =>
-                Array(settings.numColumns).fill('')
-            );
-        });
-    };
-
-
     const [settings, setSettings] = useState({
         title: 'Default Title',
         editEmptyOnly: false,
@@ -38,9 +22,43 @@ export default function SpreadsheetPage() {
         selectedFont: 'Arial',
     });
 
+    const getColumnName = (columnNumber) => {
+        let columnName = '';
+        let base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let num = columnNumber;
+
+        while (num >= 26) {
+            columnName = base[num % 26] + columnName;
+            num = Math.floor(num / 26) - 1;
+        }
+        return base[num] + columnName;
+    };
+
+    const [columnHeaders, setColumnHeaders] = useState(
+        [...Array(settings.numColumns)].map((_, index) => getColumnName(index))
+    );
+
+    const [spreadsheetExists, setSpreadsheetExists] = useState(false);
+    const [oldSpreadsheetData, setOldSpreadsheetData] = useState(null);
     const [selectedCell, setSelectedCell] = useState(null);
     const [cellFormatting, setCellFormatting] = useState({});
     const [spreadsheetRows, setSpreadsheetRows] = useState([])
+
+    const createSpreadsheet = () => {
+        setSpreadsheetRows(() => {
+            return Array.from({ length: settings.numRows }, () =>
+                Array(settings.numColumns).fill('')
+            );
+        });
+    };
+
+    const handleSettingsChange = (newSettings) => {
+        setSettings({ ...settings, ...newSettings });
+    };
+
+    useEffect(() => {
+        fetchSpreadsheetData(uuid);
+    }, []);
 
     const handleSelectCell = (rowIndex, colIndex) => {
         setSelectedCell({ row: rowIndex, col: colIndex });
@@ -83,23 +101,24 @@ export default function SpreadsheetPage() {
 
     };
 
-    const handleSettingsChange = (newSettings) => {
-        setSettings({ ...settings, ...newSettings });
-    };
-
     const prepareDataForBackend = () => {
 
-        const spreadsheetData = spreadsheetRows.map((row, rowIndex) =>
-            row.map((cellContent, colIndex) => {
-                const cellId = `${rowIndex}-${colIndex}`;
-                const formatting = cellFormatting[cellId] || {};
-                return {
-                    content: cellContent,
-                    formatting: formatting,
-                    row: rowIndex,
-                    column: colIndex
-                };
-            }))
+        const spreadsheetData = {
+            headers: columnHeaders,
+            rows: spreadsheetRows.map((row, rowIndex) =>
+                row.map((cellContent, colIndex) => {
+                    const cellId = `${rowIndex}-${colIndex}`;
+                    const formatting = cellFormatting[cellId] || {};
+                    return {
+                        content: cellContent,
+                        formatting: formatting,
+                        row: rowIndex,
+                        column: colIndex
+                    };
+                })
+            ),
+        };
+
         return ({
             settings,
             spreadsheet: spreadsheetData,
@@ -176,6 +195,8 @@ export default function SpreadsheetPage() {
                 spreadsheetRows={spreadsheetRows}
                 setSpreadsheetRows={setSpreadsheetRows}
                 cellWidth={settings.cellWidth}
+                setColumnHeaders={setColumnHeaders}
+                columnHeaders={columnHeaders}
             />
         </div>
     );
