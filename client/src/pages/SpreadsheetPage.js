@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useParams} from "react-router-dom";
 import SpreadsheetSettings from "../components/SpreadsheetSettings";
 import Spreadsheet from "../components/Spreadsheet";
 import '../styles/SpreadsheetPage.css';
@@ -7,13 +6,11 @@ import '../styles/SpreadsheetPage.css';
 
 export default function SpreadsheetPage() {
 
-    const uuid = "test";
-    //const uuid = useParams();
+    let uuid = window.location.pathname.replace('/spreadsheet/', '');
 
     useEffect(() => {
         fetchSpreadsheetData(uuid);
     }, []);
-
 
     const createSpreadsheet = () => {
         setSpreadsheetRows(() => {
@@ -47,13 +44,14 @@ export default function SpreadsheetPage() {
 
     const fetchSpreadsheetData = async (uuid) => {
         try {
-            let response = await fetch(`http://localhost:5000/getspreadsheet/${uuid}`);
+            let response = await fetch(`http://localhost:5000/getspreadsheet/`+uuid);
+            console.log("response:", response)
             if (!response.ok) {
                 response = await fetch(`http://localhost:5000/createnewspreadsheet`);
                 if (!response.ok) {
                     console.error("Failed to create a new spreadsheet.");
                 }
-                createSpreadsheet()     // should not be needed
+                createSpreadsheet()
             }
             const data = await response.json();
             console.log("data:", data)
@@ -103,7 +101,7 @@ export default function SpreadsheetPage() {
 
     const sendDataToBackend = async () => {
         const data = prepareDataForBackend();
-        console.log(data)
+        console.log("dataofsend", data)
         try {
             const response = await fetch('http://localhost:5000/postspreadsheet', {
                 method: 'POST',

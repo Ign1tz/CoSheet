@@ -128,11 +128,11 @@ def create_new_spreadsheet():
 @app.route("/getspreadsheet/<uuid>", methods=["GET"])
 def get_spreadsheet(uuid):
     database = Database()
-    spreadsheet = database.get_spreadsheet({"link": f"http://localhost:5000/spreadsheet/{uuid}"})
+    spreadsheet = database.get_spreadsheet({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
     if spreadsheet:
         return jsonify(spreadsheet), 200
     else:
-        return jsonify({"error": "Spreadsheet not found"}), 404
+        return jsonify({"error": "Spreadsheet not found"}), 406
 
 
 if __name__ == '__main__':

@@ -103,7 +103,7 @@ class SpreadsheetSettingsLogic:
         while not valid:
 
             id = str(uuid.uuid4())
-            basicLink = "http://localhost:5000/spreadsheet/"
+            basicLink = "http://localhost:3000/spreadsheet/"
             link = basicLink + id
 
             isthere = database.get_spreadsheet({"link": link})

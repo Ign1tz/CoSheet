@@ -15,6 +15,7 @@ export default function App() {
                     <Route path='/spreadsheet' element={<SpreadsheetPage/>}></Route>
                     <Route path='/login' element={<Login/>}></Route>
                     <Route path='/signup' element={<Signup/>}></Route>
+                    <Route path='/spreadsheet/*' element={<SpreadsheetPage/>}></Route>
                 </Routes>
             </BrowserRouter>
         </div>
