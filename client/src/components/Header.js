@@ -7,14 +7,15 @@ import {Link} from "react-router-dom";
 
 export default function Header(props) {
     const [data, setData] = useState([{}])
+    const [profilePicture, setProfilePicture] = useState()
     if (typeof data.username === "undefined"){
         fetch("http://localhost:5000/getUser").then(res => res.json()).then(data => {
             setData(data)
         })
+        fetch("http://localhost:5000/getProfilePicture").then(res => res.json()).then(returnedData => {setProfilePicture(<img className={"profilePicture"} src={"data:image/jpeg;base64," + returnedData.profilePicture.slice(2,-1)}  alt={"profliePicture"}/>); console.log(returnedData.profilePicture.slice(2,-1))})
     }
     //console.log(data)
 
-    let profilePicture = defaultProfilePicture
 
     return (
         <div className="header">
@@ -24,7 +25,7 @@ export default function Header(props) {
             </div>
             <div className="profile">
                 <button className={"settingsBtn"} type={"button"}>
-                    <img className={"profilePicture"} src={profilePicture}  alt={"profliePicture"}/>
+                    {profilePicture}
                     <p className={"userName"}>{data.username}</p>
                 </button>
             </div>

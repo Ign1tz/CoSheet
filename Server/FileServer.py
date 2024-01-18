@@ -1,3 +1,5 @@
+import base64
+
 from flask import Flask, send_from_directory, request, Response, session, redirect, jsonify
 from flask_session import Session
 from flask_cors import CORS
@@ -7,6 +9,7 @@ from Backend.Database.Database import Database
 import requests
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
+from Server.Backend.Login.Account import AccountParser
 
 app = Flask(__name__)
 app.debug = True
@@ -94,6 +97,32 @@ def get_user():
                             mimetype="application/json")
     else:
         response = Response(status=406, response=json.dumps({"username": "noone"}), mimetype="application/json")
+    return response
+
+@app.route("/getProfilePicture", methods=["GET"])
+def get_profile_picture():
+    db = Database()
+    account_parser = AccountParser()
+    username = session.get("username")
+    if session.get("username"):
+        username = session.get("username")
+        profile = db.get_profile({"username": username})
+        profile = account_parser.json_to_account(profile)
+        if profile.profile_picture != "None":
+            profile_picture = profile.profile_picture
+        else:
+            with open("./DefaultPictures/profilepicture-menews.png", "rb") as file:
+                profile_picture = str(file.read())
+                print(profile_picture)
+        response = Response(status=200, response=json.dumps({"profilePicture": profile_picture}),
+                            mimetype="application/json")
+    else:
+        with open("./DefaultPictures/profilepicture-menews.png", "rb") as file:
+            profile_picture = file.read()
+            print(base64.b64encode(profile_picture))
+            profile_picture = str(base64.b64encode(profile_picture))
+        response = Response(status=406, response=json.dumps({"profilePicture": profile_picture}),
+                        mimetype="application/json")
     return response
 
 
