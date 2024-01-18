@@ -2,7 +2,6 @@
 # frontend: change profile picture
 # wenn 'LogOut' Session in Fileserver muss auf "nichts" gesetzt werden/"gelöscht" werden
 # wenn username geändert dann session name ändern
-
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Database.Database import Database
 class ProfileSettings:

@@ -2,6 +2,8 @@ import '../Style/ProfileSettings.css'
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import "./default.png"
+import axios from "axios";
+
 export default function ProfileSettings() {
     const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
@@ -42,6 +44,19 @@ export default function ProfileSettings() {
             window.location.href = '/'
     }
 
+    function handleImage(e){
+        console.log(e.target.file)
+        setProfilePicture(e.targeat.file[0])
+    }
+
+
+    function handledisplay(){
+        const formData = new FormData()
+        formData.append('profile_picture', profile_picture)
+        axios.post("url", formData).then((res) => {
+            console.log(res)
+        })
+    }
 
     return (
         <div className="container">
@@ -68,8 +83,8 @@ export default function ProfileSettings() {
                        required value={confirm_password} onChange={(e) => setConfirmPassword(e.target.value)}/>
 
                 <h3>profile picture</h3>
-                <img src={require('./default.png')} alt={"default"}/>
-                <button className="saveChanges" onClick={handleProfileSettings}>
+                <input type={"file"} name={"file"} onChange={handleImage}/>
+                <button className="saveChanges" onClick={handledisplay}>
                     Save Changes
                 </button>
                 <button className="GoBack" onClick={() => history(-1)}>

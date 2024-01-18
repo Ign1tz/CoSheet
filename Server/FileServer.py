@@ -8,6 +8,8 @@ import requests
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
 from Server.Backend.ProfileSettings.ProfileSettings import ProfileSettings
+from PIL import Image
+import numpy as np
 
 app = Flask(__name__)
 app.debug = True
@@ -112,6 +114,10 @@ def profileSettings():
     elif username_taken or email_taken:
         response = Response(status=406, response=json.dumps({'response': "email or username already taken"}), mimetype="application/json")
     else:
+        #profile_picture = request.files["file"]
+       # img = Image.open('profile_picture')
+       # img = np.array(img)
+        session["username"] = username
         database.update_profileSettings(username, email, password, profile_picture)
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
     return response
