@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import '../styles/Spreadsheet.css';
 
-export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable, editEmptyOnly, setSpreadsheetRows, spreadsheetRows, cellWidth, setColumnHeaders, columnHeaders }) {
+export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable, editEmptyOnly, setSpreadsheetRows, spreadsheetRows, cellWidth, setColumnHeaders, columnHeaders, isLoggedIn, allowLoggedInEdit }) {
 
     const handleCellContentChange = (rowIndex, colIndex, content) => {
         if (editEmptyOnly && spreadsheetRows[rowIndex][colIndex] !== '') {
@@ -41,10 +41,12 @@ export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSele
                             {row.map((cellContent, colIndex) => {
                                 const cellId = `${rowIndex}-${colIndex}`;
                                 const formatting = cellFormatting[cellId] || {};
+                                 const isCellEmpty = spreadsheetRows[rowIndex][colIndex] === '';
+                                const canEdit = (!editEmptyOnly || isCellEmpty) && (!allowLoggedInEdit || isLoggedIn);
                                 return (
                                     <td
                                         key={cellId}
-                                        contentEditable={!editEmptyOnly || spreadsheetRows[rowIndex][colIndex] === ''}
+                                        contentEditable={canEdit}
                                         onClick={() => onCellSelect(rowIndex, colIndex)}
                                         onBlur={(e) => handleCellContentChange(rowIndex, colIndex, e.target.innerText)}
                                         className={`cell ${selectedCell && selectedCell.row === rowIndex && selectedCell.col === colIndex ? 'selected' : ''}`}

@@ -43,6 +43,9 @@ export default function SpreadsheetPage() {
     const [selectedCell, setSelectedCell] = useState(null);
     const [cellFormatting, setCellFormatting] = useState({});
     const [spreadsheetRows, setSpreadsheetRows] = useState([])
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+    // TODO: isloggedin check
 
     const createSpreadsheet = () => {
         setSpreadsheetRows(() => {
@@ -197,6 +200,8 @@ export default function SpreadsheetPage() {
                 cellWidth={settings.cellWidth}
                 setColumnHeaders={setColumnHeaders}
                 columnHeaders={columnHeaders}
+                isLoggedIn={isLoggedIn}
+                allowLoggedInEdit={settings.allowLoggedInEdit}
             />
         </div>
     );
