@@ -28,7 +28,7 @@ export default function Login() {
                 setData(result);
 
             }
-            response();
+            response().then(() => window.location.href  = 'http://localhost:3000/dashboard');
         } catch (error) {
             console.error("Something went wrong.", error)
             //let password_empty = document.getElementById("password")
@@ -49,7 +49,7 @@ export default function Login() {
                        placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 <span className="forgot-password"><Link
                     to="http://localhost:3000/signup">Don't have an account yet?</Link></span>
-                <input className="login-button" type="submit" value="Login" onClick={handleLogin} redir/>
+                    <input className="login-button" type="submit" value="Login" onClick={handleLogin}></input>
             </form>
         </div>
     )

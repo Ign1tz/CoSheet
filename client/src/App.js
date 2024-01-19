@@ -16,7 +16,7 @@ export default function App() {
         let test = () => {
             fetch("http://localhost:5000/getUser").then((data) => data.json()).then((data) => {
                 username = data.username
-                setLoggedIn(username === "noone") // ToDo: change to !==
+                setLoggedIn(username !== "noone") // ToDo: change to !==
             })
         }
         test()

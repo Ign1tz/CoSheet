@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.debug = True
 app._staic_folder = os.path.abspath("static/")
 CORS(app, support_credentials=True)
-app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
@@ -111,13 +111,13 @@ def get_profile_picture():
         if profile.profile_picture != "None":
             profile_picture = profile.profile_picture
         else:
-            with open("./DefaultPictures/profilepicture-menews.png", "rb") as file:
+            with open("./DefaultPictures/defaultProfileCoSheet.png", "rb") as file:
                 profile_picture = str(file.read())
                 print(profile_picture)
         response = Response(status=200, response=json.dumps({"profilePicture": profile_picture}),
                             mimetype="application/json")
     else:
-        with open("./DefaultPictures/profilepicture-menews.png", "rb") as file:
+        with open("./DefaultPictures/defaultProfileCoSheet.png", "rb") as file:
             profile_picture = file.read()
             print(base64.b64encode(profile_picture))
             profile_picture = str(base64.b64encode(profile_picture))
