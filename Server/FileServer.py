@@ -2,6 +2,7 @@ import base64
 
 from flask import Flask, send_from_directory, request, Response, session, redirect, jsonify, url_for, make_response
 
+from Server.Backend.Encryption.Encryption import Encryption
 from Server.Backend.Login.Account import AccountParser
 from flask_session import Session
 from flask_cors import CORS
@@ -112,99 +113,90 @@ def login():
     return response
 
 
-@app.route('/profileSettings', methods=['POST'])
-def profileSettings():
+@app.route('/profileSettings/<username>', methods=['POST'])
+def profileSettings(username):
     data = request.get_json()
     setting = ProfileSettings()
     database = Database()
+    encryption = Encryption()
 
-    username = data['username']
+    new_username = data['username']
     email = data['email']
     password = data['password']
     newPassword = data['newPassword']
     confirm_password = data["confirm_password"]
     profile_picture = data['profile_picture']
 
-    old_account = database.get_profile({"username": session.get("username")})
+    old_account = database.get_profile({"username": username})
 
-    # has to match with signUp rules:
-    username_rules = setting.username_rules(username)
-    username_taken = setting.username_already_taken(username)
-    password_rules = setting.password_rules(password)
-    email_taken = setting.email_already_taken(email)
+    new_account = old_account
+    resp = None
 
-    # new rules
-    password_equals = setting.password_equals_previous_password(newPassword, password)
-    confirm_password_check = setting.new_password_equals_confirm_password(newPassword, confirm_password)
-    old_password_correct = setting.old_password_correct_check(password)
-
-    if session.get("username") != username:
-        if not username_taken:
-            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
-                                mimetype="application/json")
-        elif not username_rules:
-            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
-                                mimetype="application/json")
-        elif not email_taken:
-            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
-                                mimetype="application/json")
-        elif not password_equals:
-            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
-                                mimetype="application/json")
-        elif not confirm_password:
-            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
-                                mimetype="application/json")
-        elif old_password_correct:
-            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
-                                mimetype="application/json")
-        elif password_rules:
+    if username != new_username:
+        username_rules = setting.username_rules(new_username)
+        username_taken = setting.username_already_taken(new_username)
+        if not username_taken and not username_rules:
             response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
                                 mimetype="application/json")
         else:
-            session["username"] = username
-            new_account = setting.create_new_account(username, password, email, profile_picture)
-            database.update_profile(old_account, new_account)
-            response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
-        return response
-    else:
-        response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
-                            mimetype="application/json")
+            new_account["username"] = new_username
+            resp = make_response({"username": new_username})
+            resp.set_cookie("username", value=new_username, domain="http://localhost")
+    if email != old_account["email"]:
+        email_taken = setting.email_already_taken(email)
+        if not email_taken:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        else:
+            new_account["email"] = email
+    if newPassword:
+        old_password_correct = setting.old_password_correct_check(password, old_account["salt"], old_account["password"])
+        password_rules = setting.password_rules(password)
+        confirm_password_check = setting.new_password_equals_confirm_password(newPassword, confirm_password)
+
+        password_equals = setting.old_password_correct_check(newPassword, old_account["salt"], old_account["password"])
 
 
-@app.route("/getProfilePicture", methods=["GET"])
-def get_profile_picture():
+        if  password_equals:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        elif not confirm_password_check:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        elif not old_password_correct:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        elif not password_rules:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        else:
+
+            new_account["password"] = encryption.hash_password(newPassword, old_account["salt"])
+    if old_account != new_account:
+        database.update_profile(old_account, new_account)
+    if resp:
+        return resp
+
+
+@app.route("/getProfilePicture/<username>", methods=["GET"])
+def get_profile_picture(username):
     db = Database()
-    account_parser = AccountParser()
-    username = session.get("username")
-    if session.get("username"):
-        username = session.get("username")
-        profile = db.get_profile({"username": username})
-        profile = account_parser.json_to_account(profile)
-        if profile.profile_picture != "None":
-            profile_picture = profile.profile_picture
-        else:
-            with open(".\DefaultPictures\defaultProfileCoSheet.png", "rb") as file:
-                profile_picture = str(file.read())
-                print(profile_picture)
-        response = Response(status=200, response=json.dumps({"profilePicture": profile_picture}),
+    profile = db.get_profile({"username": username})
+    if profile:
+        response = Response(status=200, response=json.dumps({"profilePicture": profile["profile_picture"]}),
                             mimetype="application/json")
     else:
-        with open(".\DefaultPictures\defaultProfileCoSheet.png", "rb") as file:
-            profile_picture = file.read()
-            print(base64.b64encode(profile_picture))
-            profile_picture = str(base64.b64encode(profile_picture))[2:-1]
-        response = Response(status=406, response=json.dumps({"profilePicture": profile_picture}),
-                            mimetype="application/json")
+        response = Response(status=406)
     return response
 
 
-@app.route('/getUsernameEmail', methods=["GET"])
-def get_username_email():
+@app.route('/getUsernameEmail/<username>', methods=["GET"])
+def get_username_email(username):
     database = Database()
     test = request.url.replace("http://localhost:5000/getUsernameEmail?username=", "")
-    print(request.url.replace("http://localhost:5000/getUsernameEmail?username=", ""))
+    print(username)
     print("AAAAAA")
-    data = database.get_profile({"username": test})
+    data = database.get_profile({"username": username})
     data = data[0]
     username = data["username"]
     email = data["email"]

@@ -22,12 +22,12 @@ export default function Login() {
                         'Accept': 'application/json, text/plain',
                         'Content-Type': 'application/json;charset=UTF-8'
                     },
-                });
+                }).then(() => {const cookie = new Cookies()
+                cookie.set("username", result.username, {path: '/'})})
 
                 const result = await request.json();
                 console.log(result);
-                const cookie = new Cookies()
-                cookie.set("username", result.username, {path: '/'})
+
                 setData(result);
 
             }

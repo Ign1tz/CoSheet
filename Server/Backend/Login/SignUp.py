@@ -2,6 +2,8 @@ from Server.Backend.Login.Account import Account
 from Server.Backend.Encryption.Encryption import Encryption
 from Server.Backend.Database.Database import Database
 from Server.Backend.Login.Account import AccountParser
+from dotenv import load_dotenv
+import os
 import re
 
 
@@ -15,8 +17,10 @@ class SignUp:
         salt = encrypt.gen_salt()
 
         hashed_password = encrypt.hash_password(password, salt)
-
-        new_account = Account(username, str(hashed_password), email, "None", str(salt))
+        path = os.path.join(os.path.join(os.path.dirname(__file__), './default_picture.txt'))
+        with open(path, "r") as file:
+            picture = file.read()
+        new_account = Account(username, str(hashed_password), email, picture, str(salt))
 
         new_account = account.account_to_json(new_account)
         return new_account

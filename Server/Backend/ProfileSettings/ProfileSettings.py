@@ -16,18 +16,16 @@ class ProfileSettings:
 
     def username_rules(self, username):
         sign_up = SignUp()
-        sign_up.username_rules(username)
+        return sign_up.username_rules(username)
 
-    def old_password_correct_check(self, password):
+    def old_password_correct_check(self, password, salt, old_password):
         database = Database()
+        encryption = Encryption()
+        accountParser = AccountParser()
 
-        database_password = database.get_profile({"password": password})
+        hashed_password = str(encryption.hash_password(password, salt))
 
-        if database_password == password:
-            print("Correct Password")
-            return True
-        else:
-            return False
+        return old_password == hashed_password
 
     def password_equals_previous_password(self, password, new_password):
         database = Database()
@@ -42,15 +40,16 @@ class ProfileSettings:
 
     def new_password_equals_confirm_password(self, new_password, confirm_password):
         sign_up = SignUp()
-        sign_up.proof_passwords_equality(new_password, confirm_password)
+        return sign_up.proof_passwords_equality(new_password, confirm_password)
 
     def password_rules(self, new_password):
         sign_up = SignUp()
-        sign_up.password_rules(new_password)
+
+        return sign_up.password_rules(new_password)
 
     def email_already_taken(self, email):
         sign_up = SignUp()
-        sign_up.prohibit_double_eMail(email)
+        return sign_up.prohibit_double_eMail(email)
 
     def create_new_account(self, username, password, email, profile_picture):
         encrypt = Encryption()
