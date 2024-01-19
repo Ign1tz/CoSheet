@@ -1,7 +1,4 @@
-#ToDo:
-# frontend: change profile picture
-# wenn 'LogOut' Session in Fileserver muss auf "nichts" gesetzt werden/"gelöscht" werden
-# login methode spricht leeren endpunkt an (session auf "null")
+
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Database.Database import Database
 class ProfileSettings:

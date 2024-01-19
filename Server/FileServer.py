@@ -12,6 +12,7 @@ import requests
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
 from Server.Backend.ProfileSettings.ProfileSettings import ProfileSettings
+from Server.Backend.Login.Account import Account
 from PIL import Image
 import numpy as np
 
@@ -71,7 +72,6 @@ def signup():
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    username = data['username']
     email = data['email']
     password = data['password']
     atSign = "@"
@@ -101,9 +101,9 @@ def login():
 @app.route('/profileSettings', methods=['POST'])
 def profileSettings():
     data = request.get_json()
-
     setting = ProfileSettings()
     database = Database()
+
 
     username = data['username']
     email = data['email']
@@ -111,7 +111,6 @@ def profileSettings():
     newPassword = data['newPassword']
     confirm_password = data["confirm_password"]
     profile_picture = data['profile_picture']
-    login = data['login']
 
     # has to match with signUp rules:
     username_rules = setting.username_rules(username)
@@ -124,18 +123,37 @@ def profileSettings():
     confirm_password_check = setting.new_password_equals_confirm_password(newPassword, confirm_password)
     old_password_correct = setting.old_password_correct_check(password)
 
-    if login == 1:
-        session["username"] = None
-
-    if not username_rules or username_taken or password_rules or email_taken:
-        response = Response(status=406, response=json.dumps({'response': "Something went wrong"}), mimetype="application/json")
-    elif not password_equals or confirm_password_check or old_password_correct:
-        response = Response(status=406, response=json.dumps({'response': "Something went wrong"}), mimetype="application/json")
+    if session[username] != username:
+        if not username_taken:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        elif not username_rules:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        elif not email_taken:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        elif not password_equals:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        elif not confirm_password:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        elif old_password_correct:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        elif password_rules:
+            response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                                mimetype="application/json")
+        else:
+            session["username"] = username
+            # ToDo: old new einfügen, json    database.update_profile()
+            response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
+        return response
     else:
-        session["username"] = username
-    #old new einfügen, json    database.update_profile()
-        response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
-    return response
+        response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
+                            mimetype="application/json")
+
 
 @app.route("/getProfilePicture", methods=["GET"])
 def get_profile_picture():
@@ -160,8 +178,14 @@ def get_profile_picture():
             print(base64.b64encode(profile_picture))
             profile_picture = str(base64.b64encode(profile_picture))[2:-1]
         response = Response(status=406, response=json.dumps({"profilePicture": profile_picture}),
-                        mimetype="application/json")
+                            mimetype="application/json")
     return response
+
+
+@app.route('/getUsernameEmail', methods=["GET"])
+def get_username_email():
+    pass
+
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)

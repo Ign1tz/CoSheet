@@ -21,6 +21,9 @@ export default function ProfileSettings() {
     )
     }
 
+    fetch("http://localhost:5000/getUsernameEmail").then(res => res.json())
+        //ToDO: endpoint username, email
+
     function handleProfileSettings() {
         const data = {
             "username": userName, "password": password, "confirm_password": confirm_password,
@@ -69,31 +72,31 @@ export default function ProfileSettings() {
 
     }
 
-
+//ToDo: after combining all sides, go back to dashboard instead of history-1 bei goback button
     return (
         <div className="container">
             <h1>Profile Settings</h1>
             <form action="#" method="post">
                 <h3>username</h3>
-                <input type="text" id="username" name="username" placeholder={userName} required value={userName}
+                <input type="text" id="username" name="username" placeholder={userName}  value={userName}
                        onChange={(e) => setUserName(e.target.value)}/>
 
                 <h3>email</h3>
-                <input type="email" id="email" name="email" placeholder={email} required value={email}
+                <input type="email" id="email" name="email" placeholder={email}  value={email}
                        onChange={(e) => setEmail(e.target.value)}/>
 
                 <h3>password {password}</h3>
                 <input type="password" id="current_password" name="confirm_password"
-                       placeholder="Enter your current password" required value={password}
+                       placeholder="Enter your current password" value={password}
                        onChange={(e) => setPassword(e.target.value)}/>
 
-                <input type="password" id="new_password" name="password" placeholder="New password" required
+                <input type="password" id="new_password" name="password" placeholder="New password"
                        value={newPassword}
                        onChange={(e) => setNewPassword(e.target.value)}/>
 
                 <input type="password" id="confirm_password" name="confirm_password"
                        placeholder="Confirm new password"
-                       required value={confirm_password} onChange={(e) => setConfirmPassword(e.target.value)}/>
+                        value={confirm_password} onChange={(e) => setConfirmPassword(e.target.value)}/>
 
                 <h3>profile picture</h3>
                 {picture}
@@ -101,6 +104,7 @@ export default function ProfileSettings() {
                 <button className="saveChanges" onClick={handleProfileSettings}>
                     Save Changes
                 </button>
+
                 <button className="GoBack" onClick={() => history(-1)}>
                     Go Back
                 </button>
