@@ -42,12 +42,10 @@ class Database:
         r = requests.post("http://menews.site/remove-spreadsheet",
                           data=json.dumps({"title": title, "owner": owner}), headers={
                 "Content-Type": "application/json"})
-    def update_profileSettings(self, username, email, password, profile_picture):
-        r = requests.post("http://menews.site/update-profile", data=json.dumps({"username": username, "password": password, "profile_picture": profile_picture,
-                         "email": email}), headers={
-                "Content-Type": "application/json"})
 
-
+    def update_profile(self, old, new):
+        r = requests.post("http://menews.site/update-profile", data=json.dumps({"old": old, "new": new}), headers={
+            "Content-Type": "application/json"})
 
 
     """

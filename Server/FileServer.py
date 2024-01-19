@@ -1,4 +1,8 @@
+import base64
+
 from flask import Flask, send_from_directory, request, Response, session, redirect, jsonify
+
+from Server.Backend.Login.Account import AccountParser
 from flask_session import Session
 from flask_cors import CORS
 import os
@@ -19,6 +23,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+
 @app.route('/default-spreadsheet', methods=['GET'])
 def default_spreadsheet_page():
     return send_from_directory('files', "default-spreadsheet.html")
@@ -27,6 +32,7 @@ def default_spreadsheet_page():
 @app.route('/', methods=['GET'])
 def serve_files():
     return send_from_directory('files', "homepage.html")
+
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -61,6 +67,7 @@ def signup():
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
 
+
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -90,36 +97,71 @@ def login():
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
 
+
 @app.route('/profileSettings', methods=['POST'])
 def profileSettings():
+    data = request.get_json()
+
     setting = ProfileSettings()
     database = Database()
-    data = request.get_json()
+
     username = data['username']
     email = data['email']
     password = data['password']
     newPassword = data['newPassword']
     confirm_password = data["confirm_password"]
     profile_picture = data['profile_picture']
+    login = data['login']
 
-    username_taken = setting.username_already_taken(username)
+    # has to match with signUp rules:
     username_rules = setting.username_rules(username)
-    password_equals = setting.password_equals_previous_password(newPassword, confirm_password) #wirkt falsch
+    username_taken = setting.username_already_taken(username)
     password_rules = setting.password_rules(password)
-    confirm_password_check = setting.new_password_equals_confirm_password(newPassword, confirm_password)
     email_taken = setting.email_already_taken(email)
 
-    if not username_rules or password_equals or password_rules or confirm_password_check:
-        response = Response(status=406, response=json.dumps({'response': "somethin went wrong"}), mimetype="application/json")
-    elif username_taken or email_taken:
-        response = Response(status=406, response=json.dumps({'response': "email or username already taken"}), mimetype="application/json")
+    # new rules
+    password_equals = setting.password_equals_previous_password(newPassword, password)
+    confirm_password_check = setting.new_password_equals_confirm_password(newPassword, confirm_password)
+    old_password_correct = setting.old_password_correct_check(password)
+
+    if login == 1:
+        session["username"] = None
+
+    if not username_rules or username_taken or password_rules or email_taken:
+        response = Response(status=406, response=json.dumps({'response': "Something went wrong"}), mimetype="application/json")
+    elif not password_equals or confirm_password_check or old_password_correct:
+        response = Response(status=406, response=json.dumps({'response': "Something went wrong"}), mimetype="application/json")
     else:
-        #profile_picture = request.files["file"]
-       # img = Image.open('profile_picture')
-       # img = np.array(img)
         session["username"] = username
-        database.update_profileSettings(username, email, password, profile_picture)
+    #old new einfügen, json    database.update_profile()
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
     return response
+
+@app.route("/getProfilePicture", methods=["GET"])
+def get_profile_picture():
+    db = Database()
+    account_parser = AccountParser()
+    username = session.get("username")
+    if session.get("username"):
+        username = session.get("username")
+        profile = db.get_profile({"username": username})
+        profile = account_parser.json_to_account(profile)
+        if profile.profile_picture != "None":
+            profile_picture = profile.profile_picture
+        else:
+            with open(".\DefaultPictures\defaultProfileCoSheet.png", "rb") as file:
+                profile_picture = str(file.read())
+                print(profile_picture)
+        response = Response(status=200, response=json.dumps({"profilePicture": profile_picture}),
+                            mimetype="application/json")
+    else:
+        with open(".\DefaultPictures\defaultProfileCoSheet.png", "rb") as file:
+            profile_picture = file.read()
+            print(base64.b64encode(profile_picture))
+            profile_picture = str(base64.b64encode(profile_picture))[2:-1]
+        response = Response(status=406, response=json.dumps({"profilePicture": profile_picture}),
+                        mimetype="application/json")
+    return response
+
 if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)

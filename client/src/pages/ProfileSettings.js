@@ -1,7 +1,6 @@
 import '../Style/ProfileSettings.css'
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import "./default.png"
 import axios from "axios";
 
 export default function ProfileSettings() {
@@ -11,11 +10,21 @@ export default function ProfileSettings() {
     const [confirm_password, setConfirmPassword] = useState('');
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
-    const[profile_picture, setProfilePicture] = useState('');
+    const [profile_picture, setProfilePicture] = useState('');
+    const [picture, setPicture] = useState();
     let history = useNavigate();
-    function handleProfileSettings(){
-        const data = {"username": userName, "password": password, "confirm_password": confirm_password,
-            "profile_picture": profile_picture, "email": email};
+
+    if (typeof picture === 'undefined'){
+        fetch("http://localhost:5000/getProfilePicture").then(res => res.json()).then(returndata => setPicture(
+            <img src={"data:image/jpeg;base64," + returndata.profilePicture} alt={"Something went wrong"}></img>
+        )
+    )
+    }
+
+    function handleProfileSettings() {
+        const data = {
+            "username": userName, "password": password, "confirm_password": confirm_password,
+            "profile_picture": profile_picture, "email": email, "newPassword": newPassword};
 
         try {
             const response = async () => {
@@ -38,25 +47,28 @@ export default function ProfileSettings() {
             console.error("Something went wrong.", error)
         }
 
-}
+    }
 
     function logout() {
-            window.location.href = '/'
+        //fetch
+        window.location.href = '/'
     }
 
-    function handleImage(e){
-        console.log(e.target.file)
-        setProfilePicture(e.targeat.file[0])
+    function handleImage(e) {
+        console.log(e)
+        let reader = new FileReader()
+        reader.onloadend = function(e){
+            let convertedimg = reader.result.split(',')[1]
+            setProfilePicture(convertedimg)
+            console.log(convertedimg)
+            setPicture(<img src={"data:image/jpeg;base64," + convertedimg}
+                        alt={"Something went wrong"}></img>)
+        }
+        console.log(e.target.files[0])
+        reader.readAsDataURL(e.target.files[0])
+
     }
 
-
-    function handledisplay(){
-        const formData = new FormData()
-        formData.append('profile_picture', profile_picture)
-        axios.post("url", formData).then((res) => {
-            console.log(res)
-        })
-    }
 
     return (
         <div className="container">
@@ -72,7 +84,8 @@ export default function ProfileSettings() {
 
                 <h3>password {password}</h3>
                 <input type="password" id="current_password" name="confirm_password"
-                       placeholder="Enter your current password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
+                       placeholder="Enter your current password" required value={password}
+                       onChange={(e) => setPassword(e.target.value)}/>
 
                 <input type="password" id="new_password" name="password" placeholder="New password" required
                        value={newPassword}
@@ -83,8 +96,9 @@ export default function ProfileSettings() {
                        required value={confirm_password} onChange={(e) => setConfirmPassword(e.target.value)}/>
 
                 <h3>profile picture</h3>
-                <input type={"file"} name={"file"} onChange={handleImage}/>
-                <button className="saveChanges" onClick={handledisplay}>
+                {picture}
+                <input className={"profile_input"} type={"file"} name={"file"} onChange={handleImage}/>
+                <button className="saveChanges" onClick={handleProfileSettings}>
                     Save Changes
                 </button>
                 <button className="GoBack" onClick={() => history(-1)}>

@@ -1,7 +1,7 @@
 #ToDo:
 # frontend: change profile picture
 # wenn 'LogOut' Session in Fileserver muss auf "nichts" gesetzt werden/"gelöscht" werden
-# wenn username geändert dann session name ändern
+# login methode spricht leeren endpunkt an (session auf "null")
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Database.Database import Database
 class ProfileSettings:
@@ -18,12 +18,23 @@ class ProfileSettings:
         sign_up = SignUp()
         sign_up.username_rules(username)
 
-    def password_equals_previous_password(self, new_password, password):
+    def old_password_correct_check(self, password):
         database = Database()
 
-        current_password = database.get_profile({"password": password})
+        database_password = database.get_profile({"password": password})
 
-        if current_password == new_password:
+        if database_password == password:
+            print("Correct Password")
+            return True
+        else:
+            return False
+
+    def password_equals_previous_password(self, password, new_password):
+        database = Database()
+
+        database_password = database.get_profile({"password": password})
+
+        if database_password == new_password:
             print("Don't use the same password twice.")
             return False
         else:
