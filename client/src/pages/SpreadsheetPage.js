@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SpreadsheetSettings from "../components/SpreadsheetSettings";
 import Spreadsheet from "../components/Spreadsheet";
 import '../styles/SpreadsheetPage.css';
@@ -7,6 +8,7 @@ import '../styles/SpreadsheetPage.css';
 export default function SpreadsheetPage() {
 
     let uuid = window.location.pathname.replace('/spreadsheet/', '');
+    const navigate = useNavigate();
 
     const [settings, setSettings] = useState({
         title: 'Default Title',
@@ -92,30 +94,48 @@ export default function SpreadsheetPage() {
         setSettings({...settings, ...newSettings});
     };
 
-    useEffect(() => {
-        fetchSpreadsheetData(uuid);
-    }, []);
-
     const handleSelectCell = (rowIndex, colIndex) => {
         setSelectedCell({row: rowIndex, col: colIndex});
     };
 
+    useEffect(() => {
+        if (uuid) {
+            fetchSpreadsheetData(uuid);
+        }
+    }, [uuid]);
+
+    const createNewSpreadsheet = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/createnewspreadsheet`);
+            if (response.ok) {
+                const data = await response.json();
+                createSpreadsheet();
+
+                const urlParts = data.link.split('/');
+                const realUuid = urlParts[urlParts.length - 1];
+                navigate(`/spreadsheet/${realUuid}`);
+
+
+                await sendDataToBackend();
+            } else {
+                console.error("Failed to create a new spreadsheet.");
+            }
+        } catch (error) {
+            console.error('Error creating a new spreadsheet:', error);
+        }
+    };
+
     const fetchSpreadsheetData = async (uuid) => {
         try {
-            let response = await fetch(`http://localhost:5000/getspreadsheet/` + uuid);
-            if (!response.ok) {
-                setSpreadsheetExists(false);
-                response = await fetch(`http://localhost:5000/createnewspreadsheet`);
-                if (!response.ok) {
-                    console.error("Failed to create a new spreadsheet.");
-                }
-                createSpreadsheet()
-            } else {
-                setSpreadsheetExists(true);
+            let response = await fetch(`http://localhost:5000/getspreadsheet/${uuid}`);
+            if (response.ok) {
                 const data = await response.json();
                 setOldSpreadsheetData(data);
                 updateSpreadsheetData(data);
-                console.log("data:", data)
+                setSpreadsheetExists(true);
+            } else {
+                console.error("Spreadsheet not found.");
+                setSpreadsheetExists(false);
             }
         } catch (error) {
             console.error('Error fetching spreadsheet data:', error);
@@ -252,6 +272,9 @@ export default function SpreadsheetPage() {
                     <p className="spreadsheet-description">{settings.description}</p>
                 </div>
                 <button className="save-button" onClick={sendDataToBackend}>Save Spreadsheet</button>
+                <div>
+                    <button onClick={createNewSpreadsheet}>New</button>
+                </div>
             </div>
             <Spreadsheet
                 numberOfRows={settings.numRows}
