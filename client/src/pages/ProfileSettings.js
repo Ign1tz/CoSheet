@@ -8,21 +8,18 @@ export default function ProfileSettings() {
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirm_password, setConfirmPassword] = useState('');
-    const [userName, setUserName] = useState('');
-    const [email, setEmail] = useState('');
+    const [userName, setUserName] = useState();
+    const [email, setEmail] = useState();
     const [profile_picture, setProfilePicture] = useState('');
     const [picture, setPicture] = useState();
     let history = useNavigate();
 
-    if (typeof picture === 'undefined'){
-        fetch("http://localhost:5000/getProfilePicture").then(res => res.json()).then(returndata => setPicture(
-            <img src={"data:image/jpeg;base64," + returndata.profilePicture} alt={"Something went wrong"}></img>
-        )
-    )
+    if (typeof userName === 'undefined' || typeof email === 'undefined') {
+        fetch("http://localhost:5000/getUsernameEmail").then(res => res.json().then(return_data => {setUserName(return_data.username);
+        setEmail(return_data.email); setPicture(<img src={"data:image/jpeg;base64," + return_data.profile_picture} alt={"Something went wrong"}></img>)}))
+
     }
 
-    fetch("http://localhost:5000/getUsernameEmail").then(res => res.json())
-        //ToDO: endpoint username, email
 
     function handleProfileSettings() {
         const data = {
@@ -78,7 +75,7 @@ export default function ProfileSettings() {
             <h1>Profile Settings</h1>
             <form action="#" method="post">
                 <h3>username</h3>
-                <input type="text" id="username" name="username" placeholder={userName}  value={userName}
+                <input type="text" id="username" name="username" placeholder={userName} value={userName}
                        onChange={(e) => setUserName(e.target.value)}/>
 
                 <h3>email</h3>

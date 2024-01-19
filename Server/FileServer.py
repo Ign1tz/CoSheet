@@ -20,7 +20,7 @@ app = Flask(__name__)
 app.debug = True
 app._staic_folder = os.path.abspath("static/")
 CORS(app, support_credentials=True)
-app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
@@ -76,18 +76,25 @@ def login():
     password = data['password']
     atSign = "@"
     login_class = Login()
+    database = Database()
 
     username_password_match = False
     email_password_match = False
 
     if atSign not in email:
         username_password_match = login_class.username_password_match(password, email)
+        username = email
     else:
         email_password_match = login_class.email_password_match(password, email)
+        profile = database.get_profile({"email": email})
+        print(profile)
+        username = profile[0]["username"]
 
     if username_password_match or email_password_match:
+
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
-        session["username"] = email
+        session["username"] = username
+        print(session.get("username"))
     else:
         errors = []
         if not username_password_match:
@@ -104,13 +111,14 @@ def profileSettings():
     setting = ProfileSettings()
     database = Database()
 
-
     username = data['username']
     email = data['email']
     password = data['password']
     newPassword = data['newPassword']
     confirm_password = data["confirm_password"]
     profile_picture = data['profile_picture']
+
+    old_account = database.get_profile({"username": session.get("username")})
 
     # has to match with signUp rules:
     username_rules = setting.username_rules(username)
@@ -123,7 +131,7 @@ def profileSettings():
     confirm_password_check = setting.new_password_equals_confirm_password(newPassword, confirm_password)
     old_password_correct = setting.old_password_correct_check(password)
 
-    if session[username] != username:
+    if session.get("username") != username:
         if not username_taken:
             response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
                                 mimetype="application/json")
@@ -147,7 +155,8 @@ def profileSettings():
                                 mimetype="application/json")
         else:
             session["username"] = username
-            # ToDo: old new einfügen, json    database.update_profile()
+            new_account = setting.create_new_account(username, password, email, profile_picture)
+            database.update_profile(old_account, new_account)
             response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
         return response
     else:
@@ -184,7 +193,16 @@ def get_profile_picture():
 
 @app.route('/getUsernameEmail', methods=["GET"])
 def get_username_email():
-    pass
+    database = Database()
+    print(session.get("username"))
+    data = database.get_profile({"username": session.get("username")})
+    data = data[0]
+    print(data)
+    username = data["username"]
+    email = data["email"]
+    profile_picture = data["profile_picture"]
+    return_data = {"username": username, "email": email, "profile_picture": profile_picture}
+    return return_data
 
 
 if __name__ == '__main__':

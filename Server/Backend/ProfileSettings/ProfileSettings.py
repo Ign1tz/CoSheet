@@ -1,6 +1,9 @@
 
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Database.Database import Database
+from Server.Backend.Login.Account import Account
+from Server.Backend.Encryption.Encryption import Encryption
+from Server.Backend.Login.Account import AccountParser
 class ProfileSettings:
 
 
@@ -49,4 +52,15 @@ class ProfileSettings:
         sign_up = SignUp()
         sign_up.prohibit_double_eMail(email)
 
+    def create_new_account(self, username, password, email, profile_picture):
+        encrypt = Encryption()
+        account = AccountParser()
+        salt = encrypt.gen_salt()
+
+        hashed_password = encrypt.hash_password(password, salt)
+
+        new_account = Account(username, str(hashed_password), email, "None", str(salt))
+
+        new_account = account.account_to_json(new_account)
+        return new_account
 
