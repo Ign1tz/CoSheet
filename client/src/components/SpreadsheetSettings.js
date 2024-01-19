@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/SpreadsheetSettings.css';
 
+/**
+ * class with all settings for spreadsheets
+ */
 export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell, settingsProps }) {
-    const [showSettings, setShowSettings] = useState(false);
 
+    // get most things from spreadsheet page with settingsProps.
+    const [showSettings, setShowSettings] = useState(false);
     const [title, setTitle] = useState(settingsProps.title);
     const [editEmptyOnly, setEditEmptyOnly] = useState(settingsProps.editEmptyOnly);
     const [numColumns, setNumColumns] = useState(settingsProps.numColumns);
@@ -16,6 +20,7 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
     const [cellBackgroundColor, setCellBackgroundColor] = useState(settingsProps.cellBackgroundColor);
     const [selectedFont, setSelectedFont] = useState(settingsProps.selectedFont);
 
+    // set all settings
     useEffect(() => {
         setTitle(settingsProps.title);
         setEditEmptyOnly(settingsProps.editEmptyOnly);
@@ -30,6 +35,7 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
         setSelectedFont(settingsProps.selectedFont)
     }, [settingsProps]);
 
+    // frontend validation for some settings
     function validateTitle(title) {
         return typeof title === 'string' && title.trim() !== '';
     }

@@ -4,12 +4,15 @@ import SpreadsheetSettings from "../components/SpreadsheetSettings";
 import Spreadsheet from "../components/Spreadsheet";
 import '../styles/SpreadsheetPage.css';
 
-
+/**
+ * The page where a spreadsheet and its settings get displayed
+ */
 export default function SpreadsheetPage() {
 
     let uuid = window.location.pathname.replace('/spreadsheet/', '');
     const navigate = useNavigate();
 
+    // states to store all default settings
     const [settings, setSettings] = useState({
         title: 'Default Title',
         editEmptyOnly: false,
@@ -24,11 +27,13 @@ export default function SpreadsheetPage() {
         selectedFont: 'Arial',
     });
 
+    // get for each column header its own name
     const getColumnName = (columnNumber) => {
         let columnName = '';
         let base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         let num = columnNumber;
 
+        // after the alphabet is ending a new letter gets added
         while (num >= 26) {
             columnName = base[num % 26] + columnName;
             num = Math.floor(num / 26) - 1;
@@ -36,19 +41,27 @@ export default function SpreadsheetPage() {
         return base[num] + columnName;
     };
 
+    // state of headers and give them their name
     const [columnHeaders, setColumnHeaders] = useState(
         [...Array(settings.numColumns)].map((_, index) => getColumnName(index))
     );
 
+    // to check if the spreadsheet already exists
     const [spreadsheetExists, setSpreadsheetExists] = useState(false);
+    // for updating I need the old spreadsheet
     const [oldSpreadsheetData, setOldSpreadsheetData] = useState(null);
+    // the cell the user selected
     const [selectedCell, setSelectedCell] = useState(null);
+    // including bold, color of cell and font
     const [cellFormatting, setCellFormatting] = useState({});
+    // each row has its own columns
     const [spreadsheetRows, setSpreadsheetRows] = useState([])
+    // to check if a user is logged in
     const [isLoggedIn, setIsLoggedIn] = useState(true);
 
     // TODO: isloggedin check
 
+    // create a default spreadsheet just in the frontend
     const createSpreadsheet = () => {
         setSpreadsheetRows(() => {
             return Array.from({ length: settings.numRows }, () =>
@@ -57,12 +70,14 @@ export default function SpreadsheetPage() {
         });
     };
 
+    // if the settings apply button is clicked
     const handleSettingsChange = (newSettings) => {
         let newColumns = columnHeaders;
         let newRows = spreadsheetRows;
         let newNumberOfColumns = newColumns.length;
         let newNumberOfRows = newSettings.numRows;
 
+        // add columns
         if (newSettings.numColumns > newNumberOfColumns) {
             for (let i = 0; i < (newSettings.numColumns - newNumberOfColumns); i++) {
                 newColumns.push(getColumnName(newNumberOfColumns + i));
@@ -71,6 +86,8 @@ export default function SpreadsheetPage() {
                 }
             }
             setColumnHeaders(newColumns);
+
+        // remove columns
         } else if (newSettings.numColumns < newNumberOfColumns) {
             for (let i = 0; i < (newNumberOfColumns - newSettings.numColumns); i++) {
                 newColumns.pop();
@@ -80,11 +97,14 @@ export default function SpreadsheetPage() {
             }
         }
 
+        // add rows
         if (newRows.length < newNumberOfRows) {
             const newRow = Array(newSettings.numColumns).fill('');
             for (let i = newRows.length; i < newNumberOfRows; i++) {
                 newRows.push([...newRow]);
             }
+
+        // remove rows
         } else if (newRows.length > newNumberOfRows) {
             newRows = newRows.slice(0, newNumberOfRows);
         }
@@ -94,16 +114,19 @@ export default function SpreadsheetPage() {
         setSettings({...settings, ...newSettings});
     };
 
+    // select cell with indexes of rows and columns
     const handleSelectCell = (rowIndex, colIndex) => {
         setSelectedCell({row: rowIndex, col: colIndex});
     };
 
+    // call fetch when uuid is there
     useEffect(() => {
         if (uuid) {
             fetchSpreadsheetData(uuid);
         }
     }, [uuid]);
 
+    // when creating a new spreadsheet we go to its new url
     const createNewSpreadsheet = async () => {
         try {
             const response = await fetch(`http://localhost:5000/createnewspreadsheet`);
@@ -113,7 +136,7 @@ export default function SpreadsheetPage() {
 
                 const urlParts = data.link.split('/');
                 const realUuid = urlParts[urlParts.length - 1];
-                navigate(`/spreadsheet/${realUuid}`);
+                navigate(`/spreadsheet/${realUuid}`); // go to url
 
 
                 await sendDataToBackend();
@@ -125,14 +148,15 @@ export default function SpreadsheetPage() {
         }
     };
 
+    // get a spreadsheet by its uuid
     const fetchSpreadsheetData = async (uuid) => {
         try {
             let response = await fetch(`http://localhost:5000/getspreadsheet/${uuid}`);
             if (response.ok) {
                 const data = await response.json();
-                setOldSpreadsheetData(data);
+                setOldSpreadsheetData(data);    // needed for the update method
                 updateSpreadsheetData(data);
-                setSpreadsheetExists(true);
+                setSpreadsheetExists(true); // needed for the update method
             } else {
                 console.error("Spreadsheet not found.");
                 setSpreadsheetExists(false);
@@ -142,6 +166,7 @@ export default function SpreadsheetPage() {
         }
     };
 
+    // use data from request to fill the spreadsheet
     const updateSpreadsheetData = (data) => {
         if (data) {
             const spreadsheetInfo = data[0];
@@ -153,6 +178,8 @@ export default function SpreadsheetPage() {
             setSpreadsheetRows(normalizeSpreadsheet)
 
             const newCellFormatting = {};
+
+            // add formatting to each cell
             spreadsheetInfo.spreadsheet.rows.forEach((row, rowIndex) => {
                 row.forEach((cell, colIndex) => {
                     const cellId = `${rowIndex}-${colIndex}`;
@@ -166,6 +193,7 @@ export default function SpreadsheetPage() {
 
     };
 
+    // collect everything including settings and spreadsheet data
     const prepareDataForBackend = () => {
 
         const spreadsheetData = {
@@ -190,16 +218,17 @@ export default function SpreadsheetPage() {
         });
     };
 
-
+    // collected data gets sent to backend
     const sendDataToBackend = async () => {
         const newData = prepareDataForBackend();
         let requestBody;
+        // decide endpoint depending on existence
         const endpoint = spreadsheetExists ? 'updatespreadsheet' : 'postspreadsheet';
 
-        if (spreadsheetExists) {
+        if (spreadsheetExists) { // send old and new
             const oldData = oldSpreadsheetData;
             requestBody = JSON.stringify({old: oldData, new: newData});
-        } else {
+        } else {    // only new
             requestBody = JSON.stringify(newData);
         }
 
@@ -220,6 +249,7 @@ export default function SpreadsheetPage() {
         }
     };
 
+    // apply formatting
     const handleApplyFormatting = (formatting) => {
         if (selectedCell) {
             setCellFormatting({
@@ -232,6 +262,7 @@ export default function SpreadsheetPage() {
         }
     };
 
+    // share menu currently just as placeholder
     const [showShareMenu, setShowShareMenu] = useState(false);
     const toggleShareMenu = () => setShowShareMenu(!showShareMenu);
     const handleShareLink = () => {
