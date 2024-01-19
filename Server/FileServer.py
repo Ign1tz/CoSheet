@@ -201,16 +201,14 @@ def get_profile_picture():
 @app.route('/getUsernameEmail', methods=["GET"])
 def get_username_email():
     database = Database()
-    print(request)
+    test = request.url.replace("http://localhost:5000/getUsernameEmail?username=", "")
+    print(request.url.replace("http://localhost:5000/getUsernameEmail?username=", ""))
     print("AAAAAA")
-    print(request.form["username"])
-    data = database.get_profile({"username": request.form["username"]})
-    #data = data[0]
-    print("BBbBBB")
-    print(data)
-    username = data[0]["username"]
-    email = data[0]["email"]
-    profile_picture = data[0]["profile_picture"]
+    data = database.get_profile({"username": test})
+    data = data[0]
+    username = data["username"]
+    email = data["email"]
+    profile_picture = data["profile_picture"]
     return_data = {"username": username, "email": email, "profile_picture": profile_picture}
     return return_data
 

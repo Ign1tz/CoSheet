@@ -16,8 +16,6 @@ export default function ProfileSettings() {
     const cookie = new Cookies()
 
     if (typeof userName === 'undefined' || typeof email === 'undefined') {
-        let link = "http://localhost:5000/getUsernameEmail?username="+ cookie.get("username")
-        console.log(link)
         fetch("http://localhost:5000/getUsernameEmail?username="+ cookie.get("username")).then(res => res.json().then(return_data => {setUserName(return_data.username);
         setEmail(return_data.email); setPicture(<img src={"data:image/jpeg;base64," + return_data.profile_picture} alt={"Something went wrong"}></img>)}))
 
