@@ -144,10 +144,10 @@ def update_spreadsheet():
     if not data or 'old' not in data or 'new' not in data:
         return jsonify({"error": "Invalid data provided"}), 400
 
-    old_data = data['old']
     new_data = data['new']
+    old = database.get_spreadsheet({"link": data["old"][0]["link"]})[0]
 
-    success = database.update_spreadsheet(old_data, new_data)
+    success = database.update_spreadsheet(old, new_data)
 
     if success:
         return jsonify({"message": "Spreadsheet updated successfully"}), 200

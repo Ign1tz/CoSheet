@@ -11,7 +11,9 @@
 }
 
 .spreadsheet-title, .spreadsheet-description {
-    margin: 0.8em;
+    margin-top: 0.8em;
+    margin-right: 2.5em;
+    margin-bottom: 0.8em;
 }
 
 .save-button {
@@ -57,4 +59,8 @@
 
 .share-menu ul li:hover {
     background-color: #f1f1f1;
+}
+
+.share-menu ul li:active {
+background-color: lightgray;
 }

@@ -56,7 +56,40 @@ export default function SpreadsheetPage() {
     };
 
     const handleSettingsChange = (newSettings) => {
-        setSettings({ ...settings, ...newSettings });
+        let newColumns = columnHeaders;
+        let newRows = spreadsheetRows;
+        let newNumberOfColumns = newColumns.length;
+        let newNumberOfRows = newSettings.numRows;
+
+        if (newSettings.numColumns > newNumberOfColumns) {
+            for (let i = 0; i < (newSettings.numColumns - newNumberOfColumns); i++) {
+                newColumns.push(getColumnName(newNumberOfColumns + i));
+                for (let row of newRows) {
+                    row.push('');
+                }
+            }
+            setColumnHeaders(newColumns);
+        } else if (newSettings.numColumns < newNumberOfColumns) {
+            for (let i = 0; i < (newNumberOfColumns - newSettings.numColumns); i++) {
+                newColumns.pop();
+                for (let row of newRows) {
+                    row.pop();
+                }
+            }
+        }
+
+        if (newRows.length < newNumberOfRows) {
+            const newRow = Array(newSettings.numColumns).fill('');
+            for (let i = newRows.length; i < newNumberOfRows; i++) {
+                newRows.push([...newRow]);
+            }
+        } else if (newRows.length > newNumberOfRows) {
+            newRows = newRows.slice(0, newNumberOfRows);
+        }
+
+        setColumnHeaders(newColumns);
+        setSpreadsheetRows(newRows)
+        setSettings({...settings, ...newSettings});
     };
 
     useEffect(() => {
@@ -64,13 +97,12 @@ export default function SpreadsheetPage() {
     }, []);
 
     const handleSelectCell = (rowIndex, colIndex) => {
-        setSelectedCell({ row: rowIndex, col: colIndex });
+        setSelectedCell({row: rowIndex, col: colIndex});
     };
 
     const fetchSpreadsheetData = async (uuid) => {
         try {
-            let response = await fetch(`http://localhost:5000/getspreadsheet/`+uuid);
-            console.log("response:", response)
+            let response = await fetch(`http://localhost:5000/getspreadsheet/` + uuid);
             if (!response.ok) {
                 setSpreadsheetExists(false);
                 response = await fetch(`http://localhost:5000/createnewspreadsheet`);
@@ -81,9 +113,9 @@ export default function SpreadsheetPage() {
             } else {
                 setSpreadsheetExists(true);
                 const data = await response.json();
-                console.log("data:", data)
                 setOldSpreadsheetData(data);
                 updateSpreadsheetData(data);
+                console.log("data:", data)
             }
         } catch (error) {
             console.error('Error fetching spreadsheet data:', error);
@@ -94,10 +126,20 @@ export default function SpreadsheetPage() {
         if (data) {
             const spreadsheetInfo = data[0];
             setSettings(spreadsheetInfo.settings || {});
-            const normalizeSpreadsheet = spreadsheetInfo.spreadsheet.map(row =>
+            setColumnHeaders(spreadsheetInfo.spreadsheet.headers)
+            const normalizeSpreadsheet = spreadsheetInfo.spreadsheet.rows.map(row =>
                 row.map(cell => cell.content)
             )
             setSpreadsheetRows(normalizeSpreadsheet)
+
+            const newCellFormatting = {};
+            spreadsheetInfo.spreadsheet.rows.forEach((row, rowIndex) => {
+                row.forEach((cell, colIndex) => {
+                    const cellId = `${rowIndex}-${colIndex}`;
+                    newCellFormatting[cellId] = cell.formatting || {};
+                });
+            });
+            setCellFormatting(newCellFormatting);
         } else {
             console.error("No data received to update spreadsheet.")
         }
@@ -131,18 +173,15 @@ export default function SpreadsheetPage() {
 
     const sendDataToBackend = async () => {
         const newData = prepareDataForBackend();
-        console.log("newData:", newData)
         let requestBody;
         const endpoint = spreadsheetExists ? 'updatespreadsheet' : 'postspreadsheet';
 
         if (spreadsheetExists) {
             const oldData = oldSpreadsheetData;
-            console.log("oldData:", oldData)
-            requestBody = JSON.stringify({ old: oldData, new: newData});
+            requestBody = JSON.stringify({old: oldData, new: newData});
         } else {
             requestBody = JSON.stringify(newData);
         }
-        console.log("old and new:", requestBody)
 
         try {
             const response = await fetch(`http://localhost:5000/${endpoint}`, {
@@ -154,8 +193,8 @@ export default function SpreadsheetPage() {
                 body: requestBody
             });
             if (!response.ok) {
-            console.error("Failed to send data to the backend.");
-        }
+                console.error("Failed to send data to the backend.");
+            }
         } catch (error) {
             console.error('Failed to send data to the backend:', error);
         }
@@ -201,7 +240,7 @@ export default function SpreadsheetPage() {
                     {showShareMenu && (
                         <div className="share-menu">
                             <ul>
-                                <li onClick={handleShareLink}>By Link</li>
+                                <li onClick={handleShareLink}>Copy Link</li>
                                 <li onClick={handleShareQRCode}>QR Code</li>
                                 <li onClick={handleShareEmail}>Email</li>
                             </ul>
