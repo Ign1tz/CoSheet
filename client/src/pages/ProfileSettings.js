@@ -1,7 +1,7 @@
 import '../Style/ProfileSettings.css'
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import axios from "axios";
+import Cookies from "universal-cookie";
 
 export default function ProfileSettings() {
     const [data, setData] = useState([{}]);
@@ -13,9 +13,12 @@ export default function ProfileSettings() {
     const [profile_picture, setProfilePicture] = useState('');
     const [picture, setPicture] = useState();
     let history = useNavigate();
+    const cookie = new Cookies()
 
     if (typeof userName === 'undefined' || typeof email === 'undefined') {
-        fetch("http://localhost:5000/getUsernameEmail").then(res => res.json().then(return_data => {setUserName(return_data.username);
+        let link = "http://localhost:5000/getUsernameEmail?username="+ cookie.get("username")
+        console.log(link)
+        fetch("http://localhost:5000/getUsernameEmail?username="+ cookie.get("username")).then(res => res.json().then(return_data => {setUserName(return_data.username);
         setEmail(return_data.email); setPicture(<img src={"data:image/jpeg;base64," + return_data.profile_picture} alt={"Something went wrong"}></img>)}))
 
     }

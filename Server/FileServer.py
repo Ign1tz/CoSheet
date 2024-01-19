@@ -100,7 +100,7 @@ def login():
 
         resp = make_response({"username": username})
         print(request.cookies.get("username"))
-        resp.set_cookie("username", 'ComputerScience Portal')
+        resp.set_cookie("username", value=username, domain="http:localhost")
         return resp
     else:
         errors = []
@@ -201,9 +201,10 @@ def get_profile_picture():
 @app.route('/getUsernameEmail', methods=["GET"])
 def get_username_email():
     database = Database()
+    print(request)
     print("AAAAAA")
-    print(request.cookies.get('username'))
-    data = database.get_profile({"username": request.cookies.get("username")})
+    print(request.form["username"])
+    data = database.get_profile({"username": request.form["username"]})
     #data = data[0]
     print("BBbBBB")
     print(data)

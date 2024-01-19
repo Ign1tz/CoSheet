@@ -1,6 +1,7 @@
 import '../Style/Login.css'
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
+import Cookies from "universal-cookie"
 
 export default function Login() {
 
@@ -25,6 +26,8 @@ export default function Login() {
 
                 const result = await request.json();
                 console.log(result);
+                const cookie = new Cookies()
+                cookie.set("username", result.username, {path: '/'})
                 setData(result);
 
             }
