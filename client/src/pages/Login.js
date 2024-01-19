@@ -24,11 +24,11 @@ export default function Login() {
                 });
 
                 const result = await request.json();
-
+                console.log(result);
                 setData(result);
 
             }
-            response().then(window.location.href = "http://localhost:3000/ProfileSettings")
+            response()//.then(() => window.location.href = "http://localhost:3000/ProfileSettings")
 
         } catch (error) {
             console.error("Something went wrong.", error)

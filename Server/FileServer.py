@@ -1,6 +1,6 @@
 import base64
 
-from flask import Flask, send_from_directory, request, Response, session, redirect, jsonify
+from flask import Flask, send_from_directory, request, Response, session, redirect, jsonify, url_for, make_response
 
 from Server.Backend.Login.Account import AccountParser
 from flask_session import Session
@@ -20,7 +20,7 @@ app = Flask(__name__)
 app.debug = True
 app._staic_folder = os.path.abspath("static/")
 CORS(app, support_credentials=True)
-app.config["SESSION_PERMANENT"] = True
+app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
@@ -93,8 +93,15 @@ def login():
     if username_password_match or email_password_match:
 
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
-        session["username"] = username
-        print(session.get("username"))
+        #session["username"] = username
+        #print(session.get("username"))
+        #return redirect(url_for('get_username_email'))
+        # Initializing response object
+
+        resp = make_response({"username": username})
+        print(request.cookies.get("username"))
+        resp.set_cookie("username", 'ComputerScience Portal')
+        return resp
     else:
         errors = []
         if not username_password_match:
@@ -194,13 +201,15 @@ def get_profile_picture():
 @app.route('/getUsernameEmail', methods=["GET"])
 def get_username_email():
     database = Database()
-    print(session.get("username"))
-    data = database.get_profile({"username": session.get("username")})
-    data = data[0]
+    print("AAAAAA")
+    print(request.cookies.get('username'))
+    data = database.get_profile({"username": request.cookies.get("username")})
+    #data = data[0]
+    print("BBbBBB")
     print(data)
-    username = data["username"]
-    email = data["email"]
-    profile_picture = data["profile_picture"]
+    username = data[0]["username"]
+    email = data[0]["email"]
+    profile_picture = data[0]["profile_picture"]
     return_data = {"username": username, "email": email, "profile_picture": profile_picture}
     return return_data
 
