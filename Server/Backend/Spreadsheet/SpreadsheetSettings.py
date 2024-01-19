@@ -6,7 +6,7 @@ class SpreadsheetSettings:
     def __init__(self, title, cell_width, edit_empty_only, num_columns, num_rows, column_headers, description,
                  allow_logged_in_edit):
         self.title = title  # string
-        self.cell_width = cell_width  # percent
+        self.cell_width = cell_width  # boolean
         self.edit_empty_only = edit_empty_only  # boolean
         self.num_columns = num_columns
         self.num_rows = num_rows
@@ -38,9 +38,9 @@ class SpreadsheetSettings:
             valid = False
             raise ValueError("Number of rows must be an int")
 
-        if not (1 <= self.cell_width <= 100):
+        if not (self.cell_width, bool):
             valid = False
-            raise ValueError("Cell width must be a percentage between 1 and 100")
+            raise ValueError("Cell width must be a boolean")
 
         if not isinstance(self.column_headers, bool):
             valid = False
