@@ -173,6 +173,20 @@ export default function SpreadsheetPage() {
         }
     };
 
+    const [showShareMenu, setShowShareMenu] = useState(false);
+    const toggleShareMenu = () => setShowShareMenu(!showShareMenu);
+    const handleShareLink = () => {
+        const currentUrl = window.location.href;
+        navigator.clipboard.writeText(currentUrl);
+    };
+    const handleShareQRCode = () => {
+        console.log("Share via QR Code");
+    };
+    const handleShareEmail = () => {
+        console.log("Share via Email");
+    };
+
+
     return (
         <div>
             <SpreadsheetSettings
@@ -182,6 +196,18 @@ export default function SpreadsheetPage() {
                 settingsProps={settings}
             />
             <div className="header-container">
+                <div className="share-options">
+                    <button onClick={toggleShareMenu}>Share</button>
+                    {showShareMenu && (
+                        <div className="share-menu">
+                            <ul>
+                                <li onClick={handleShareLink}>By Link</li>
+                                <li onClick={handleShareQRCode}>QR Code</li>
+                                <li onClick={handleShareEmail}>Email</li>
+                            </ul>
+                        </div>
+                    )}
+                </div>
                 <div className="title-description-container">
                     <h2 className="spreadsheet-title">{settings.title}</h2>
                     <p className="spreadsheet-description">{settings.description}</p>
