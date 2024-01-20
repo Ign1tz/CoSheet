@@ -14,7 +14,7 @@ import requests
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
 from Server.Backend.Login.Account import AccountParser
-from Server.Backend.Share.ShareLogic import QRCode
+from Server.Backend.Share.ShareLogic import QRCode, MailSharing
 from Server.Backend.ProfileSettings.ProfileSettings import ProfileSettings
 from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, SpreadsheetSettingsLogic
 from Server.Backend.Login.Account import Account
@@ -326,6 +326,16 @@ def get_qr_code(link):
     img = qr.create_qrcode(new_link)
     return Response(status=200, response=json.dumps({"image": str(img)}), mimetype="application/json")
 
+@app.route("/sendEmail/<username>", methods=["POST"])
+def send_email(username):
+    mail = MailSharing()
+    database = Database()
+    print(request.get_json())
+    data = request.get_json()
+    email = database.get_profile({"username": username})[0]["email"]
+    print(data["recipients"], data["title"], email)
+    mail.send_mail(data["recipients"], data["title"], email)
+    return Response(status=200, mimetype="application/json")
 
 
 if __name__ == '__main__':

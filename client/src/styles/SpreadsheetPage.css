@@ -6,7 +6,6 @@
 }
 
 .title-description-container {
-    position: relative;
     text-align: center;
     width: 100%;
     display: inline-block;
@@ -35,8 +34,8 @@
 }
 
 .share-options {
+    float: left;
     position: relative;
-    display: inline-block;
     left: 4em;
 }
 
@@ -69,8 +68,13 @@ background-color: lightgray;
 
 
 .qrcode {
-    display: inline-block;
     margin-left: 100px;
     position: relative;
     height:100px;
+}
+
+.email-share-container{
+    float: left;
+    position: relative;
+    width:200px;
 }

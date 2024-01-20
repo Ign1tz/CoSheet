@@ -274,14 +274,41 @@ export default function SpreadsheetPage() {
         console.log(res)
         let test = <img className={"qrcode"} src={"data:image/jpeg;base64," + res.image}></img>
         setQrCode(test)
+        setShowEmailInput(false)
 
         console.log("Share via QR Code");
         setShowShareMenu(false)
     };
+    const [emailInput, setEmailInput] = useState('');
+    const [showEmailInput, setShowEmailInput] = useState(false);
+    const [emailList, setEmailList] = useState([]);
+
+    const handleEmailInputChange = (event) => {
+        setEmailInput(event.target.value);
+    };
+
+
     const handleShareEmail = () => {
-        console.log("Share via Email");
+        setQrCode(null)
+        setShowEmailInput(true);
+        if (emailInput) {
+            setEmailList(oldList => [...oldList, emailInput]);
+            setEmailInput('');
+        }
         setShowShareMenu(false)
     };
+    async function sendEmails(){
+        setShowEmailInput(false)
+        let response = await fetch("http://localhost:5000/sendEmail/" + cookie.get("username"), {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                body: JSON.stringify({recipients: emailList, title: settings.title})
+            })
+    }
+    console.log(emailList)
 
 
     return (
@@ -292,6 +319,10 @@ export default function SpreadsheetPage() {
                 selectedCell={selectedCell}
                 settingsProps={settings}
             /> : null}
+            <div className="title-description-container">
+                <h2 className="spreadsheet-title">{settings.title}</h2>
+                <p className="spreadsheet-description">{settings.description}</p>
+            </div>
             <div className="header-container">
                 {isOwner ? <div className="share-options">
                     <button className={"shareButton"} onClick={toggleShareMenu}>Share</button>
@@ -306,11 +337,25 @@ export default function SpreadsheetPage() {
                     )}
                 </div> : null}
                 {qrCode}
-                <div className="title-description-container">
-                    <h2 className="spreadsheet-title">{settings.title}</h2>
-                    <p className="spreadsheet-description">{settings.description}</p>
+                {showEmailInput && (
+                        <div className="email-share-container">
+                            <input
+                                type="email"
+                                value={emailInput}
+                                onChange={handleEmailInputChange}
+                                placeholder="Enter email address"
+                            />
+                            <button onClick={handleShareEmail}>Add Email</button>
+                            <button onClick={sendEmails}>Send!</button>
+                        </div>
+                )}
+                <div className="email-list">
+                    {emailList.map((email, index) => (
+                        <div key={index}>{email}</div>
+                    ))}
                 </div>
-                    <button className="save-button" onClick={sendDataToBackend}>Save Spreadsheet</button>
+
+                <button className="save-button" onClick={sendDataToBackend}>Save Spreadsheet</button>
             </div>
             <Spreadsheet
                 numberOfRows={settings.numRows}
