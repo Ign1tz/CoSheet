@@ -12,7 +12,6 @@
 }
 .spreadsheet-title, .spreadsheet-description {
     margin-top: 0.8em;
-    margin-right: 2.5em;
     margin-bottom: 0.8em;
 }
 
@@ -35,8 +34,8 @@
 
 .share-options {
     float: left;
-    position: relative;
-    left: 4em;
+    position: absolute;
+    margin-left: 15em;
 }
 
 .share-menu {
@@ -66,10 +65,20 @@
 background-color: lightgray;
 }
 
+.shareButton {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: grey;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+}
 
 .qrcode {
-    margin-left: 100px;
-    position: relative;
+    margin-left: 22em;
+    margin-bottom: 2.5em;
+    position: absolute;
     height:100px;
 }
 
@@ -77,4 +86,40 @@ background-color: lightgray;
     float: left;
     position: relative;
     width:200px;
+}
+
+.goBack {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: grey;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-left: 4em;
+}
+
+.goBack:active {
+    transform: scale(0.95);
+    background-color: dimgrey;
+}
+
+.add {
+    display: inline-block;
+    padding: 5px 7px;
+    background-color: grey;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+}
+
+.send {
+    display: inline-block;
+    padding: 5px 7px;
+    background-color: grey;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    margin-left: 1em;
 }

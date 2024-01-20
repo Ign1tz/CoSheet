@@ -310,7 +310,6 @@ export default function SpreadsheetPage() {
     }
     console.log(emailList)
 
-
     return (
         <div>
             {isOwner ? <SpreadsheetSettings
@@ -324,8 +323,9 @@ export default function SpreadsheetPage() {
                 <p className="spreadsheet-description">{settings.description}</p>
             </div>
             <div className="header-container">
-                {isOwner ? <div className="share-options">
-                    <button className={"shareButton"} onClick={toggleShareMenu}>Share</button>
+                <a className="goBack" href="http://localhost:3000/dashboard">Dashboard</a>
+                 {isOwner ? <div className="share-options">
+                    <button className={"shareButton"} onClick={toggleShareMenu}>Share ☰</button>
                     {showShareMenu && (
                         <div className="share-menu">
                             <ul>
@@ -345,8 +345,8 @@ export default function SpreadsheetPage() {
                                 onChange={handleEmailInputChange}
                                 placeholder="Enter email address"
                             />
-                            <button onClick={handleShareEmail}>Add Email</button>
-                            <button onClick={sendEmails}>Send!</button>
+                            <button className="add" onClick={handleShareEmail}>Add Email</button>
+                            <button className="send" onClick={sendEmails}>Send !</button>
                         </div>
                 )}
                 <div className="email-list">
@@ -354,7 +354,6 @@ export default function SpreadsheetPage() {
                         <div key={index}>{email}</div>
                     ))}
                 </div>
-
                 <button className="save-button" onClick={sendDataToBackend}>Save Spreadsheet</button>
             </div>
             <Spreadsheet
