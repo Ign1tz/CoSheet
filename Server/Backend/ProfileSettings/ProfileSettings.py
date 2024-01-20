@@ -10,7 +10,7 @@ class ProfileSettings:
     def username_already_taken(self, username):
         sign_up = SignUp()
         if sign_up.prohibit_double_username(username) is False:
-            print("Username is already taken")
+            #print("Username is already taken")
             return False
         return username
 
@@ -33,7 +33,7 @@ class ProfileSettings:
         database_password = database.get_profile({"password": password})
 
         if database_password == new_password:
-            print("Don't use the same password twice.")
+            #print("Don't use the same password twice.")
             return False
         else:
             return True

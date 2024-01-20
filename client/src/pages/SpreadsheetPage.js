@@ -138,7 +138,7 @@ export default function SpreadsheetPage() {
     const fetchSpreadsheetData = async (uuid) => {
         try {
             let response = await fetch(`http://localhost:5000/getspreadsheet/${uuid}`);
-            console.log(response)
+            //console.log(response)
             if (response.status === 200) {
                 const data = await response.json();
                 let spreadsheet = data[0]
@@ -221,7 +221,7 @@ export default function SpreadsheetPage() {
         // decide endpoint depending on existence
         //const endpoint = spreadsheetExists ? 'updatespreadsheet' : 'postspreadsheet';
         const endpoint = "updatespreadsheet";
-        console.log("test")
+        //console.log("test")
         const oldData = {link: window.location.href.split("3000")[1]}
         requestBody = JSON.stringify({old: oldData, new: newData});
         if (spreadsheetExists) { // send old and new
@@ -271,12 +271,12 @@ export default function SpreadsheetPage() {
     const handleShareQRCode = async () => {
         let response = await fetch("http://localhost:5000/getQRCode/" + oldSpreadsheetData[0].link.split("3000/spreadsheet/")[1])
         let res  = await response.json()
-        console.log(res)
+        //console.log(res)
         let test = <img className={"qrcode"} src={"data:image/jpeg;base64," + res.image}></img>
         setQrCode(test)
         setShowEmailInput(false)
 
-        console.log("Share via QR Code");
+        //console.log("Share via QR Code");
         setShowShareMenu(false)
     };
     const [emailInput, setEmailInput] = useState('');
@@ -308,7 +308,7 @@ export default function SpreadsheetPage() {
                 body: JSON.stringify({recipients: emailList, title: settings.title})
             })
     }
-    console.log(emailList)
+    //console.log(emailList)
 
     return (
         <div>

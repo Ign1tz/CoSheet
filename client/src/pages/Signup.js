@@ -42,9 +42,27 @@ export default function Signup() {
                 const result = await request.json();
 
                 setData(result);
+                return result;
 
             }
-            response().then(() => window.location.href = "http://localhost:3000/login");
+            response().then(res => {
+                if (typeof res.error !== 'undefined') {
+                    if (res.error === "abusiv"){
+                        window.alert("Your username was flagged as abusiv.\n Please choose a different one!")
+                        setUserName("")
+                    }
+                    if (res.error === "username"){
+                        window.alert("Your username already exists.\n Please choose a different one!")
+                        setUserName("")
+                    }
+                    if (res.error === "email"){
+                        window.alert("There is already an account registered with this email.\n Please choose a different one!")
+                        setEmail("")
+                    }
+                }else{
+
+                    //window.location.href = "http://localhost:3000/login";
+                }})
         } catch (error) {
             console.error("Something went wrong.", error)
         }
@@ -82,7 +100,6 @@ export default function Signup() {
     }
 
     function handleUsernameRules() {
-        console.log(userName)
         const min = 1;
         const max = 30;
         const allowed_characters = "abcdefghijklmnopqrstuvwxyz1234567890_."
