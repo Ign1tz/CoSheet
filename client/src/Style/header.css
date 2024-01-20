@@ -60,6 +60,7 @@
 }
 
 .userName {
+    color: white;
     position: relative;
     float: left;
     left: 10px;

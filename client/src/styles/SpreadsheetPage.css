@@ -6,10 +6,11 @@
 }
 
 .title-description-container {
+    position: relative;
     text-align: center;
     width: 100%;
+    display: inline-block;
 }
-
 .spreadsheet-title, .spreadsheet-description {
     margin-top: 0.8em;
     margin-right: 2.5em;
@@ -17,6 +18,7 @@
 }
 
 .save-button {
+    display: inline-block;
     position: absolute;
     right: 1em;
     color: white;
@@ -63,4 +65,12 @@
 
 .share-menu ul li:active {
 background-color: lightgray;
+}
+
+
+.qrcode {
+    display: inline-block;
+    margin-left: 100px;
+    position: relative;
+    height:100px;
 }

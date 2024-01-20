@@ -3,16 +3,20 @@ import {useEffect, useState} from "react";
 import defaultProfilePicture from "./profilepicture-menews.png"
 import CoSheetLogo from "./CoSheet logo idea cropped.png"
 import {Link} from "react-router-dom";
+import Cookies from "universal-cookie";
 
 
 export default function Header(props) {
     const [data, setData] = useState([{}])
     const [profilePicture, setProfilePicture] = useState()
-    if (typeof data.username === "undefined"){
-        fetch("http://localhost:5000/getUser").then(res => res.json()).then(data => {
-            setData(data)
+    let cookie = new Cookies()
+    if (typeof data.username === "undefined") {
+        setData({username: cookie.get("username")})
+        fetch("http://localhost:5000/getProfilePicture/" + cookie.get("username")).then(res => res.json()).then(returnedData => {
+            setProfilePicture(<img className={"profilePicture"}
+                                   src={"data:image/jpeg;base64," + returnedData.profile_picture}
+                                   alt={"profliePicture"}/>);
         })
-        fetch("http://localhost:5000/getProfilePicture").then(res => res.json()).then(returnedData => {setProfilePicture(<img className={"profilePicture"} src={"data:image/jpeg;base64," + returnedData.profilePicture.slice(2,-1)}  alt={"profliePicture"}/>); console.log(returnedData.profilePicture.slice(2,-1))})
     }
     //console.log(data)
 
@@ -26,7 +30,9 @@ export default function Header(props) {
             <div className="profile">
                 <button className={"settingsBtn"} type={"button"}>
                     {profilePicture}
-                    <p className={"userName"}>{data.username}</p>
+                    <Link to="/ProfileSettings">
+                        <p className={"userName"}>{data.username}</p>
+                    </Link>
                 </button>
             </div>
         </div>

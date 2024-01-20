@@ -17,7 +17,7 @@ export default function ProfileSettings() {
 
     if (typeof userName === 'undefined' || typeof email === 'undefined') {
         fetch("http://localhost:5000/getUsernameEmail/"+ cookie.get("username")).then(res => res.json().then(return_data => {setUserName(return_data.username);
-        setEmail(return_data.email); setPicture(<img src={"data:image/jpeg;base64," + return_data.profile_picture} alt={"Something went wrong"}></img>)}))
+        setEmail(return_data.email); setPicture(<img className={"img"}  src={"data:image/jpeg;base64," + return_data.profile_picture} alt={"Something went wrong"}></img>); console.log(return_data.profile_picture)}))
 
     }
 
@@ -29,19 +29,18 @@ export default function ProfileSettings() {
 
         try {
             const response = async () => {
-                const request = await fetch("http://localhost:5000/profileSettings", {
+                const request = await fetch("http://localhost:5000/profileSettings/" + cookie.get("username"), {
                     method: 'POST',
                     body: JSON.stringify(data),
                     headers: {
                         'Accept': 'application/json, text/plain',
                         'Content-Type': 'application/json;charset=UTF-8'
                     },
-                });
-
-                const result = await request.json();
-
-                setData(result);
-
+                })
+                let result = await request.json()
+                if (typeof result.username !== "undefined") {
+                    cookie.set("username", result.username)
+                }
             }
             response();
         } catch (error) {
@@ -51,6 +50,7 @@ export default function ProfileSettings() {
     }
 
     function logout() {
+        cookie.remove("username", { path: "/"})
         //fetch
         window.location.href = '/'
     }
@@ -62,7 +62,7 @@ export default function ProfileSettings() {
             let convertedimg = reader.result.split(',')[1]
             setProfilePicture(convertedimg)
             console.log(convertedimg)
-            setPicture(<img src={"data:image/jpeg;base64," + convertedimg}
+            setPicture(<img className={"img"} src={"data:image/jpeg;base64," + convertedimg}
                         alt={"Something went wrong"}></img>)
         }
         console.log(e.target.files[0])
@@ -83,7 +83,7 @@ export default function ProfileSettings() {
                 <input type="email" id="email" name="email" placeholder={email}  value={email}
                        onChange={(e) => setEmail(e.target.value)}/>
 
-                <h3>password {password}</h3>
+                <h3>password</h3>
                 <input type="password" id="current_password" name="confirm_password"
                        placeholder="Enter your current password" value={password}
                        onChange={(e) => setPassword(e.target.value)}/>
@@ -99,14 +99,14 @@ export default function ProfileSettings() {
                 <h3>profile picture</h3>
                 {picture}
                 <input className={"profile_input"} type={"file"} name={"file"} onChange={handleImage}/>
-                <button className="saveChanges" onClick={handleProfileSettings}>
+                <button className="button saveChanges" onClick={handleProfileSettings}>
                     Save Changes
                 </button>
 
-                <button className="GoBack" onClick={() => history(-1)}>
+                <button className="button GoBack" onClick={() => history(-1)}>
                     Go Back
                 </button>
-                <button className="logout-btn" onClick={logout}>
+                <button className="button logout-btn" onClick={logout}>
                     Logout
                 </button>
 
