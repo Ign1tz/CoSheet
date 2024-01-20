@@ -4,8 +4,9 @@ import {Navigate, PublicHomePage} from "react-router-dom";
 import Home from "./pages/Home"
 import Dashboard from "./pages/Dashboard";
 import Spreadsheet from "./pages/Spreadsheet";
-import Login from "./pages/Login"
 import Signup from "./pages/Signup"
+import Login from "./pages/Login"
+import ProfileSettings from "./pages/ProfileSettings";
 
 
 export default function App() {
@@ -32,6 +33,9 @@ export default function App() {
                            element={loggedIn ? <Navigate to="/dashboard" replace={true}/> : <Login/>}></Route>
                     <Route path='/signup'
                            element={loggedIn ? <Navigate to="/dashboard" replace={true}/> : <Signup/>}></Route>
+                    <Route path="/signup" element={<Signup/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/ProfileSettings" element={<ProfileSettings/>}/>
                 </Routes>
             </BrowserRouter>
         </div>

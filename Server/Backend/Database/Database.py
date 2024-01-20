@@ -1,6 +1,3 @@
-from pymongo.mongo_client import MongoClient
-from dotenv import load_dotenv
-import os
 import json
 import requests
 
@@ -42,6 +39,13 @@ class Database:
                           data=json.dumps({"link": link, "owner": owner}), headers={
                 "Content-Type": "application/json"})
 
+    def update_profile(self,  old, new):
+        r = requests.post("http://menews.site/update-profile", data=json.dumps({"old": old, "new": new}), headers={
+            "Content-Type": "application/json"})
+
+    def update_spreadsheet(self, old, new):
+        r = requests.post("http://menews.site/update-spreadsheet", data=json.dumps({"old": old, "new": new}), headers={
+                "Content-Type": "application/json"})#
     """
     deprecated
     def __init__(self):
