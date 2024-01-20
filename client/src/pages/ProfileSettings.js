@@ -74,7 +74,7 @@ export default function ProfileSettings() {
     return (
         <div className="container">
             <h1>Profile Settings</h1>
-            <form action="#" method="post">
+
                 <h3>username</h3>
                 <input type="text" id="username" name="username" placeholder={userName} value={userName}
                        onChange={(e) => setUserName(e.target.value)}/>
@@ -109,7 +109,7 @@ export default function ProfileSettings() {
                 <button className="logout-btn" onClick={logout}>
                     Logout
                 </button>
-            </form>
+
         </div>
     )
 }
