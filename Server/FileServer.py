@@ -90,19 +90,19 @@ def login():
     else:
         email_password_match = login_class.email_password_match(password, email)
         profile = database.get_profile({"email": email})
-        print(profile)
+        #print(profile)
         username = profile[0]["username"]
 
     if username_password_match or email_password_match:
 
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
         # session["username"] = username
-        # print(session.get("username"))
+        # #print(session.get("username"))
         # return redirect(url_for('get_username_email'))
         # Initializing response object
 
         resp = make_response({"username": username})
-        print(request.cookies.get("username"))
+        #print(request.cookies.get("username"))
         resp.set_cookie("username", value=username, domain="http:localhost")
         return resp
     else:
@@ -153,7 +153,7 @@ def delete_spreadsheet(owner):
 @app.route('/profileSettings/<username>', methods=['POST'])
 def profileSettings(username):
     data = request.get_json()
-    print(data)
+    #print(data)
     setting = ProfileSettings()
     database = Database()
     encryption = Encryption()
@@ -215,11 +215,11 @@ def profileSettings(username):
         else:
             new_account["password"] = str(encryption.hash_password(newPassword, salt))
             changed = True
-    # print(old_account, new_account)
+    # #print(old_account, new_account)
     if changed:
         database.update_profile(old_account, new_account)
     if resp:
-        print("test")
+        #print("test")
         return resp
     else:
         return Response(status=200, response=json.dumps({'response': "something happend"}), mimetype="application/json")
@@ -257,7 +257,7 @@ def post_spreadsheets():
     parser = SpreadsheetSettingsParser()
     database = Database()
     data = request.get_json()
-    print(data)
+    #print(data)
     # check if settings are correct on backend
     spreadsheet_settings = parser.from_json(data["settings"])
     if spreadsheet_settings.validate_settings():
@@ -293,11 +293,11 @@ def create_new_spreadsheet(username):
 # get specific spreadsheet by uuid
 @app.route("/getspreadsheet/<uuid>", methods=["GET"])
 def get_spreadsheet(uuid):
-    print({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
+    #print({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
     database = Database()
     # search the link in the database
     spreadsheet = database.get_spreadsheet({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
-    print(spreadsheet)
+    #print(spreadsheet)
     if spreadsheet:
         return jsonify(spreadsheet), 200
     else:
@@ -309,7 +309,7 @@ def get_spreadsheet(uuid):
 def update_spreadsheet():
     database = Database()
     data = request.get_json()
-    print("data:", "http://localhost:5000" + data["old"]["link"])
+    #print("data:", "http://localhost:5000" + data["old"]["link"])
 
     # only if old and new are correct
 
@@ -324,7 +324,7 @@ def update_spreadsheet():
 
 @app.route("/getQRCode/<link>", methods=["GET"])
 def get_qr_code(link):
-    print(link)
+    #print(link)
     new_link = "http://localhost:3000/spreadsheet/" + link
     qr = QRCode()
     img = qr.create_qrcode(new_link)
@@ -335,10 +335,10 @@ def get_qr_code(link):
 def send_email(username):
     mail = MailSharing()
     database = Database()
-    print(request.get_json())
+    #print(request.get_json())
     data = request.get_json()
     email = database.get_profile({"username": username})[0]["email"]
-    print(data["recipients"], data["title"], email)
+    #print(data["recipients"], data["title"], email)
     mail.send_mail(data["recipients"], data["title"], email)
     return Response(status=200, mimetype="application/json")
 

@@ -112,7 +112,7 @@ class SpreadsheetSettingsLogic:
             isthere = database.get_spreadsheet({"link": link})
             if len(isthere) == 0:
                 valid = True
-            print(isthere)
+            #print(isthere)
         return link
 
 

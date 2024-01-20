@@ -5,6 +5,7 @@ import Spreadsheet from "../components/Spreadsheet";
 import WidthBar from "../components/widthBar";
 import '../styles/SpreadsheetPage.css';
 
+import Header from "../components/Header"
 import Cookies from "universal-cookie"
 
 /**
@@ -89,7 +90,7 @@ export default function SpreadsheetPage() {
         let newNumberOfRows = newSettings.numRows;
         let newColumWidths = settings.columWidths
         // add columns
-        console.log(newColumWidths)
+        //console.log(newColumWidths)
         if (newSettings.numColumns > newNumberOfColumns) {
             for (let i = 0; i < (newSettings.numColumns - newNumberOfColumns); i++) {
                 newColumns.push(getColumnName(newNumberOfColumns + i));
@@ -126,7 +127,7 @@ export default function SpreadsheetPage() {
         } else if (newRows.length > newNumberOfRows) {
             newRows = newRows.slice(0, newNumberOfRows);
         }
-        console.log(newColumWidths)
+        //console.log(newColumWidths)
         newSettings.columWidths = newColumWidths
         setColumnHeaders(newColumns);
         setSpreadsheetRows(newRows)
@@ -150,11 +151,11 @@ export default function SpreadsheetPage() {
     const fetchSpreadsheetData = async (uuid) => {
         try {
             let response = await fetch(`http://localhost:5000/getspreadsheet/${uuid}`);
-            console.log(response)
+            //console.log(response)
             if (response.status === 200) {
                 const data = await response.json();
                 let spreadsheet = data[0]
-                console.log(spreadsheet.settings.allowLoggedInEdit)
+                //console.log(spreadsheet.settings.allowLoggedInEdit)
                 if (spreadsheet.settings.allowLoggedInEdit) {
                     if (typeof cookie.get("username") === "undefined") {
                         window.location.href = "/"
@@ -245,7 +246,7 @@ export default function SpreadsheetPage() {
         // decide endpoint depending on existence
         //const endpoint = spreadsheetExists ? 'updatespreadsheet' : 'postspreadsheet';
         const endpoint = "updatespreadsheet";
-        console.log("test")
+        //console.log("test")
         const oldData = {link: window.location.href.split("3000")[1]}
         requestBody = JSON.stringify({old: oldData, new: newData});
         if (spreadsheetExists) { // send old and new
@@ -295,12 +296,12 @@ export default function SpreadsheetPage() {
     const handleShareQRCode = async () => {
         let response = await fetch("http://localhost:5000/getQRCode/" + oldSpreadsheetData[0].link.split("3000/spreadsheet/")[1])
         let res = await response.json()
-        console.log(res)
+        //console.log(res)
         let test = <img className={"qrcode"} src={"data:image/jpeg;base64," + res.image}></img>
         setQrCode(test)
         setShowEmailInput(false)
 
-        console.log("Share via QR Code");
+        //console.log("Share via QR Code");
         setShowShareMenu(false)
     };
     const [emailInput, setEmailInput] = useState('');
@@ -337,11 +338,13 @@ export default function SpreadsheetPage() {
 
     return (
         <div>
+            <Header/>
             {isOwner ? <SpreadsheetSettings
                 onSettingsChange={handleSettingsChange}
                 onApplyFormatting={handleApplyFormatting}
                 selectedCell={selectedCell}
                 settingsProps={settings}
+                saveSpreadsheet={sendDataToBackend}
             /> : null}
             <div className="title-description-container">
                 <h2 className="spreadsheet-title">{settings.title}</h2>
@@ -373,11 +376,12 @@ export default function SpreadsheetPage() {
                         <button onClick={sendEmails}>Send!</button>
                     </div>
                 )}
-                <div className="email-list">
+
+                {showEmailInput  && (<div className="email-list">
                     {emailList.map((email, index) => (
                         <div key={index}>{email}</div>
                     ))}
-                </div>
+                </div>)}
 
                 <button className="save-button" onClick={sendDataToBackend}>Save Spreadsheet</button>
             </div>

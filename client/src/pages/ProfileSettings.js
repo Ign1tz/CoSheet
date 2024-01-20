@@ -17,7 +17,7 @@ export default function ProfileSettings() {
 
     if (typeof userName === 'undefined' || typeof email === 'undefined') {
         fetch("http://localhost:5000/getUsernameEmail/"+ cookie.get("username")).then(res => res.json().then(return_data => {setUserName(return_data.username);
-        setEmail(return_data.email); setPicture(<img className={"img"}  src={"data:image/jpeg;base64," + return_data.profile_picture} alt={"Something went wrong"}></img>); console.log(return_data.profile_picture)}))
+        setEmail(return_data.email); setPicture(<img className={"img"}  src={"data:image/jpeg;base64," + return_data.profile_picture} alt={"Something went wrong"}></img>); }))
 
     }
 
@@ -56,16 +56,16 @@ export default function ProfileSettings() {
     }
 
     function handleImage(e) {
-        console.log(e)
+        //console.log(e)
         let reader = new FileReader()
         reader.onloadend = function(e){
             let convertedimg = reader.result.split(',')[1]
             setProfilePicture(convertedimg)
-            console.log(convertedimg)
+            //console.log(convertedimg)
             setPicture(<img className={"img"} src={"data:image/jpeg;base64," + convertedimg}
                         alt={"Something went wrong"}></img>)
         }
-        console.log(e.target.files[0])
+        //console.log(e.target.files[0])
         reader.readAsDataURL(e.target.files[0])
 
     }

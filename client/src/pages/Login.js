@@ -26,7 +26,7 @@ export default function Login() {
                 });
 
                 const result = await request.json();
-                console.log(result);
+                //result);
 
                 const cookie = new Cookies()
                 cookie.set("username", result.username,{path: '/'})

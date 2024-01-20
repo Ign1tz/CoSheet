@@ -12,7 +12,7 @@ export default function Bar(props) {
         oldWidths[props.index] = size.width
 
         newSettings.columWidths = oldWidths
-        console.log(props.settings.columWidths.reduce((a,b) => a+b,0))
+        //props.settings.columWidths.reduce((a,b) => a+b,0))
         if (newSettings.columWidths.reduce((a, b) => a + b, 0) <= 1750) {
             setState({width: size.width})
             props.setSettings(newSettings)

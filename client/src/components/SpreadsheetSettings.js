@@ -4,7 +4,7 @@ import '../styles/SpreadsheetSettings.css';
 /**
  * class with all settings for spreadsheets
  */
-export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell, settingsProps }) {
+export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell, settingsProps, saveSpreadsheet }) {
 
     // get most things from spreadsheet page with settingsProps.
     const [showSettings, setShowSettings] = useState(false);
@@ -107,7 +107,6 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
             alert('Invalid allow logged in edit setting.');
             return;
         }
-
         applyFormatting()
 
         onSettingsChange({

@@ -17,7 +17,7 @@ class QRCode:
         buffered = BytesIO()
         qrcode = make(data)
         qrcode.save(buffered)
-        print(base64.b64encode(buffered.getvalue()))
+        #print(base64.b64encode(buffered.getvalue()))
         return str(base64.b64encode(buffered.getvalue()))[2:-1]
 
 

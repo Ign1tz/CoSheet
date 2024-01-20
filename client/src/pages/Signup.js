@@ -82,7 +82,7 @@ export default function Signup() {
     }
 
     function handleUsernameRules() {
-        console.log(userName)
+        //console.log(userName)
         const min = 1;
         const max = 30;
         const allowed_characters = "abcdefghijklmnopqrstuvwxyz1234567890_."
