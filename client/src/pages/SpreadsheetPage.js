@@ -338,7 +338,6 @@ export default function SpreadsheetPage() {
 
     return (
         <div>
-            <Header/>
             {isOwner ? <SpreadsheetSettings
                 onSettingsChange={handleSettingsChange}
                 onApplyFormatting={handleApplyFormatting}

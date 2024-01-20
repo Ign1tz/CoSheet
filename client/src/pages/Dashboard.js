@@ -8,11 +8,13 @@ import Cookies from "universal-cookie";
 
 export default function Dashboard() {
     const [data, setData] = useState([{}])
+    const [reqested, setReqested] = useState(false)
 
     let cookie = new Cookies()
-    if (typeof data.titles === "undefined"){
+    if (typeof data.titles === "undefined" && !reqested){
         fetch("http://localhost:5000/get-spreadsheet-titles/" + cookie.get("username")).then(res => res.json()).then(data => {
             setData(data)
+            setReqested(true)
             //console.log(data)
         })
     }

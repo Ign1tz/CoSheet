@@ -137,7 +137,7 @@ def return_spreadsheets_titles(username):
             spreadsheet_data["links"].append(sheet["link"])
         response = Response(status=200, response=json.dumps(spreadsheet_data), mimetype="application/json")
     else:
-        response = Response(status=406)
+        response = Response(status=406, response=json.dumps({"error":"error"}), mimetype="application/json")
     return response
 
 
