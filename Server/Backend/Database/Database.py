@@ -17,6 +17,9 @@ class Database:
         r = requests.get("http://menews.site/get-spreadsheet",
                          data=json.dumps(key_pair), headers={
                 "Content-Type": "application/json"})
+        data = json.loads(r.text)
+        if data is None:
+            return None
         return json.loads(r.text)["spreadsheets"]
 
     def add_profile(self, profile):
@@ -29,6 +32,7 @@ class Database:
         r = requests.post("http://menews.site/add-spreadsheet",
                           data=json.dumps(spreadsheet), headers={
                 "Content-Type": "application/json"})
+        print(r)
 
     def delete_profile(self, username, password):
         r = requests.post("http://menews.site/remove-profile",
@@ -40,6 +44,13 @@ class Database:
                           data=json.dumps({"title": title, "owner": owner}), headers={
                 "Content-Type": "application/json"})
 
+    def update_profile(self,  old, new):
+        r = requests.post("http://menews.site/update-profile", data=json.dumps({"old": old, "new": new}), headers={
+            "Content-Type": "application/json"})
+
+    def update_spreadsheet(self, old, new):
+        r = requests.post("http://menews.site/update-spreadsheet", data=json.dumps({"old": old, "new": new}), headers={
+                "Content-Type": "application/json"})
     """
     deprecated
     def __init__(self):

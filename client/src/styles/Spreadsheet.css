@@ -1,7 +1,7 @@
 .spreadsheetContainer {
-    margin-left: 8em;
-    margin-right: 8em;
-    margin-top: 4em;
+    margin-left: 4em;
+    margin-right: 4em;
+    margin-top: 1em;
     overflow-x: auto;
     display: flex;
     align-items: flex-start;
@@ -13,19 +13,21 @@
 }
 
 .spreadsheetContainer table {
-    border: 2px solid #000;
+    border: 0.1em solid #000;
     border-collapse: collapse;
     width: 100%;
     table-layout: auto;
 }
 
 .spreadsheetContainer td {
-    border: 1px solid #888;
-    padding: 8px;
-    height: 20px;
+    border: 0.08em solid #888;
+    padding: 0.4em;
+    height: 1.5em;
     text-align: center;
     min-width: 5em;
-    white-space: nowrap;
+    max-width: 15em;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .spreadsheetContainer td.editable {
@@ -45,22 +47,39 @@
 }
 
 .spreadsheetContainer th {
-    border: 1px solid #888;
+    border: 0.08em solid #888;
     background-color: #f2f2f2;
     font-weight: bold;
     text-align: center;
     min-width: 1.5em;
+    float: none;
 }
 
 .spreadsheetContainer input[type="number"] {
     padding: 0.5em;
     margin-left: 1em;
-    border: 1px solid #ccc;
+    border: 0.08em solid #ccc;
     border-radius: 4px;
 }
 
 .label {
     display: inline-block;
     margin-right: 0.5em;
-    font-size: 16px;
+    font-size: 1.5em;
+}
+
+.spreadsheet-title {
+    text-align: center;
+    font-size: 1.5em;
+    margin: 0.5em;
+}
+
+.spreadsheet-description {
+    text-align: center;
+    margin: 0;
+}
+
+.apply-button button:active {
+    transform: scale(0.98);
+    opacity: 0.8;
 }
