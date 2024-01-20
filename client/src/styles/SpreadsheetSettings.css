@@ -1,0 +1,107 @@
+.ribbon-container {
+    font-family: 'Segoe UI', 'Calibri', sans-serif;
+    border-bottom: 0.08em solid lightgrey;
+    background-color: #f3f3f3;
+    width: auto;
+}
+
+.ribbon-header {
+    display: flex;
+    justify-content: center;
+    padding: 1em;
+}
+
+.ribbon-header button {
+    background-color: #0078d7;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 0.15em;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.ribbon-settings {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    background-color: #f3f3f3;
+    padding: 0.8em;
+    border-top: 0.08em solid lightgrey;
+}
+
+.setting-group {
+    margin-right: 1.5em;
+    display: flex;
+    flex-direction: column;
+}
+
+.setting-group label {
+    font-size: 0.8em;
+    margin-bottom: 0.3em;
+}
+
+.setting-group input[type="text"],
+.setting-group input[type="number"] {
+    padding: 0.45em;
+    border: 0.08em solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.range-values {
+    font-size: 0.7em;
+    color: #666;
+    text-align: center;
+}
+
+.apply-button {
+    margin-left: auto;
+}
+
+.apply-button button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 0.15em;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+
+.setting-group button {
+    background-color: grey;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 0.1em;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-top: 0.25em;
+    margin-bottom: 0.5em;
+}
+
+.setting-group button.button-active {
+    background-color: #444;
+}
+
+.setting-group input[type="color"] {
+    height: 2em;
+    border: 0.08em solid #ccc;
+    border-radius: 0.2em;
+    padding: 0;
+    width: 3.8em;
+    cursor: pointer;
+}
+
+.setting-group input[type="text"],
+.setting-group input[type="number"],
+.setting-group input[type="range"] {
+    margin-bottom: 0.9em;
+}
+
+@media screen and (max-width: 1240px) {
+    .ribbon-settings {
+        flex-wrap: wrap;
+    }
+}
