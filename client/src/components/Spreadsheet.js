@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import '../styles/Spreadsheet.css';
 
+/**
+ * class to display a spreadsheet
+ */
 export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSelect, selectedCell, columnHeadersEditable, editEmptyOnly, setSpreadsheetRows, spreadsheetRows, cellWidth, setColumnHeaders, columnHeaders, isLoggedIn, allowLoggedInEdit }) {
 
     const handleCellContentChange = (rowIndex, colIndex, content) => {

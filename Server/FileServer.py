@@ -93,12 +93,14 @@ def login():
     return response
 
 
+# add a new spreadsheet to the database
 @app.route("/postspreadsheet", methods=["POST"])
 def post_spreadsheets():
     parser = SpreadsheetSettingsParser()
     database = Database()
     data = request.get_json()
     print(data)
+    # check if settings are correct on backend
     spreadsheet_settings = parser.from_json(data["settings"])
     if spreadsheet_settings.validate_settings():
         database.add_spreadsheet(data)
@@ -106,10 +108,11 @@ def post_spreadsheets():
     return Response(status=200, mimetype="application/json")
 
 
+# add default spreadsheet to the database
 @app.route("/createnewspreadsheet", methods=["GET"])
 def create_new_spreadsheet():
     spreadsheet_settings_logic = SpreadsheetSettingsLogic()
-    link = spreadsheet_settings_logic.createLink()
+    link = spreadsheet_settings_logic.createLink()  # link including uuid
     parser = SpreadsheetSettingsParser()
     database = Database()
     owner = "TestOwner"     # change to real owner
@@ -125,9 +128,11 @@ def create_new_spreadsheet():
     return jsonify(default_spreadsheet), 200
 
 
+# get specific spreadsheet by uuid
 @app.route("/getspreadsheet/<uuid>", methods=["GET"])
 def get_spreadsheet(uuid):
     database = Database()
+    # search the link in the database
     spreadsheet = database.get_spreadsheet({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
     if spreadsheet:
         return jsonify(spreadsheet), 200
@@ -135,16 +140,19 @@ def get_spreadsheet(uuid):
         return jsonify({"error": "Spreadsheet not found"}), 406
 
 
+# update an already existing spreadsheet
 @app.route("/updatespreadsheet", methods=["POST"])
 def update_spreadsheet():
     database = Database()
     data = request.get_json()
     print("data:", data)
 
+    # only if old and new are correct
     if not data or 'old' not in data or 'new' not in data:
         return jsonify({"error": "Invalid data provided"}), 400
 
     new_data = data['new']
+    # get old data from database
     old = database.get_spreadsheet({"link": data["old"][0]["link"]})[0]
 
     success = database.update_spreadsheet(old, new_data)
