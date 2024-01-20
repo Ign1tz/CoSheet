@@ -1,0 +1,126 @@
+.home-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    background-color: lightgray;
+
+}
+
+.hero-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30vh;
+    background-color: lightgrey;
+    margin-bottom: 0;
+    text-align: center;
+    padding: 0;
+    border-radius: 2px;
+}
+
+.header-content {
+    max-width: 600px;
+}
+
+.header-content p {
+    font-size: 1.5em;
+    margin-top: 20px;
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+.about {
+    margin-top: 110px;
+}
+
+.creators {
+    margin-top: 70px;
+    margin-bottom: 30px;
+}
+
+.creators-list {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 10px;
+    height: 70px;
+    border-radius: 2px;
+    margin-top: 6px;
+}
+
+.cosheet-button {
+  margin: 0;
+  height: auto;
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.cosheet-button {
+  --border-right: 6px;
+  --text-stroke-color: white;
+  --animation-color: grey;
+  --fs-size: 5em;
+  letter-spacing: 3px;
+  text-decoration: none;
+  font-size: var(--fs-size);
+  font-family: "Arial";
+  position: relative;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-stroke-color);
+}
+
+.hover-text {
+  position: absolute;
+  box-sizing: border-box;
+  content: attr(data-text);
+  color: var(--animation-color);
+  width: 0%;
+  inset: 0;
+  border-right: var(--border-right) solid var(--animation-color);
+  overflow: hidden;
+  transition: 0.5s;
+  -webkit-text-stroke: 1px var(--animation-color);
+}
+
+.cosheet-button:hover .hover-text {
+  width: 100%;
+  filter: drop-shadow(0 0 23px var(--animation-color))
+}
+
+.dashboard-button {
+  background-color: lightgrey;
+  color: black;
+  border-radius: 10em;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 1em 2em;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  border: 1px solid black;
+  box-shadow: 0 0 0 0 black;
+}
+
+.dashboard-button:hover {
+  transform: translateY(-4px) translateX(-2px);
+  box-shadow: 2px 5px 0 0 black;
+}
+
+.dashboard-button:active {
+  transform: translateY(2px) translateX(1px);
+  box-shadow: 0 0 0 0 black;
+}

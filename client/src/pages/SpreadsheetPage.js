@@ -351,8 +351,9 @@ export default function SpreadsheetPage() {
                 <p className="spreadsheet-description">{settings.description}</p>
             </div>
             <div className="header-container">
-                {isOwner ? <div className="share-options">
-                    <button className={"shareButton"} onClick={toggleShareMenu}>Share</button>
+                <a className="goBack" href="http://localhost:3000/dashboard">Dashboard</a>
+                 {isOwner ? <div className="share-options">
+                    <button className={"shareButton"} onClick={toggleShareMenu}>Share ☰</button>
                     {showShareMenu && (
                         <div className="share-menu">
                             <ul>
@@ -365,16 +366,16 @@ export default function SpreadsheetPage() {
                 </div> : null}
                 {qrCode}
                 {showEmailInput && (
-                    <div className="email-share-container">
-                        <input
-                            type="email"
-                            value={emailInput}
-                            onChange={handleEmailInputChange}
-                            placeholder="Enter email address"
-                        />
-                        <button onClick={handleShareEmail}>Add Email</button>
-                        <button onClick={sendEmails}>Send!</button>
-                    </div>
+                        <div className="email-share-container">
+                            <input
+                                type="email"
+                                value={emailInput}
+                                onChange={handleEmailInputChange}
+                                placeholder="Enter email address"
+                            />
+                            <button className="add" onClick={handleShareEmail}>Add Email</button>
+                            <button className="send" onClick={sendEmails}>Send !</button>
+                        </div>
                 )}
 
                 {showEmailInput  && (<div className="email-list">
