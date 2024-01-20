@@ -3,15 +3,12 @@ import '../Style/widthBar.css';
 import Bar from "./Bar"
 
 export default function WidthBar(props) {
-    let widths = props.widths
-    widths = [100,50,100]
-
+    let widths = props.settings.columWidths
 
 
     let widthBars = []
     for (let i = 0; i < widths.length; i++) {
-        console.log(i)
-        let bar = <Bar width={100}/>
+        let bar = <Bar key={i} width={widths[i]} settings={props.settings} setSettings={props.setSettings} index={i} onSettingsChange={props.onSettingsChange}/>
         widthBars.push(bar)
     }
     //console.log(widthBars)

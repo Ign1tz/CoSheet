@@ -7,6 +7,10 @@
     align-items: flex-start;
 }
 
+.table{
+    max-width:1750px;
+}
+
 .createButton {
     margin-left: 2em;
     margin-top: 2em;

@@ -26,6 +26,7 @@ export default function SpreadsheetPage() {
         isTextBold: false,
         cellBackgroundColor: '#FFFFFF',
         selectedFont: 'Arial',
+        columWidths: [40,250,250,250,250]
     });
 
     // get for each column header its own name
@@ -77,13 +78,19 @@ export default function SpreadsheetPage() {
         let newRows = spreadsheetRows;
         let newNumberOfColumns = newColumns.length;
         let newNumberOfRows = newSettings.numRows;
-
+        let newColumWidths = settings.columWidths
         // add columns
+        console.log(newColumWidths)
         if (newSettings.numColumns > newNumberOfColumns) {
             for (let i = 0; i < (newSettings.numColumns - newNumberOfColumns); i++) {
                 newColumns.push(getColumnName(newNumberOfColumns + i));
                 for (let row of newRows) {
                     row.push('');
+                }
+                newColumWidths.push(250)
+                if (newColumWidths.reduce((a,b) => a+b,0) >1750){
+                    let index = newColumWidths.indexOf(Math.max(...newColumWidths))
+                    newColumWidths[index] = newColumWidths[index] - (newColumWidths.reduce((a,b) => a+b,0) - 1750)
                 }
             }
             setColumnHeaders(newColumns);
@@ -95,6 +102,7 @@ export default function SpreadsheetPage() {
                 for (let row of newRows) {
                     row.pop();
                 }
+                newColumWidths.pop()
             }
         }
 
@@ -109,7 +117,8 @@ export default function SpreadsheetPage() {
         } else if (newRows.length > newNumberOfRows) {
             newRows = newRows.slice(0, newNumberOfRows);
         }
-
+        console.log(newColumWidths)
+        newSettings.columWidths = newColumWidths
         setColumnHeaders(newColumns);
         setSpreadsheetRows(newRows)
         setSettings({...settings, ...newSettings});
@@ -308,7 +317,7 @@ export default function SpreadsheetPage() {
                     <button onClick={createNewSpreadsheet}>New</button>
                 </div>
             </div>
-            <WidthBar></WidthBar>
+            <WidthBar onSettingsChange={handleSettingsChange} settings = {settings} setSettings={setSettings}></WidthBar>
             <Spreadsheet
                 numberOfRows={settings.numRows}
                 numberOfColumns={settings.numColumns}
@@ -323,6 +332,7 @@ export default function SpreadsheetPage() {
                 columnHeaders={columnHeaders}
                 isLoggedIn={isLoggedIn}
                 allowLoggedInEdit={settings.allowLoggedInEdit}
+                columWidths={settings.columWidths}
             />
         </div>
     );
