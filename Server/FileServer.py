@@ -8,6 +8,7 @@ from flask_session import Session
 from flask_cors import CORS
 import os
 import json
+from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, SpreadsheetSettingsLogic
 from Backend.Database.Database import Database
 import requests
 from Server.Backend.Login.SignUp import SignUp
@@ -19,7 +20,7 @@ import numpy as np
 
 app = Flask(__name__)
 app.debug = True
-app._staic_folder = os.path.abspath("static/")
+app._static_folder = os.path.abspath("static/")
 CORS(app, support_credentials=True)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -107,6 +108,7 @@ def login():
             errors.append("Email or password is not correct.")
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
+
 
 
 @app.route('/profileSettings/<username>', methods=['POST'])
@@ -199,6 +201,76 @@ def get_username_email(username):
     profile_picture = data["profile_picture"]
     return_data = {"username": username, "email": email, "profile_picture": profile_picture}
     return return_data
+  
+# add a new spreadsheet to the database
+@app.route("/postspreadsheet", methods=["POST"])
+def post_spreadsheets():
+    parser = SpreadsheetSettingsParser()
+    database = Database()
+    data = request.get_json()
+    print(data)
+    # check if settings are correct on backend
+    spreadsheet_settings = parser.from_json(data["settings"])
+    if spreadsheet_settings.validate_settings():
+        database.add_spreadsheet(data)
+        pass
+    return Response(status=200, mimetype="application/json")
+
+
+# add default spreadsheet to the database
+@app.route("/createnewspreadsheet", methods=["GET"])
+def create_new_spreadsheet():
+    spreadsheet_settings_logic = SpreadsheetSettingsLogic()
+    link = spreadsheet_settings_logic.createLink()  # link including uuid
+    parser = SpreadsheetSettingsParser()
+    database = Database()
+    owner = "TestOwner"     # change to real owner
+
+    default_spreadsheet_settings = SpreadsheetSettings(
+        "Default Title", 50, False, 4, 20, False, "This is a small description for the default spreadsheet.",
+        False
+    )
+    json_of_default = parser.to_json(default_spreadsheet_settings)
+
+    default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": "NONE", "owner": "NONE"}
+    database.add_spreadsheet(default_spreadsheet)
+    return jsonify(default_spreadsheet), 200
+
+
+# get specific spreadsheet by uuid
+@app.route("/getspreadsheet/<uuid>", methods=["GET"])
+def get_spreadsheet(uuid):
+    database = Database()
+    # search the link in the database
+    spreadsheet = database.get_spreadsheet({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
+    if spreadsheet:
+        return jsonify(spreadsheet), 200
+    else:
+        return jsonify({"error": "Spreadsheet not found"}), 406
+
+
+# update an already existing spreadsheet
+@app.route("/updatespreadsheet", methods=["POST"])
+def update_spreadsheet():
+    database = Database()
+    data = request.get_json()
+    print("data:", data)
+
+    # only if old and new are correct
+    if not data or 'old' not in data or 'new' not in data:
+        return jsonify({"error": "Invalid data provided"}), 400
+
+    new_data = data['new']
+    # get old data from database
+    old = database.get_spreadsheet({"link": data["old"][0]["link"]})[0]
+
+    success = database.update_spreadsheet(old, new_data)
+
+    if success:
+        return jsonify({"message": "Spreadsheet updated successfully"}), 200
+    else:
+        return jsonify({"error": "Failed to update spreadsheet"}), 500
+
 
 
 if __name__ == '__main__':
