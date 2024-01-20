@@ -1,3 +1,4 @@
+import json
 import time
 
 import bcrypt
@@ -38,5 +39,10 @@ if __name__ == "__main__":
     start = time.time()
     #key = e.generate_whole_key()
     #print(e.encrypt("hallo", key))
-    print(e.generate_whole_key())
+    key = e.generate_whole_key()
+    print(key[0])
+    text = "text"
+    t=e.encrypt(text, key[0])
+    print(e.encrypt(text, key[0]))
+    print(e.decrypt(t, key[1]))
     print("--- %s seconds ---" % (time.time() - start))

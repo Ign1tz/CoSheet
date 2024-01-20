@@ -36,8 +36,7 @@ export default function Login() {
                 setData(result);
 
             }
-            response()//.then(() => window.location.href = "http://localhost:3000/ProfileSettings")
-
+            response().then(() => window.location.href = "http://localhost:3000/dashboard")
         } catch (error) {
             console.error("Something went wrong.", error)
             //let password_empty = document.getElementById("password")

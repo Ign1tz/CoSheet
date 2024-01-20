@@ -28,6 +28,7 @@ export default function Spreadsheet({numberOfColumns, cellFormatting, onCellSele
                         {[...Array(numberOfColumns)].map((_, colIndex) => (
                             <th key={colIndex} contentEditable={columnHeadersEditable} className="spreadsheetHeader"
                                 onBlur={(e) => {
+                                    console.log(columnHeaders)
                                     const newHeaders = [...columnHeaders];
                                     newHeaders[colIndex] = e.target.innerText;
                                     setColumnHeaders(newHeaders);

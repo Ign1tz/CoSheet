@@ -49,13 +49,13 @@ input:focus {
     border-inline: 2px solid #12B1D1;
 }
 
-img {
+.img {
     width: 30%;
     border-radius: 50%;
     aspect-ratio: 1/1;
 }
 
-button {
+.button {
     display: block;
     width: 60%;
     font-weight: bold;
