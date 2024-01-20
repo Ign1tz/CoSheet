@@ -94,10 +94,6 @@ def login():
     if username_password_match or email_password_match:
 
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
-        #session["username"] = username
-        #print(session.get("username"))
-        #return redirect(url_for('get_username_email'))
-        # Initializing response object
 
         resp = make_response({"username": username})
         print(request.cookies.get("username"))
@@ -194,9 +190,9 @@ def get_profile_picture(username):
 def get_username_email(username):
     database = Database()
     test = request.url.replace("http://localhost:5000/getUsernameEmail?username=", "")
-    print(username)
-    print("AAAAAA")
+
     data = database.get_profile({"username": username})
+
     data = data[0]
     username = data["username"]
     email = data["email"]
