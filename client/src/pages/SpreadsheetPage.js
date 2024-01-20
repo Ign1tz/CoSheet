@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SpreadsheetSettings from "../components/SpreadsheetSettings";
 import Spreadsheet from "../components/Spreadsheet";
+import WidthBar  from "../components/widthBar";
 import '../styles/SpreadsheetPage.css';
 
 
@@ -276,6 +277,7 @@ export default function SpreadsheetPage() {
                     <button onClick={createNewSpreadsheet}>New</button>
                 </div>
             </div>
+            <WidthBar></WidthBar>
             <Spreadsheet
                 numberOfRows={settings.numRows}
                 numberOfColumns={settings.numColumns}

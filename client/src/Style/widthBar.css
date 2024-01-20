@@ -1,0 +1,33 @@
+.test {
+    position: absolute;
+    background-color: blue;
+    float: left;
+    height: 15px;
+}
+
+.seperator {
+    height: 10px;
+    background-color: red;
+    float: left;
+    padding-left: 5px;
+}
+
+.barContainer {
+    display: block;
+    margin-left: 4em;
+    margin-right: 4em;
+}
+
+.react-resizable-handle {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    background-color: red;
+    float: right;
+    z-index: 2;
+    width: 10px;
+    height: 15px;
+    box-sizing: border-box;
+    cursor: e-resize;
+}
+
