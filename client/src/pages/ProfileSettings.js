@@ -4,7 +4,6 @@ import {useNavigate} from "react-router-dom";
 import Cookies from "universal-cookie";
 
 export default function ProfileSettings() {
-    const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirm_password, setConfirmPassword] = useState('');
@@ -17,7 +16,7 @@ export default function ProfileSettings() {
 
     if (typeof userName === 'undefined' || typeof email === 'undefined') {
         fetch("http://localhost:5000/getUsernameEmail/"+ cookie.get("username")).then(res => res.json().then(return_data => {setUserName(return_data.username);
-        setEmail(return_data.email); setPicture(<img className={"img"}  src={"data:image/jpeg;base64," + return_data.profile_picture} alt={"Something went wrong"}></img>); console.log(return_data.profile_picture)}))
+        setEmail(return_data.email); setPicture(<img className={"img"}  src={"data:image/jpeg;base64," + return_data.profile_picture} alt={"Something went wrong"}></img>); }))
 
     }
 
@@ -56,16 +55,13 @@ export default function ProfileSettings() {
     }
 
     function handleImage(e) {
-        console.log(e)
         let reader = new FileReader()
-        reader.onloadend = function(e){
+        reader.onloadend = function(){
             let convertedimg = reader.result.split(',')[1]
             setProfilePicture(convertedimg)
-            console.log(convertedimg)
             setPicture(<img className={"img"} src={"data:image/jpeg;base64," + convertedimg}
                         alt={"Something went wrong"}></img>)
         }
-        console.log(e.target.files[0])
         reader.readAsDataURL(e.target.files[0])
 
     }
@@ -98,7 +94,7 @@ export default function ProfileSettings() {
 
                 <h3>profile picture</h3>
                 {picture}
-                <input className={"profile_input"} type={"file"} name={"file"} onChange={handleImage}/>
+                <input  className={"profile_input"} type={"file"} accept={"image/png, image/gif, image/jpeg"} name={"file"} onChange={handleImage}/>
                 <button className="button saveChanges" onClick={handleProfileSettings}>
                     Save Changes
                 </button>
