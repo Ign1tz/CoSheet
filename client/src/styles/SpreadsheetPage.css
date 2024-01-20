@@ -8,8 +8,8 @@
 .title-description-container {
     text-align: center;
     width: 100%;
+    display: inline-block;
 }
-
 .spreadsheet-title, .spreadsheet-description {
     margin-top: 0.8em;
     margin-right: 2.5em;
@@ -17,6 +17,7 @@
 }
 
 .save-button {
+    display: inline-block;
     position: absolute;
     right: 1em;
     color: white;
@@ -33,8 +34,8 @@
 }
 
 .share-options {
+    float: left;
     position: relative;
-    display: inline-block;
     left: 4em;
 }
 
@@ -63,4 +64,17 @@
 
 .share-menu ul li:active {
 background-color: lightgray;
+}
+
+
+.qrcode {
+    margin-left: 100px;
+    position: relative;
+    height:100px;
+}
+
+.email-share-container{
+    float: left;
+    position: relative;
+    width:200px;
 }

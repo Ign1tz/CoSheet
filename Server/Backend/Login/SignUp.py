@@ -2,6 +2,8 @@ from Server.Backend.Login.Account import Account
 from Server.Backend.Encryption.Encryption import Encryption
 from Server.Backend.Database.Database import Database
 from Server.Backend.Login.Account import AccountParser
+from dotenv import load_dotenv
+import os
 import re
 
 
@@ -12,13 +14,13 @@ class SignUp:
     def create_new_account(self, username, password, email):
         encrypt = Encryption()
         account = AccountParser()
-       # whole_key = encrypt.generate_whole_key()
-        #public_key = encrypt.generate_public_key()
         salt = encrypt.gen_salt()
 
         hashed_password = encrypt.hash_password(password, salt)
-
-        new_account = Account(username, str(hashed_password), email, "None", str(salt))
+        path = os.path.join(os.path.join(os.path.dirname(__file__), './default_picture.txt'))
+        with open(path, "r") as file:
+            picture = file.read()
+        new_account = Account(username, str(hashed_password), email, picture, str(salt))
 
         new_account = account.account_to_json(new_account)
         return new_account
@@ -33,17 +35,16 @@ class SignUp:
         # get_username_database = database.get_from_database(database.profile_database, {"username": username})
         get_username_database = database.get_profile({"username": username})
 
-        if not len(get_username_database):
+        if len(get_username_database) == 0:
             return True
         else:
             return False
 
     def prohibit_double_eMail(self, email):
         database = Database()
-        # get_e_mail_database = database.get_from_database(database.profile_database, {"e_mail": e_mail})
         get_e_mail_database = database.get_profile({"email": email})
 
-        if not len(get_e_mail_database):
+        if len(get_e_mail_database) == 0:
             return True
         else:
             return False
@@ -90,6 +91,8 @@ class SignUp:
             print("Username is too long.")
             return False
 
+    def email_rules(self, email):
+        ad = "Q"
 #ToDo:
 # comment code
 # add profile settings

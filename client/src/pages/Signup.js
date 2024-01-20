@@ -44,7 +44,7 @@ export default function Signup() {
                 setData(result);
 
             }
-            response();
+            response().then(() => window.location.href = "http://localhost:3000/login");
         } catch (error) {
             console.error("Something went wrong.", error)
         }
@@ -120,7 +120,7 @@ export default function Signup() {
                         <input type="password" className="input" name="password2" placeholder="Confirm Password"
                                required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
                     </div>
-                    <button onClick={handleSubmit}>Sign up</button>
+                    <button className={"button"} onClick={handleSubmit}>Sign up</button>
                 </form>
                 <div className="form-section">
                     <p>Have an account? <Link to="http://localhost:3000/login">Login</Link></p>

@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import SpreadsheetSettings from "../components/SpreadsheetSettings";
 import Spreadsheet from "../components/Spreadsheet";
 import WidthBar  from "../components/widthBar";
 import '../styles/SpreadsheetPage.css';
 
+import Cookies from "universal-cookie"
+
 /**
  * The page where a spreadsheet and its settings get displayed
  */
 export default function SpreadsheetPage() {
-
+    let cookie = new Cookies()
     let uuid = window.location.pathname.replace('/spreadsheet/', '');
-    const navigate = useNavigate();
 
     // states to store all default settings
     const [settings, setSettings] = useState({
@@ -28,6 +29,24 @@ export default function SpreadsheetPage() {
         selectedFont: 'Arial',
         columWidths: [40,250,250,250,250]
     });
+
+
+    // to check if the spreadsheet already exists
+    const [spreadsheetExists, setSpreadsheetExists] = useState(false);
+    // for updating I need the old spreadsheet
+    const [oldSpreadsheetData, setOldSpreadsheetData] = useState(null);
+    // the cell the user selected
+    const [selectedCell, setSelectedCell] = useState(null);
+    // including bold, color of cell and font
+    const [cellFormatting, setCellFormatting] = useState({});
+    // each row has its own columns
+    const [spreadsheetRows, setSpreadsheetRows] = useState([])
+    // to check if a user is logged in
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+    const [isOwner, setIsOwner] = useState(false);
+
+    const [qrCode, setQrCode] = useState()
 
     // get for each column header its own name
     const getColumnName = (columnNumber) => {
@@ -48,25 +67,13 @@ export default function SpreadsheetPage() {
         [...Array(settings.numColumns)].map((_, index) => getColumnName(index))
     );
 
-    // to check if the spreadsheet already exists
-    const [spreadsheetExists, setSpreadsheetExists] = useState(false);
-    // for updating I need the old spreadsheet
-    const [oldSpreadsheetData, setOldSpreadsheetData] = useState(null);
-    // the cell the user selected
-    const [selectedCell, setSelectedCell] = useState(null);
-    // including bold, color of cell and font
-    const [cellFormatting, setCellFormatting] = useState({});
-    // each row has its own columns
-    const [spreadsheetRows, setSpreadsheetRows] = useState([])
-    // to check if a user is logged in
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
 
     // TODO: isloggedin check
 
     // create a default spreadsheet just in the frontend
     const createSpreadsheet = () => {
         setSpreadsheetRows(() => {
-            return Array.from({ length: settings.numRows }, () =>
+            return Array.from({length: settings.numRows}, () =>
                 Array(settings.numColumns).fill('')
             );
         });
@@ -95,7 +102,7 @@ export default function SpreadsheetPage() {
             }
             setColumnHeaders(newColumns);
 
-        // remove columns
+            // remove columns
         } else if (newSettings.numColumns < newNumberOfColumns) {
             for (let i = 0; i < (newNumberOfColumns - newSettings.numColumns); i++) {
                 newColumns.pop();
@@ -113,7 +120,7 @@ export default function SpreadsheetPage() {
                 newRows.push([...newRow]);
             }
 
-        // remove rows
+            // remove rows
         } else if (newRows.length > newNumberOfRows) {
             newRows = newRows.slice(0, newNumberOfRows);
         }
@@ -136,40 +143,29 @@ export default function SpreadsheetPage() {
         }
     }, [uuid]);
 
-    // when creating a new spreadsheet we go to its new url
-    const createNewSpreadsheet = async () => {
-        try {
-            const response = await fetch(`http://localhost:5000/createnewspreadsheet`);
-            if (response.ok) {
-                const data = await response.json();
-                createSpreadsheet();
-
-                const urlParts = data.link.split('/');
-                const realUuid = urlParts[urlParts.length - 1];
-                navigate(`/spreadsheet/${realUuid}`); // go to url
-
-
-                await sendDataToBackend();
-            } else {
-                console.error("Failed to create a new spreadsheet.");
-            }
-        } catch (error) {
-            console.error('Error creating a new spreadsheet:', error);
-        }
-    };
 
     // get a spreadsheet by its uuid
     const fetchSpreadsheetData = async (uuid) => {
         try {
             let response = await fetch(`http://localhost:5000/getspreadsheet/${uuid}`);
-            if (response.ok) {
+            console.log(response)
+            if (response.status === 200) {
                 const data = await response.json();
+                let spreadsheet = data[0]
+                setIsOwner(true)
+                if (cookie.get("username") === spreadsheet.owner) {
+                    setIsOwner(true)
+                } else {
+                    setIsOwner(false)
+                }
                 setOldSpreadsheetData(data);    // needed for the update method
                 updateSpreadsheetData(data);
                 setSpreadsheetExists(true); // needed for the update method
             } else {
                 console.error("Spreadsheet not found.");
-                setSpreadsheetExists(false);
+                //setSpreadsheetExists(false);
+                setSpreadsheetExists(true); // needed for the update method
+                createSpreadsheet()
             }
         } catch (error) {
             console.error('Error fetching spreadsheet data:', error);
@@ -233,13 +229,15 @@ export default function SpreadsheetPage() {
         const newData = prepareDataForBackend();
         let requestBody;
         // decide endpoint depending on existence
-        const endpoint = spreadsheetExists ? 'updatespreadsheet' : 'postspreadsheet';
-
+        //const endpoint = spreadsheetExists ? 'updatespreadsheet' : 'postspreadsheet';
+        const endpoint = "updatespreadsheet";
+        console.log("test")
+        const oldData = {link: window.location.href.split("3000")[1]}
+        requestBody = JSON.stringify({old: oldData, new: newData});
         if (spreadsheetExists) { // send old and new
-            const oldData = oldSpreadsheetData;
-            requestBody = JSON.stringify({old: oldData, new: newData});
+            //const oldData = oldSpreadsheetData;
         } else {    // only new
-            requestBody = JSON.stringify(newData);
+            //requestBody = JSON.stringify(newData);
         }
 
         try {
@@ -278,26 +276,66 @@ export default function SpreadsheetPage() {
     const handleShareLink = () => {
         const currentUrl = window.location.href;
         navigator.clipboard.writeText(currentUrl);
+        setShowShareMenu(false)
     };
-    const handleShareQRCode = () => {
+    const handleShareQRCode = async () => {
+        let response = await fetch("http://localhost:5000/getQRCode/" + oldSpreadsheetData[0].link.split("3000/spreadsheet/")[1])
+        let res  = await response.json()
+        console.log(res)
+        let test = <img className={"qrcode"} src={"data:image/jpeg;base64," + res.image}></img>
+        setQrCode(test)
+        setShowEmailInput(false)
+
         console.log("Share via QR Code");
+        setShowShareMenu(false)
     };
+    const [emailInput, setEmailInput] = useState('');
+    const [showEmailInput, setShowEmailInput] = useState(false);
+    const [emailList, setEmailList] = useState([]);
+
+    const handleEmailInputChange = (event) => {
+        setEmailInput(event.target.value);
+    };
+
+
     const handleShareEmail = () => {
-        console.log("Share via Email");
+        setQrCode(null)
+        setShowEmailInput(true);
+        if (emailInput) {
+            setEmailList(oldList => [...oldList, emailInput]);
+            setEmailInput('');
+        }
+        setShowShareMenu(false)
     };
+    async function sendEmails(){
+        setShowEmailInput(false)
+        let response = await fetch("http://localhost:5000/sendEmail/" + cookie.get("username"), {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                body: JSON.stringify({recipients: emailList, title: settings.title})
+            })
+    }
+    console.log(emailList)
 
 
     return (
         <div>
-            <SpreadsheetSettings
+            {isOwner ? <SpreadsheetSettings
                 onSettingsChange={handleSettingsChange}
                 onApplyFormatting={handleApplyFormatting}
                 selectedCell={selectedCell}
                 settingsProps={settings}
-            />
+            /> : null}
+            <div className="title-description-container">
+                <h2 className="spreadsheet-title">{settings.title}</h2>
+                <p className="spreadsheet-description">{settings.description}</p>
+            </div>
             <div className="header-container">
-                <div className="share-options">
-                    <button onClick={toggleShareMenu}>Share</button>
+                {isOwner ? <div className="share-options">
+                    <button className={"shareButton"} onClick={toggleShareMenu}>Share</button>
                     {showShareMenu && (
                         <div className="share-menu">
                             <ul>
@@ -307,15 +345,27 @@ export default function SpreadsheetPage() {
                             </ul>
                         </div>
                     )}
+                </div> : null}
+                {qrCode}
+                {showEmailInput && (
+                        <div className="email-share-container">
+                            <input
+                                type="email"
+                                value={emailInput}
+                                onChange={handleEmailInputChange}
+                                placeholder="Enter email address"
+                            />
+                            <button onClick={handleShareEmail}>Add Email</button>
+                            <button onClick={sendEmails}>Send!</button>
+                        </div>
+                )}
+                <div className="email-list">
+                    {emailList.map((email, index) => (
+                        <div key={index}>{email}</div>
+                    ))}
                 </div>
-                <div className="title-description-container">
-                    <h2 className="spreadsheet-title">{settings.title}</h2>
-                    <p className="spreadsheet-description">{settings.description}</p>
-                </div>
+
                 <button className="save-button" onClick={sendDataToBackend}>Save Spreadsheet</button>
-                <div>
-                    <button onClick={createNewSpreadsheet}>New</button>
-                </div>
             </div>
             <WidthBar onSettingsChange={handleSettingsChange} settings = {settings} setSettings={setSettings}></WidthBar>
             <Spreadsheet
