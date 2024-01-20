@@ -3,8 +3,7 @@ import '../Style/widthBar.css';
 import {ResizableBox} from 'react-resizable';
 
 export default function Bar(props) {
-    let [state, setState] = useState({width: props.width})
-
+    let [state, setState] = useState({width: props.columWidth})
     let onResize = (event, {node, size, handle}) => {
         //setState({width: size.width})
         let oldSettings = props.settings

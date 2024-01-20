@@ -8,7 +8,7 @@ export default function WidthBar(props) {
 
     let widthBars = []
     for (let i = 0; i < widths.length; i++) {
-        let bar = <Bar key={i} width={widths[i]} settings={props.settings} setSettings={props.setSettings} index={i} onSettingsChange={props.onSettingsChange}/>
+        let bar = <Bar key={i} width={widths[i]} columWidth={props.columWidths[i]} settings={props.settings} setSettings={props.setSettings} index={i} onSettingsChange={props.onSettingsChange}/>
         widthBars.push(bar)
     }
     //console.log(widthBars)

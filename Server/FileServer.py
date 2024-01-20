@@ -8,7 +8,8 @@ from flask_session import Session
 from flask_cors import CORS
 import os
 import json
-from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, SpreadsheetSettingsLogic
+from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, \
+    SpreadsheetSettingsLogic
 from Backend.Database.Database import Database
 import requests
 from Server.Backend.Login.SignUp import SignUp
@@ -16,7 +17,8 @@ from Server.Backend.Login.Login import Login
 from Server.Backend.Login.Account import AccountParser
 from Server.Backend.Share.ShareLogic import QRCode, MailSharing
 from Server.Backend.ProfileSettings.ProfileSettings import ProfileSettings
-from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, SpreadsheetSettingsLogic
+from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, \
+    SpreadsheetSettingsLogic
 from Server.Backend.Login.Account import Account
 from PIL import Image
 import numpy as np
@@ -29,7 +31,6 @@ CORS(app, support_credentials=True)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
 
 
 @app.route('/', methods=['GET'])
@@ -95,9 +96,9 @@ def login():
     if username_password_match or email_password_match:
 
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
-        #session["username"] = username
-        #print(session.get("username"))
-        #return redirect(url_for('get_username_email'))
+        # session["username"] = username
+        # print(session.get("username"))
+        # return redirect(url_for('get_username_email'))
         # Initializing response object
 
         resp = make_response({"username": username})
@@ -152,6 +153,7 @@ def delete_spreadsheet(owner):
 @app.route('/profileSettings/<username>', methods=['POST'])
 def profileSettings(username):
     data = request.get_json()
+    print(data)
     setting = ProfileSettings()
     database = Database()
     encryption = Encryption()
@@ -168,6 +170,9 @@ def profileSettings(username):
     new_account = copy.deepcopy(old_account)
     resp = None
     changed = False
+    if profile_picture != old_account["profile_picture"]:
+        new_account["profile_picture"] = profile_picture
+        changed = True
     if username != new_username:
         username_rules = setting.username_rules(new_username)
         username_taken = setting.username_already_taken(new_username)
@@ -195,8 +200,7 @@ def profileSettings(username):
 
         password_equals = setting.old_password_correct_check(newPassword, salt, old_account["password"])
 
-
-        if  password_equals:
+        if password_equals:
             response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
                                 mimetype="application/json")
         elif not confirm_password_check:
@@ -211,7 +215,7 @@ def profileSettings(username):
         else:
             new_account["password"] = str(encryption.hash_password(newPassword, salt))
             changed = True
-    #print(old_account, new_account)
+    # print(old_account, new_account)
     if changed:
         database.update_profile(old_account, new_account)
     if resp:
@@ -247,7 +251,6 @@ def get_username_email(username):
     return return_data
 
 
-
 # add a new spreadsheet to the database
 @app.route("/postspreadsheet", methods=["POST"])
 def post_spreadsheets():
@@ -270,18 +273,19 @@ def create_new_spreadsheet(username):
     link = spreadsheet_settings_logic.createLink()  # link including uuid
     parser = SpreadsheetSettingsParser()
     database = Database()
-    owner = username     # change to real owner
+    owner = username  # change to real owner
 
     default_spreadsheet_settings = SpreadsheetSettings(
         "Default Title", 50, False, 4, 20, False, "This is a small description for the default spreadsheet.",
-        False
+        False, [40, 250, 250, 250, 250]
     )
     json_of_default = parser.to_json(default_spreadsheet_settings)
     path = os.path.join(os.path.join(os.path.dirname(__file__), './Backend/Spreadsheet/default_spreadsheet.json'))
     with open(path, "r") as file:
         default_spreadsheet = json.load(file)
 
-    default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": default_spreadsheet, "owner": owner}
+    default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": default_spreadsheet,
+                           "owner": owner}
     database.add_spreadsheet(default_spreadsheet)
     return jsonify(default_spreadsheet["link"]), 200
 
@@ -309,7 +313,6 @@ def update_spreadsheet():
 
     # only if old and new are correct
 
-
     new_data = data['new']
     # get old data from database
     old = database.get_spreadsheet({"link": "http://localhost:3000" + data["old"]["link"]})[0]
@@ -318,6 +321,7 @@ def update_spreadsheet():
 
     return jsonify({"message": "Spreadsheet updated successfully"}), 200
 
+
 @app.route("/getQRCode/<link>", methods=["GET"])
 def get_qr_code(link):
     print(link)
@@ -325,6 +329,7 @@ def get_qr_code(link):
     qr = QRCode()
     img = qr.create_qrcode(new_link)
     return Response(status=200, response=json.dumps({"image": str(img)}), mimetype="application/json")
+
 
 @app.route("/sendEmail/<username>", methods=["POST"])
 def send_email(username):
