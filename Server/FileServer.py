@@ -13,23 +13,23 @@ from Backend.Database.Database import Database
 import requests
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
+from Server.Backend.Login.Account import AccountParser
+from Server.Backend.Share.ShareLogic import QRCode, MailSharing
 from Server.Backend.ProfileSettings.ProfileSettings import ProfileSettings
+from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, SpreadsheetSettingsLogic
 from Server.Backend.Login.Account import Account
 from PIL import Image
 import numpy as np
+import copy
 
 app = Flask(__name__)
 app.debug = True
-app._static_folder = os.path.abspath("static/")
+app._staic_folder = os.path.abspath("static/")
 CORS(app, support_credentials=True)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-
-@app.route('/default-spreadsheet', methods=['GET'])
-def default_spreadsheet_page():
-    return send_from_directory('files', "default-spreadsheet.html")
 
 
 @app.route('/', methods=['GET'])
@@ -95,6 +95,10 @@ def login():
     if username_password_match or email_password_match:
 
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
+        #session["username"] = username
+        #print(session.get("username"))
+        #return redirect(url_for('get_username_email'))
+        # Initializing response object
 
         resp = make_response({"username": username})
         print(request.cookies.get("username"))
@@ -109,6 +113,40 @@ def login():
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
 
+
+@app.route("/getUser", methods=["GET"])
+def get_user():
+    if session.get("username"):
+        response = Response(status=200, response=json.dumps({"username": session.get("username")}),
+                            mimetype="application/json")
+    else:
+        response = Response(status=406, response=json.dumps({"username": "noone"}), mimetype="application/json")
+    return response
+
+
+@app.route("/get-spreadsheet-titles/<username>", methods=["GET"])
+def return_spreadsheets_titles(username):
+    database = Database()
+    key_pair = {"owner": username}
+    spreadsheets = database.get_spreadsheet(key_pair)
+    spreadsheet_data = {"titles": [], "links": []}
+    if spreadsheets:
+        for sheet in spreadsheets:
+            spreadsheet_data["titles"].append(sheet["settings"]["title"])
+            spreadsheet_data["links"].append(sheet["link"])
+        response = Response(status=200, response=json.dumps(spreadsheet_data), mimetype="application/json")
+    else:
+        response = Response(status=406)
+    return response
+
+
+@app.route("/deleteSpreadsheet/<owner>", methods=["POST"])
+def delete_spreadsheet(owner):
+    data = request.get_json()
+    link = data["link"]
+    db = Database()
+    db.delete_spreadsheet(link, owner)
+    return Response(status=200, mimetype="application/json")
 
 
 @app.route('/profileSettings/<username>', methods=['POST'])
@@ -125,11 +163,11 @@ def profileSettings(username):
     confirm_password = data["confirm_password"]
     profile_picture = data['profile_picture']
 
-    old_account = database.get_profile({"username": username})
+    old_account = database.get_profile({"username": username})[0]
 
-    new_account = old_account
+    new_account = copy.deepcopy(old_account)
     resp = None
-
+    changed = False
     if username != new_username:
         username_rules = setting.username_rules(new_username)
         username_taken = setting.username_already_taken(new_username)
@@ -140,6 +178,7 @@ def profileSettings(username):
             new_account["username"] = new_username
             resp = make_response({"username": new_username})
             resp.set_cookie("username", value=new_username, domain="http://localhost")
+            changed = True
     if email != old_account["email"]:
         email_taken = setting.email_already_taken(email)
         if not email_taken:
@@ -147,12 +186,14 @@ def profileSettings(username):
                                 mimetype="application/json")
         else:
             new_account["email"] = email
+            changed = True
     if newPassword:
-        old_password_correct = setting.old_password_correct_check(password, old_account["salt"], old_account["password"])
+        salt = bytes(old_account["salt"][2:-1], "ascii")
+        old_password_correct = setting.old_password_correct_check(password, salt, old_account["password"])
         password_rules = setting.password_rules(password)
         confirm_password_check = setting.new_password_equals_confirm_password(newPassword, confirm_password)
 
-        password_equals = setting.old_password_correct_check(newPassword, old_account["salt"], old_account["password"])
+        password_equals = setting.old_password_correct_check(newPassword, salt, old_account["password"])
 
 
         if  password_equals:
@@ -168,30 +209,33 @@ def profileSettings(username):
             response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
                                 mimetype="application/json")
         else:
-
-            new_account["password"] = encryption.hash_password(newPassword, old_account["salt"])
-    if old_account != new_account:
+            new_account["password"] = str(encryption.hash_password(newPassword, salt))
+            changed = True
+    #print(old_account, new_account)
+    if changed:
         database.update_profile(old_account, new_account)
     if resp:
+        print("test")
         return resp
+    else:
+        return Response(status=200, response=json.dumps({'response': "something happend"}), mimetype="application/json")
 
 
 @app.route("/getProfilePicture/<username>", methods=["GET"])
 def get_profile_picture(username):
-    db = Database()
-    profile = db.get_profile({"username": username})
-    if profile:
-        response = Response(status=200, response=json.dumps({"profilePicture": profile["profile_picture"]}),
-                            mimetype="application/json")
-    else:
-        response = Response(status=406)
-    return response
+    database = Database()
+
+    data = database.get_profile({"username": username})
+
+    data = data[0]
+    profile_picture = data["profile_picture"]
+    return_data = {"profile_picture": profile_picture}
+    return return_data
 
 
 @app.route('/getUsernameEmail/<username>', methods=["GET"])
 def get_username_email(username):
     database = Database()
-    test = request.url.replace("http://localhost:5000/getUsernameEmail?username=", "")
 
     data = database.get_profile({"username": username})
 
@@ -201,7 +245,9 @@ def get_username_email(username):
     profile_picture = data["profile_picture"]
     return_data = {"username": username, "email": email, "profile_picture": profile_picture}
     return return_data
-  
+
+
+
 # add a new spreadsheet to the database
 @app.route("/postspreadsheet", methods=["POST"])
 def post_spreadsheets():
@@ -218,31 +264,36 @@ def post_spreadsheets():
 
 
 # add default spreadsheet to the database
-@app.route("/createnewspreadsheet", methods=["GET"])
-def create_new_spreadsheet():
+@app.route("/createnewspreadsheet/<username>", methods=["GET"])
+def create_new_spreadsheet(username):
     spreadsheet_settings_logic = SpreadsheetSettingsLogic()
     link = spreadsheet_settings_logic.createLink()  # link including uuid
     parser = SpreadsheetSettingsParser()
     database = Database()
-    owner = "TestOwner"     # change to real owner
+    owner = username     # change to real owner
 
     default_spreadsheet_settings = SpreadsheetSettings(
         "Default Title", 50, False, 4, 20, False, "This is a small description for the default spreadsheet.",
         False
     )
     json_of_default = parser.to_json(default_spreadsheet_settings)
+    path = os.path.join(os.path.join(os.path.dirname(__file__), './Backend/Spreadsheet/default_spreadsheet.json'))
+    with open(path, "r") as file:
+        default_spreadsheet = json.load(file)
 
-    default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": "NONE", "owner": "NONE"}
+    default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": default_spreadsheet, "owner": owner}
     database.add_spreadsheet(default_spreadsheet)
-    return jsonify(default_spreadsheet), 200
+    return jsonify(default_spreadsheet["link"]), 200
 
 
 # get specific spreadsheet by uuid
 @app.route("/getspreadsheet/<uuid>", methods=["GET"])
 def get_spreadsheet(uuid):
+    print({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
     database = Database()
     # search the link in the database
     spreadsheet = database.get_spreadsheet({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
+    print(spreadsheet)
     if spreadsheet:
         return jsonify(spreadsheet), 200
     else:
@@ -254,24 +305,38 @@ def get_spreadsheet(uuid):
 def update_spreadsheet():
     database = Database()
     data = request.get_json()
-    print("data:", data)
+    print("data:", "http://localhost:5000" + data["old"]["link"])
 
     # only if old and new are correct
-    if not data or 'old' not in data or 'new' not in data:
-        return jsonify({"error": "Invalid data provided"}), 400
+
 
     new_data = data['new']
     # get old data from database
-    old = database.get_spreadsheet({"link": data["old"][0]["link"]})[0]
+    old = database.get_spreadsheet({"link": "http://localhost:3000" + data["old"]["link"]})[0]
 
-    success = database.update_spreadsheet(old, new_data)
+    database.update_spreadsheet(old, new_data)
 
-    if success:
-        return jsonify({"message": "Spreadsheet updated successfully"}), 200
-    else:
-        return jsonify({"error": "Failed to update spreadsheet"}), 500
+    return jsonify({"message": "Spreadsheet updated successfully"}), 200
 
+@app.route("/getQRCode/<link>", methods=["GET"])
+def get_qr_code(link):
+    print(link)
+    new_link = "http://localhost:3000/spreadsheet/" + link
+    qr = QRCode()
+    img = qr.create_qrcode(new_link)
+    return Response(status=200, response=json.dumps({"image": str(img)}), mimetype="application/json")
+
+@app.route("/sendEmail/<username>", methods=["POST"])
+def send_email(username):
+    mail = MailSharing()
+    database = Database()
+    print(request.get_json())
+    data = request.get_json()
+    email = database.get_profile({"username": username})[0]["email"]
+    print(data["recipients"], data["title"], email)
+    mail.send_mail(data["recipients"], data["title"], email)
+    return Response(status=200, mimetype="application/json")
 
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=5000, debug=True)
+    app.run(host='localhost', port=5000, debug=True, threaded=True)

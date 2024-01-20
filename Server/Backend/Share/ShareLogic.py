@@ -1,3 +1,5 @@
+import base64
+from io import BytesIO
 from qrcode import make
 import os
 from dotenv import load_dotenv
@@ -12,9 +14,11 @@ class QRCode:
         pass
 
     def create_qrcode(self, data):
+        buffered = BytesIO()
         qrcode = make(data)
-        qrcode.save("test.png")
-        return qrcode
+        qrcode.save(buffered)
+        print(base64.b64encode(buffered.getvalue()))
+        return str(base64.b64encode(buffered.getvalue()))[2:-1]
 
 
 class MailSharing:
@@ -53,5 +57,5 @@ class MailSharing:
 if __name__ == "__main__":
     qr = QRCode()
     qr.create_qrcode("test")
-    ms = MailSharing()
-    ms.send_mail(["moritz.pertl@gmx.at", "ignis.hd@gmx.at", "test"], "testing", "Ignitz")
+    """ms = MailSharing()
+    ms.send_mail(["moritz.pertl@gmx.at", "ignis.hd@gmx.at", "test"], "testing", "Ignitz")"""
