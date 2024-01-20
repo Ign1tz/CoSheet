@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import '../styles/Spreadsheet.css';
+import '../Style/Spreadsheet.css';
 
 /**
  * class to display a spreadsheet

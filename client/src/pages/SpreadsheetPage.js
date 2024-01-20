@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import SpreadsheetSettings from "../components/SpreadsheetSettings";
 import Spreadsheet from "../components/Spreadsheet";
 import WidthBar from "../components/widthBar";
-import '../styles/SpreadsheetPage.css';
+import '../Style/SpreadsheetPage.css';
 
 import Header from "../components/Header"
 import Cookies from "universal-cookie"

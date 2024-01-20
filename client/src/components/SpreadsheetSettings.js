@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/SpreadsheetSettings.css';
+import '../Style/SpreadsheetSettings.css';
 
 /**
  * class with all settings for spreadsheets
