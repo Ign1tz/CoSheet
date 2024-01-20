@@ -16,6 +16,7 @@ from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Login.Login import Login
 from Server.Backend.Login.Account import AccountParser
 from Server.Backend.Share.ShareLogic import QRCode, MailSharing
+from Server.Backend.Filter.Check import Check
 from Server.Backend.ProfileSettings.ProfileSettings import ProfileSettings
 from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, \
     SpreadsheetSettingsLogic
@@ -40,14 +41,16 @@ def serve_files():
 
 @app.route('/signup', methods=['POST'])
 def signup():
+    check = Check()
     data = request.get_json()
     username = data['username']
+    if check.check_username_for_abuse(username):
+        return Response(status=406, response=json.dumps({"error":"abusiv"}), mimetype="application/json")
     email = data['email']
     password = data['password']
     confirm_password = data['confirm_password']
     sign_up = SignUp()
     correct_username = sign_up.prohibit_double_username(username)
-    username_rules = sign_up.username_rules(username)
     double_email = sign_up.prohibit_double_eMail(email)
     password_equality = sign_up.proof_passwords_equality(password, confirm_password)
     password_rules = sign_up.password_rules(password)
@@ -57,18 +60,12 @@ def signup():
         sign_up.save_new_account(new_account)
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
     else:
-        errors = []
+        error = ""
         if not correct_username:
-            errors.append("Username is already taken.")
-        if not username_rules:
-            errors.append("A character you chose in your username is not supported.")
-        if not password_equality:
-            errors.append("Passwords are not equal.")
-        if not password_rules:
-            errors.append("Password does not fulfill the requirements.")
+            error = "username"
         if not double_email:
-            errors.append("Email is not correct.")
-        response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
+            error = "email"
+        response = Response(status=406, response=json.dumps({'error': error}), mimetype="application/json")
     return response
 
 
@@ -83,22 +80,20 @@ def login():
 
     username_password_match = False
     email_password_match = False
-
+    username = ""
     if atSign not in email:
         username_password_match = login_class.username_password_match(password, email)
         username = email
     else:
         email_password_match = login_class.email_password_match(password, email)
-        profile = database.get_profile({"email": email})
-        #print(profile)
-        username = profile[0]["username"]
+        if email_password_match:
+            profile = database.get_profile({"email": email})
+            username = profile[0]["username"]
 
     if username_password_match or email_password_match:
-
-        response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
-        # session["username"] = username
-        # #print(session.get("username"))
-        # return redirect(url_for('get_username_email'))
+        #session["username"] = username
+        #print(session.get("username"))
+        #return redirect(url_for('get_username_email'))
         # Initializing response object
 
         resp = make_response({"username": username})
@@ -109,7 +104,7 @@ def login():
         errors = []
         if not username_password_match:
             errors.append("Username or password is not correct.")
-        if not email_password_match:
+        elif not email_password_match:
             errors.append("Email or password is not correct.")
         response = Response(status=406, response=json.dumps({'errors': errors}), mimetype="application/json")
     return response
@@ -251,13 +246,14 @@ def get_username_email(username):
     return return_data
 
 
+
 # add a new spreadsheet to the database
 @app.route("/postspreadsheet", methods=["POST"])
 def post_spreadsheets():
     parser = SpreadsheetSettingsParser()
     database = Database()
     data = request.get_json()
-    #print(data)
+    print(data)
     # check if settings are correct on backend
     spreadsheet_settings = parser.from_json(data["settings"])
     if spreadsheet_settings.validate_settings():
@@ -273,19 +269,18 @@ def create_new_spreadsheet(username):
     link = spreadsheet_settings_logic.createLink()  # link including uuid
     parser = SpreadsheetSettingsParser()
     database = Database()
-    owner = username  # change to real owner
+    owner = username     # change to real owner
 
     default_spreadsheet_settings = SpreadsheetSettings(
         "Default Title", 50, False, 4, 20, False, "This is a small description for the default spreadsheet.",
-        False, [40, 250, 250, 250, 250]
+        False
     )
     json_of_default = parser.to_json(default_spreadsheet_settings)
     path = os.path.join(os.path.join(os.path.dirname(__file__), './Backend/Spreadsheet/default_spreadsheet.json'))
     with open(path, "r") as file:
         default_spreadsheet = json.load(file)
 
-    default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": default_spreadsheet,
-                           "owner": owner}
+    default_spreadsheet = {"link": link, "settings": json_of_default, "spreadsheet": default_spreadsheet, "owner": owner}
     database.add_spreadsheet(default_spreadsheet)
     return jsonify(default_spreadsheet["link"]), 200
 
@@ -293,11 +288,11 @@ def create_new_spreadsheet(username):
 # get specific spreadsheet by uuid
 @app.route("/getspreadsheet/<uuid>", methods=["GET"])
 def get_spreadsheet(uuid):
-    #print({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
+    print({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
     database = Database()
     # search the link in the database
     spreadsheet = database.get_spreadsheet({"link": f"http://localhost:3000/spreadsheet/{uuid}"})
-    #print(spreadsheet)
+    print(spreadsheet)
     if spreadsheet:
         return jsonify(spreadsheet), 200
     else:
@@ -309,9 +304,10 @@ def get_spreadsheet(uuid):
 def update_spreadsheet():
     database = Database()
     data = request.get_json()
-    #print("data:", "http://localhost:5000" + data["old"]["link"])
+    print("data:", "http://localhost:5000" + data["old"]["link"])
 
     # only if old and new are correct
+
 
     new_data = data['new']
     # get old data from database
@@ -321,24 +317,22 @@ def update_spreadsheet():
 
     return jsonify({"message": "Spreadsheet updated successfully"}), 200
 
-
 @app.route("/getQRCode/<link>", methods=["GET"])
 def get_qr_code(link):
-    #print(link)
+    print(link)
     new_link = "http://localhost:3000/spreadsheet/" + link
     qr = QRCode()
     img = qr.create_qrcode(new_link)
     return Response(status=200, response=json.dumps({"image": str(img)}), mimetype="application/json")
 
-
 @app.route("/sendEmail/<username>", methods=["POST"])
 def send_email(username):
     mail = MailSharing()
     database = Database()
-    #print(request.get_json())
+    print(request.get_json())
     data = request.get_json()
     email = database.get_profile({"username": username})[0]["email"]
-    #print(data["recipients"], data["title"], email)
+    print(data["recipients"], data["title"], email)
     mail.send_mail(data["recipients"], data["title"], email)
     return Response(status=200, mimetype="application/json")
 

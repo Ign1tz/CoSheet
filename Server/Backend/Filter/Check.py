@@ -4,9 +4,9 @@ import requests
 
 
 class Check:
-    def check_username(self, username):
+    def check_username_for_abuse(self, username):
         check = Check()
-        return not check.check_if_data_is_abusiv(username)
+        return check.check_if_data_is_abusiv(username)
 
     def check_sreadsheet(self, spreadsheet):
         check = Check()

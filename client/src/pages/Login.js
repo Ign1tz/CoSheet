@@ -26,17 +26,20 @@ export default function Login() {
                 });
 
                 const result = await request.json();
-                //result);
+                if (typeof result.errors !== "undefined") {
+                    window.alert(result.errors + "\nPlease try again!")
+                    setPassword("")
+                    setEmail("")
+                }else{
 
+                //console.log(result);
                 const cookie = new Cookies()
                 cookie.set("username", result.username,{path: '/'})
-
-
-
-                setData(result);
+                    window.location.href = "http://localhost:3000/dashboard"
+                }
 
             }
-            response().then(() => window.location.href = "http://localhost:3000/dashboard")
+            response()
         } catch (error) {
             console.error("Something went wrong.", error)
             //let password_empty = document.getElementById("password")
@@ -58,7 +61,7 @@ export default function Login() {
                 <span className="forgot-password"><Link
                     to="http://localhost:3000/signup">Don't have an account yet?</Link></span>
 
-                <input className="login-button" type="submit" value="Login" onClick={handleLogin} redir/>
+                <input className="login-button" type="submit" value="Login" onClick={handleLogin}/>
 
             </form>
         </div>

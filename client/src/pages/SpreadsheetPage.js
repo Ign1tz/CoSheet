@@ -343,7 +343,6 @@ export default function SpreadsheetPage() {
                 onApplyFormatting={handleApplyFormatting}
                 selectedCell={selectedCell}
                 settingsProps={settings}
-                saveSpreadsheet={sendDataToBackend}
             /> : null}
             <div className="title-description-container">
                 <h2 className="spreadsheet-title">{settings.title}</h2>

@@ -4,7 +4,6 @@ import {useNavigate} from "react-router-dom";
 import Cookies from "universal-cookie";
 
 export default function ProfileSettings() {
-    const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirm_password, setConfirmPassword] = useState('');
@@ -58,7 +57,7 @@ export default function ProfileSettings() {
     function handleImage(e) {
         //console.log(e)
         let reader = new FileReader()
-        reader.onloadend = function(e){
+        reader.onloadend = function(){
             let convertedimg = reader.result.split(',')[1]
             setProfilePicture(convertedimg)
             //console.log(convertedimg)
@@ -98,7 +97,7 @@ export default function ProfileSettings() {
 
                 <h3>profile picture</h3>
                 {picture}
-                <input className={"profile_input"} type={"file"} name={"file"} onChange={handleImage}/>
+                <input  className={"profile_input"} type={"file"} accept={"image/png, image/gif, image/jpeg"} name={"file"} onChange={handleImage}/>
                 <button className="button saveChanges" onClick={handleProfileSettings}>
                     Save Changes
                 </button>
