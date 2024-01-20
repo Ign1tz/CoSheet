@@ -4,6 +4,7 @@ import Bar from "./Bar"
 
 export default function WidthBar(props) {
     let widths = props.widths
+    widths = [100,50,100]
 
 
 
