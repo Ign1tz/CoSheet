@@ -13,7 +13,7 @@ class QRCode:
         buffered = BytesIO()
         qrcode = make(data)
         qrcode.save(buffered)
-        #print(base64.b64encode(buffered.getvalue()))
+        # print(base64.b64encode(buffered.getvalue()))
         return str(base64.b64encode(buffered.getvalue()))[2:-1]
 
 
@@ -23,11 +23,8 @@ class MailSharing:
             {"recipients": recipients, "title": spreadsheet_title, "username": username, "link": link}), headers={
             "Content-Type": "application/json"})
 
-
-
-
-#info: because of savety reasons (me not pushing passwords to github again) the actual sending of emails
-#       happens on my server but uses the following code
+    # info: because of savety reasons (me not pushing passwords to github again) the actual sending of emails
+    #       happens on my server but uses the following code
     """
     
 import os

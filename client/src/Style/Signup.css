@@ -90,6 +90,7 @@
     transform: scale(1.03);
     box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 23px 10px -20px;
 }
+
 .form .button:active {
     transform: scale(0.95);
     box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 15px 10px -10px;

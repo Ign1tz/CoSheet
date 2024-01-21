@@ -48,7 +48,6 @@ input {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-
 }
 
 .saveChanges:hover,
@@ -57,7 +56,7 @@ input {
     background-color: #0056b3;
 }
 
-.img{
+.img {
     width: 20%;
     aspect-ratio: 1/1;
     border-radius: 50%;

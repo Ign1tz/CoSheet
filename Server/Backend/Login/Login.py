@@ -11,7 +11,7 @@ class Login:
         accountParser = AccountParser()
 
         username_database_json = database.get_profile({"username": username})
-        #print(username_database_json)
+        # print(username_database_json)
 
         if len(username_database_json) == 0:
             return False
@@ -27,7 +27,6 @@ class Login:
             if password_database == hashed_password:
                 return True
         return False
-
 
     def email_password_match(self, password, email):
         database = Database()

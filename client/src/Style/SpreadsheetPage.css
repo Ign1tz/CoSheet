@@ -10,6 +10,7 @@
     width: 100%;
     display: inline-block;
 }
+
 .spreadsheet-title, .spreadsheet-description {
     margin-top: 0.8em;
     margin-bottom: 0.8em;
@@ -43,7 +44,7 @@
     position: absolute;
     background-color: #f9f9f9;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 3;
 }
 
@@ -63,7 +64,7 @@
 }
 
 .share-menu ul li:active {
-background-color: lightgray;
+    background-color: lightgray;
 }
 
 .shareButton {
@@ -77,7 +78,7 @@ background-color: lightgray;
     cursor: pointer;
 }
 
-.linkText{
+.linkText {
     float: left;
     margin-left: 60px;
 }
@@ -86,17 +87,17 @@ background-color: lightgray;
     float: left;
     margin-left: 60px;
     margin-bottom: 20px;
-    height:130px;
+    height: 130px;
 }
 
-.email-share-container{
+.email-share-container {
     margin-left: 100px;
     float: left;
     position: relative;
-    width:200px;
+    width: 200px;
 }
 
-.email-list{
+.email-list {
     margin-left: 100px;
     float: left;
 }

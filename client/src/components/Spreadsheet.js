@@ -37,8 +37,8 @@ export default function Spreadsheet({
     let columns = [<tr style={{width: columWidths[0]}}></tr>]
     //console.log(columWidths)
     for (let i = 0; i < numberOfColumns; i++) {
-        columns.push(<th key={i} contentEditable={columnHeadersEditable} style={{width: columWidths[i+1]-3}}
-                                    suppressContentEditableWarning={true} className="spreadsheetHeader"
+        columns.push(<th key={i} contentEditable={columnHeadersEditable} style={{width: columWidths[i + 1] - 3}}
+                         suppressContentEditableWarning={true} className="spreadsheetHeader"
                          onBlur={(e) => {
                              const newHeaders = [...columnHeaders];
                              newHeaders[i] = e.target.innerText;
@@ -50,42 +50,42 @@ export default function Spreadsheet({
 
 
     return (
-            <table className="table" style={tableStyle} >
-                <thead >
-                <tr style={{width: 1040}}>
-                    {columns}
+        <table className="table" style={tableStyle}>
+            <thead>
+            <tr style={{width: 1040}}>
+                {columns}
+            </tr>
+            </thead>
+            <tbody>
+            {spreadsheetRows.map((row, rowIndex) => (
+                <tr key={`row-${rowIndex}`}>
+                    <th key={"row" + (rowIndex + 1)}>{rowIndex + 1}</th>
+                    {row.map((cellContent, colIndex) => {
+                        const cellId = `${rowIndex}-${colIndex}`;
+                        const formatting = cellFormatting[cellId] || {};
+                        const isCellEmpty = spreadsheetRows[rowIndex][colIndex] === '';
+                        const canEdit = (!editEmptyOnly || isCellEmpty) && (!allowLoggedInEdit || isLoggedIn);
+                        return (
+                            <td
+                                suppressContentEditableWarning={true}
+                                key={cellId}
+                                contentEditable={canEdit}
+                                onClick={() => onCellSelect(rowIndex, colIndex)}
+                                onBlur={(e) => handleCellContentChange(rowIndex, colIndex, e.target.innerText)}
+                                className={`cell ${selectedCell && selectedCell.row === rowIndex && selectedCell.col === colIndex ? 'selected' : ''}`}
+                                style={{
+                                    fontWeight: formatting.bold ? 'bold' : 'normal',
+                                    backgroundColor: formatting.backgroundColor || 'transparent',
+                                    fontFamily: formatting.fontFamily || 'inherit',
+                                }}
+                            >
+                                {cellContent}
+                            </td>
+                        );
+                    })}
                 </tr>
-                </thead>
-                <tbody>
-                {spreadsheetRows.map((row, rowIndex) => (
-                    <tr key={`row-${rowIndex}`}>
-                        <th key={"row"+ (rowIndex + 1)}>{rowIndex + 1}</th>
-                        {row.map((cellContent, colIndex) => {
-                            const cellId = `${rowIndex}-${colIndex}`;
-                            const formatting = cellFormatting[cellId] || {};
-                            const isCellEmpty = spreadsheetRows[rowIndex][colIndex] === '';
-                            const canEdit = (!editEmptyOnly || isCellEmpty) && (!allowLoggedInEdit || isLoggedIn);
-                            return (
-                                <td
-                                    suppressContentEditableWarning={true}
-                                    key={cellId}
-                                    contentEditable={canEdit}
-                                    onClick={() => onCellSelect(rowIndex, colIndex)}
-                                    onBlur={(e) => handleCellContentChange(rowIndex, colIndex, e.target.innerText)}
-                                    className={`cell ${selectedCell && selectedCell.row === rowIndex && selectedCell.col === colIndex ? 'selected' : ''}`}
-                                    style={{
-                                        fontWeight: formatting.bold ? 'bold' : 'normal',
-                                        backgroundColor: formatting.backgroundColor || 'transparent',
-                                        fontFamily: formatting.fontFamily || 'inherit',
-                                    }}
-                                >
-                                    {cellContent}
-                                </td>
-                            );
-                        })}
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            ))}
+            </tbody>
+        </table>
     );
 }

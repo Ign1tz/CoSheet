@@ -31,7 +31,7 @@ class Database:
         r = requests.post("http://menews.site/add-spreadsheet",
                           data=json.dumps(spreadsheet), headers={
                 "Content-Type": "application/json"})
-        #print(r)
+        # print(r)
 
     def delete_profile(self, username, password):
         r = requests.post("http://menews.site/remove-profile",
@@ -43,14 +43,15 @@ class Database:
                           data=json.dumps({"link": link, "owner": owner}), headers={
                 "Content-Type": "application/json"})
 
-    def update_profile(self,  old, new):
+    def update_profile(self, old, new):
         r = requests.post("http://menews.site/update-profile", data=json.dumps({"old": old, "new": new}), headers={
             "Content-Type": "application/json"})
-        #print(r)
+        # print(r)
 
     def update_spreadsheet(self, old, new):
         r = requests.post("http://menews.site/update-spreadsheet", data=json.dumps({"old": old, "new": new}), headers={
-                "Content-Type": "application/json"})
+            "Content-Type": "application/json"})
+
     """
     deprecated
     def __init__(self):
@@ -88,4 +89,5 @@ class Database:
 
 if __name__ == "__main__":
     data = Database()
-    print(data.get_spreadsheet({"link":"http://localhost:3000/spreadsheet/4115b6d9-b3cb-4610-b7b1-e32593f7375b"})[0]["spreadsheet"])
+    print(data.get_spreadsheet({"link": "http://localhost:3000/spreadsheet/4115b6d9-b3cb-4610-b7b1-e32593f7375b"})[0][
+              "spreadsheet"])

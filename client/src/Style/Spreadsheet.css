@@ -5,7 +5,7 @@
     align-items: flex-start;
 }
 
-.table{
+.table {
     position: relative;
 }
 
@@ -39,16 +39,15 @@
 .spreadsheetContainer tr:nth-child(even) {
     background-color: lightgray;
 }
+
 .spreadsheetContainer tr:nth-child(odd) {
-    background-color: whitesmoke;
+    background-color: #eeeeee;
 }
+
 .spreadsheetContainer table tr:first-child {
     height: 1.5em;
 }
 
-.spreadsheetContainer table th:first-child {
-    width: 1cm;
-}
 
 .spreadsheetContainer th {
     border: 0.08em solid #888;

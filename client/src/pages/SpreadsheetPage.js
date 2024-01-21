@@ -75,8 +75,6 @@ export default function SpreadsheetPage() {
     );
 
 
-    // TODO: isloggedin check
-
     // create a default spreadsheet just in the frontend
     const createSpreadsheet = () => {
         setSpreadsheetRows(() => {
@@ -178,8 +176,8 @@ export default function SpreadsheetPage() {
             }
             setHasLoaded(true)
             if (typeof cookie.get("username") !== "undefined") {
-                    setLoggedIn(true)
-                }
+                setLoggedIn(true)
+            }
             if (settings.allowLoggedInEdit) {
                 if (!loggedIn) {
                     window.location.href = "/"
@@ -293,7 +291,7 @@ export default function SpreadsheetPage() {
     const toggleShareMenu = () => setShowShareMenu(!showShareMenu);
     const handleShareLink = () => {
         const currentUrl = window.location.href;
-        setLink(<p className={"linkText"} >{currentUrl}</p>)
+        setLink(<p className={"linkText"}>{currentUrl}</p>)
         navigator.clipboard.writeText(currentUrl);
         setShowShareMenu(false)
         setQrCode(null)
@@ -399,7 +397,8 @@ export default function SpreadsheetPage() {
 
             <div className="spreadsheetContainer">
                 {hasLoaded && isOwner &&
-                    <WidthBar style={{width: settings.columWidths.reduce((a,b)=> a+b,0) + "px"}} onSettingsChange={handleSettingsChange} columWidths={settings.columWidths}
+                    <WidthBar style={{width: settings.columWidths.reduce((a, b) => a + b, 0) + "px"}}
+                              onSettingsChange={handleSettingsChange} columWidths={settings.columWidths}
                               settings={settings}
                               setSettings={setSettings}></WidthBar>}
                 <Spreadsheet

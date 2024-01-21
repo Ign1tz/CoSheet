@@ -57,14 +57,14 @@ class SignUp:
         if len(password) >= min_length and len(password) <= max_length:
             for element in password:
                 if element not in allowed_characters:
-                    #print("Character is not supported.")
+                    # print("Character is not supported.")
                     return False
             return True
         if len(password) < min_length:
-            #print("The password has to be at least 8 characters long.")
+            # print("The password has to be at least 8 characters long.")
             return False
         if len(password) > max_length:
-            #print("The password has to be shorter than 40 characters.")
+            # print("The password has to be shorter than 40 characters.")
             return False
 
     def proof_passwords_equality(self, password, confirm_password):
@@ -81,19 +81,16 @@ class SignUp:
         if min_length < len(username) < max_length:
             for element in username:
                 if element not in allowed_characters:
-                    #print("Character in username is not supported.")
+                    # print("Character in username is not supported.")
                     return False
             return True
         if len(username) < min_length:
-            #print("Username is too short.")
+            # print("Username is too short.")
             return False
         elif len(username) > max_length:
-            #print("Username is too long.")
+            # print("Username is too long.")
             return False
 
     def check_valid_email(self, email):
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
         return re.fullmatch(regex, email)
-#ToDo:
-# comment code
-# add profile settings

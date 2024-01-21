@@ -30,11 +30,11 @@ export default function Login() {
                     window.alert(result.errors + "\nPlease try again!")
                     setPassword("")
                     setEmail("")
-                }else{
+                } else {
 
-                //console.log(result);
-                const cookie = new Cookies()
-                cookie.set("username", result.username,{path: '/'})
+                    //console.log(result);
+                    const cookie = new Cookies()
+                    cookie.set("username", result.username, {path: '/'})
                     window.location.href = "http://localhost:3000/dashboard"
                 }
 
