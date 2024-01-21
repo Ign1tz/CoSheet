@@ -10,7 +10,7 @@ export default function Dashboard() {
     const [reqested, setReqested] = useState(false)
 
     let cookie = new Cookies()
-    if (typeof data.titles === "undefined" && !reqested){
+    if (typeof data.titles === "undefined" && !reqested) {
         fetch("http://localhost:5000/get-spreadsheet-titles/" + cookie.get("username")).then(res => res.json()).then(data => {
             setData(data)
             setReqested(true)
@@ -18,18 +18,18 @@ export default function Dashboard() {
         })
     }
 
-    let cards=[]
+    let cards = []
     if (typeof data.titles === "undefined") {
-    }else {
+    } else {
         for (let i = 0; i < data.titles.length; i++) {
-            cards.push(<Card key={i} title={data.titles[i]} link={data.links[i]} />)
+            cards.push(<Card key={i} title={data.titles[i]} link={data.links[i]}/>)
         }
     }
     return (
         <section>
-            <Header />
+            <Header/>
             {cards}
-            <AddNewCard />
+            <AddNewCard/>
         </section>
     )
 }

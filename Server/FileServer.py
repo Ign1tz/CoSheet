@@ -36,19 +36,21 @@ def signup():
     confirm_password = data['confirm_password']
     sign_up = SignUp()
     correct_username = sign_up.prohibit_double_username(username)
+    username_rules = sign_up.username_rules(username)
     double_email = sign_up.prohibit_double_eMail(email)
+    correct_email = sign_up.check_valid_email(email)
     password_equality = sign_up.proof_passwords_equality(password, confirm_password)
     password_rules = sign_up.password_rules(password)
 
-    if correct_username and double_email and password_rules and password_equality:
+    if correct_username and double_email and password_rules and password_equality and correct_email and username_rules:
         new_account = sign_up.create_new_account(username, password, email)
         sign_up.save_new_account(new_account)
         response = Response(status=200, response=json.dumps({'response': "Perfect"}), mimetype="application/json")
     else:
         error = ""
-        if not correct_username:
+        if not correct_username or not username_rules:
             error = "username"
-        if not double_email:
+        if not double_email or not correct_email:
             error = "email"
         response = Response(status=406, response=json.dumps({'error': error}), mimetype="application/json")
     return response
@@ -121,6 +123,7 @@ def profileSettings(username):
     data = request.get_json()
     # print(data)
     setting = ProfileSettings()
+    signup = SignUp()
     database = Database()
     encryption = Encryption()
 
@@ -136,9 +139,10 @@ def profileSettings(username):
     new_account = copy.deepcopy(old_account)
     resp = None
     changed = False
-    if profile_picture != old_account["profile_picture"]:
+    if profile_picture and profile_picture != old_account["profile_picture"]:
         new_account["profile_picture"] = profile_picture
         changed = True
+
     if username != new_username:
         username_rules = setting.username_rules(new_username)
         username_taken = setting.username_already_taken(new_username)
@@ -150,14 +154,17 @@ def profileSettings(username):
             resp = make_response({"username": new_username})
             resp.set_cookie("username", value=new_username, domain="http://localhost")
             changed = True
+
     if email != old_account["email"]:
         email_taken = setting.email_already_taken(email)
-        if not email_taken:
+        correct_email = signup.check_valid_email(email)
+        if not email_taken or not correct_email:
             response = Response(status=406, response=json.dumps({'response': "Something went wrong"}),
                                 mimetype="application/json")
         else:
             new_account["email"] = email
             changed = True
+
     if newPassword:
         salt = bytes(old_account["salt"][2:-1], "ascii")
         old_password_correct = setting.old_password_correct_check(password, salt, old_account["password"])
@@ -181,6 +188,7 @@ def profileSettings(username):
         else:
             new_account["password"] = str(encryption.hash_password(newPassword, salt))
             changed = True
+
     # #print(old_account, new_account)
     if changed:
         database.update_profile(old_account, new_account)
@@ -242,7 +250,7 @@ def create_new_spreadsheet(username):
 
     default_spreadsheet_settings = SpreadsheetSettings(
         "Default Title", 50, False, 4, 20, False, "This is a small description for the default spreadsheet.",
-        False, [40, 250, 250, 250, 250]
+        False, [40, 350, 350, 350, 350]
     )
     json_of_default = parser.to_json(default_spreadsheet_settings)
     path = os.path.join(os.path.join(os.path.dirname(__file__), './Backend/Spreadsheet/default_spreadsheet.json'))

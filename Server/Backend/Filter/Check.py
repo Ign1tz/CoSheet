@@ -13,9 +13,9 @@ class Check:
         for row in spreadsheet:
             for cell in row:
                 content = cell["content"]
-                #print(content)
+                # print(content)
                 if content and not check.check_if_data_is_abusiv(content):
-                    #print("1")
+                    # print("1")
                     cell["content"] = ""
 
     def check_if_data_is_abusiv(self, data):
@@ -28,13 +28,11 @@ class Check:
         response = requests.request("Post", url, headers=headers, data=json.dumps(data))
         # #print(response.json())
         if "abuse" in response.json() and response.json()["abuse"][0]["severity"] != "low":
-            #print(json.dumps(response.json()["abuse"], indent=4))
+            # print(json.dumps(response.json()["abuse"], indent=4))
             return True
         else:
-            #print("Not abusive")
+            # print("Not abusive")
             return False
-
-
 
 
 if __name__ == "__main__":
@@ -48,12 +46,12 @@ if __name__ == "__main__":
     with open("test.png", "wb") as file:
         a = a[2:-1]
         a = bytes(a, "utf-8")
-        #print(type(a))
+        # print(type(a))
         file.write(a)
     pass
     """image = Image.open("./CoSheet logo idea.png")
     image_bytes = image.tobytes("xbm", "rgb")
     #print(image_bytes)"""
 
-    #check = Check()
-    #check.check_sreadsheet([[{"content": "test"}], [{"content": ""}]])
+    # check = Check()
+    # check.check_sreadsheet([[{"content": "test"}], [{"content": ""}]])

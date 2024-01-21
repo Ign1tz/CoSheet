@@ -13,7 +13,7 @@
 
 .react-resizable-handle {
     position: relative;
-    background-color: #F86D00;
+    background-color: black;
     float: right;
     right: -2.5px;
     z-index: 2;

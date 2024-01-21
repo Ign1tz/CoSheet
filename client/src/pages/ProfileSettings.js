@@ -15,8 +15,12 @@ export default function ProfileSettings() {
     const cookie = new Cookies()
 
     if (typeof userName === 'undefined' || typeof email === 'undefined') {
-        fetch("http://localhost:5000/getUsernameEmail/"+ cookie.get("username")).then(res => res.json().then(return_data => {setUserName(return_data.username);
-        setEmail(return_data.email); setPicture(<img className={"img"}  src={"data:image/jpeg;base64," + return_data.profile_picture} alt={"Something went wrong"}></img>); }))
+        fetch("http://localhost:5000/getUsernameEmail/" + cookie.get("username")).then(res => res.json().then(return_data => {
+            setUserName(return_data.username);
+            setEmail(return_data.email);
+            setPicture(<img className={"img"} src={"data:image/jpeg;base64," + return_data.profile_picture}
+                            alt={"Something went wrong"}></img>);
+        }))
 
     }
 
@@ -24,7 +28,8 @@ export default function ProfileSettings() {
     function handleProfileSettings() {
         const data = {
             "username": userName, "password": password, "confirm_password": confirm_password,
-            "profile_picture": profile_picture, "email": email, "newPassword": newPassword};
+            "profile_picture": profile_picture, "email": email, "newPassword": newPassword
+        };
 
         try {
             const response = async () => {
@@ -41,7 +46,7 @@ export default function ProfileSettings() {
                     cookie.set("username", result.username)
                 }
             }
-            response();
+            response().then(() => window.location.reload());
         } catch (error) {
             console.error("Something went wrong.", error)
         }
@@ -55,12 +60,12 @@ export default function ProfileSettings() {
 
     function handleImage(e) {
         let reader = new FileReader()
-        reader.onloadend = function(){
+        reader.onloadend = function () {
             let convertedimg = reader.result.split(',')[1]
             setProfilePicture(convertedimg)
             //console.log(convertedimg)
             setPicture(<img className={"img"} src={"data:image/jpeg;base64," + convertedimg}
-                        alt={"Something went wrong"}></img>)
+                            alt={"Something went wrong"}></img>)
         }
         reader.readAsDataURL(e.target.files[0])
 

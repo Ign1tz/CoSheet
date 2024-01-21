@@ -26,13 +26,11 @@ class SignUp:
         new_account = account.account_to_json(new_account)
         return new_account
 
-#die Methode speichert das Account-Json-Objekt in der Datenbank ab
     def save_new_account(self, new_account):
         database = Database()
         # profile_database = database.profile_database
         database.add_profile(new_account)
 
-#Hier wird geschaut ob der Username bereits verwendet wird in der Datenbank
     def prohibit_double_username(self, username):
         database = Database()
         # get_username_database = database.get_from_database(database.profile_database, {"username": username})
@@ -43,7 +41,6 @@ class SignUp:
         else:
             return False
 
-#Hier wird geschaut ob die E-Mail in der Datenbank bereits benutzt wird
     def prohibit_double_eMail(self, email):
         database = Database()
         get_e_mail_database = database.get_profile({"email": email})
@@ -52,7 +49,7 @@ class SignUp:
             return True
         else:
             return False
-#Hier wird geschaut ob das password eine gewisse Länge hat und welche Zeichen benutzt werden
+
     def password_rules(self, password):
         min_length = 8
         max_length = 40
@@ -71,14 +68,12 @@ class SignUp:
             #print("The password has to be shorter than 40 characters.")
             return False
 
-#Diese Methode überprüft ob das Passwort mit dem Confirm Passwort übereinstimmt
     def proof_passwords_equality(self, password, confirm_password):
         if password == confirm_password:
             return True
         else:
             return False
 
-#Die untere Methode überprüft ob der Username gewisse Kriterien erfüllt (Länge, Zeichen)
     def username_rules(self, username):
         min_length = 1
         max_length = 30
@@ -96,6 +91,7 @@ class SignUp:
         if len(username) > max_length:
             #print("Username is too long.")
             return False
-
-    def email_rules(self, email):
-        ad = "Q"
+#Diese Methode überprüft ob die E-Mail übernommen werden kann
+    def check_valid_email(self, email):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+        return re.fullmatch(regex, email)

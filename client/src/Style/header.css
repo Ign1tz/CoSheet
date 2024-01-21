@@ -29,7 +29,7 @@
 
 
 .settingsBtn {
-    background-color: rgb(0, 139, 248);
+    background-color: #008bf8;
     color: #ffffff;
     padding: 10px 20px;
     border: none;
@@ -46,11 +46,11 @@
 }
 
 .settingsBtn:hover {
-    background-color: rgb(5, 79, 134);
+    background-color: #054f86;
 }
 
 .settingsBtn:active {
-    background-color: rgb(5, 79, 134);
+    background-color: #054f86;
 }
 
 .profilePicture {
@@ -73,7 +73,7 @@
     padding-right: 20px;
 }
 
-.CoSheetLogo{
+.CoSheetLogo {
     top: 7%;
     height: 80%;
     float: left;
@@ -81,7 +81,7 @@
     position: relative;
 }
 
-.Title{
+.Title {
     position: relative;
     float: left;
     left: 10px;

@@ -9,11 +9,7 @@
     [
       {
         "content": "",
-        "formatting": {
-          "backgroundColor": "#FFFFFF",
-          "bold": false,
-          "fontFamily": "Arial"
-        },
+        "formatting": {},
         "row": 0,
         "column": 0
       },

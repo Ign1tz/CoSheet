@@ -1,7 +1,14 @@
 import '../Style/Home.css';
+import {Link} from "react-router-dom";
+
+import Cookies from "universal-cookie"
 
 export default function Home() {
-    return(
+    let cookie = new Cookies()
+    let loggedIn = typeof cookie.get("username") === "undefined"
+    let login = <a className="dashboard-button" href={"http://localhost:3000/login"}>Login/Signup</a>
+    let dashboard = <a className="dashboard-button" href={"http://localhost:3000/dashboard"}>Dashboard</a>
+    return (
         <div className="home-container">
             <header className="hero-header">
                 <div className="header-content">
@@ -12,9 +19,8 @@ export default function Home() {
                 </div>
             </header>
             <main>
-                <a className="dashboard-button" href={"http://localhost:3000/dashboard"}>
-                    Dashboard
-                </a>
+                {loggedIn && login}
+                {!loggedIn && dashboard}
                 <section className="about">
                     <h3>Create and edit spreadsheets collaboratively and easily.</h3>
                     <p>CoSheet is an intuitive and easy-to-use platform for creating and editing spreadsheets.</p>
@@ -23,9 +29,15 @@ export default function Home() {
                 <section className="creators">
                     <h4>Creators</h4>
                     <div className="creators-list">
-                        <div>Moritz Pertl</div>
-                        <div>Anna Poglitsch</div>
-                        <div>Elias Meisl</div>
+                        <Link to={"https://github.com/Ign1tz"}>
+                            <div className={"creatorName"}>Moritz Pertl</div>
+                        </Link>
+                        <Link to={"https://github.com/annapoglitsch"}>
+                            <div className={"creatorName"}>Anna Poglitsch</div>
+                        </Link>
+                        <Link to={"https://github.com/elimei1"}>
+                            <div className={"creatorName"}>Elias Meisl</div>
+                        </Link>
                     </div>
                 </section>
             </main>

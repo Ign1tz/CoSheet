@@ -47,22 +47,23 @@ export default function Signup() {
             }
             response().then(res => {
                 if (typeof res.error !== 'undefined') {
-                    if (res.error === "abusiv"){
-                        window.alert("Your username was flagged as abusiv.\n Please choose a different one!")
+                    if (res.error === "abusiv") {
+                        window.alert("Your username was flagged as abusiv.\nPlease choose a different one!")
                         setUserName("")
                     }
-                    if (res.error === "username"){
-                        window.alert("Your username already exists.\n Please choose a different one!")
+                    if (res.error === "username") {
+                        window.alert("Your username already exists.\nPlease choose a different one!")
                         setUserName("")
                     }
-                    if (res.error === "email"){
-                        window.alert("There is already an account registered with this email.\n Please choose a different one!")
+                    if (res.error === "email") {
+                        window.alert("This email is not correct.\nPlease choose a different one!")
                         setEmail("")
                     }
-                }else{
+                } else {
 
-                    //window.location.href = "http://localhost:3000/login";
-                }})
+                    window.location.href = "http://localhost:3000/login";
+                }
+            })
         } catch (error) {
             console.error("Something went wrong.", error)
         }
@@ -110,11 +111,13 @@ export default function Signup() {
         } else if (userName.length >= min && userName.length <= max) {
             for (let char of userName) {
                 if (!allowed_characters.includes(char)) {
+                    setUserName("")
                     return alert("A character you chose in your username is not supported.");
                 }
             }
             return true;
         } else if (userName.length > max) {
+            setUserName("")
             return alert("The username has to be shorter than 30 characters.");
         }
         return true;
@@ -141,7 +144,9 @@ export default function Signup() {
                     <button className={"button"} onClick={handleSubmit}>Sign up</button>
                 </form>
                 <div className="form-section">
-                    <p>Have an account? <Link to="http://localhost:3000/login">Login</Link></p>
+                    <p className={"link"}>Already have an account?
+                        <br/> <Link to="http://localhost:3000/login">Login</Link>
+                    </p>
                 </div>
             </div>
         </form>

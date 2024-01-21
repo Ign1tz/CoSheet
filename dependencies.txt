@@ -2,6 +2,6 @@
 pip install Flask pymongo python-dotenv rsa bcrypt flask_session flask_cors requests
 
 cd client
-npm install react-router-dom universal-cookie
+npm install react-router-dom universal-cookie react-resizable
 
 npm i -S react react-url

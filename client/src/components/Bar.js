@@ -13,14 +13,15 @@ export default function Bar(props) {
 
         newSettings.columWidths = oldWidths
         //props.settings.columWidths.reduce((a,b) => a+b,0))
-            setState({width: size.width})
-            props.setSettings(newSettings)
-            props.onSettingsChange(props.settings)
+        setState({width: size.width})
+        props.setSettings(newSettings)
+        props.onSettingsChange(props.settings)
     }
-        return (
-            <ResizableBox style={{float: "left"}} width={state.width} height={15} minConstraints={[20, 15]} onResize={onResize}>
-                <div className={"test"} style={{width:state.width}}/>
-            </ResizableBox>
-        )
+    return (
+        <ResizableBox style={{float: "left"}} width={state.width} height={15} minConstraints={[20, 15]}
+                      onResize={onResize}>
+            <div className={"test"} style={{width: state.width}}/>
+        </ResizableBox>
+    )
 
 }

@@ -28,7 +28,7 @@ export default function SpreadsheetPage() {
         isTextBold: false,
         cellBackgroundColor: '#FFFFFF',
         selectedFont: 'Arial',
-        columWidths: [40, 250, 250, 250, 250]
+        columWidths: [40, 350, 350, 350, 350]
     });
 
 
@@ -49,7 +49,11 @@ export default function SpreadsheetPage() {
 
     const [qrCode, setQrCode] = useState()
 
+    const [link, setLink] = useState()
+
     const [hasLoaded, setHasLoaded] = useState(false)
+
+    const [loggedIn, setLoggedIn] = useState(false)
 
     // get for each column header its own name
     const getColumnName = (columnNumber) => {
@@ -70,8 +74,6 @@ export default function SpreadsheetPage() {
         [...Array(settings.numColumns)].map((_, index) => getColumnName(index))
     );
 
-
-    // TODO: isloggedin check
 
     // create a default spreadsheet just in the frontend
     const createSpreadsheet = () => {
@@ -173,8 +175,11 @@ export default function SpreadsheetPage() {
                 createSpreadsheet()
             }
             setHasLoaded(true)
+            if (typeof cookie.get("username") !== "undefined") {
+                setLoggedIn(true)
+            }
             if (settings.allowLoggedInEdit) {
-                if (typeof cookie.get("username") === "undefined") {
+                if (!loggedIn) {
                     window.location.href = "/"
                 }
             }
@@ -286,15 +291,22 @@ export default function SpreadsheetPage() {
     const toggleShareMenu = () => setShowShareMenu(!showShareMenu);
     const handleShareLink = () => {
         const currentUrl = window.location.href;
+        setLink(<p className={"linkText"}>{currentUrl}</p>)
         navigator.clipboard.writeText(currentUrl);
+        setShowShareMenu(false)
+        setQrCode(null)
+        setShowEmailInput(false)
+
+        //console.log("Share via QR Code");
         setShowShareMenu(false)
     };
     const handleShareQRCode = async () => {
         let response = await fetch("http://localhost:5000/getQRCode/" + oldSpreadsheetData[0].link.split("3000/spreadsheet/")[1])
         let res = await response.json()
         //console.log(res)
-        let test = <img className={"qrcode"} src={"data:image/jpeg;base64," + res.image}></img>
-        setQrCode(test)
+        let img = <img className={"qrcode"} src={"data:image/jpeg;base64," + res.image}></img>
+        setQrCode(img)
+        setLink(null)
         setShowEmailInput(false)
 
         //console.log("Share via QR Code");
@@ -317,6 +329,7 @@ export default function SpreadsheetPage() {
             setEmailInput('');
         }
         setShowShareMenu(false)
+        setLink(null)
     };
 
     async function sendEmails() {
@@ -345,7 +358,7 @@ export default function SpreadsheetPage() {
                 <p className="spreadsheet-description">{settings.description}</p>
             </div>
             <div className="header-container">
-                <a className="goBack" href="http://localhost:3000/dashboard">Dashboard</a>
+                {loggedIn && <a className="goBack" href="http://localhost:3000/dashboard">Dashboard</a>}
                 {isOwner ? <div className="share-options">
                     <button className={"shareButton"} onClick={toggleShareMenu}>Share ☰</button>
                     {showShareMenu && (
@@ -359,6 +372,7 @@ export default function SpreadsheetPage() {
                     )}
                 </div> : null}
                 {qrCode}
+                {link}
                 {showEmailInput && (
                     <div className="email-share-container">
                         <input
@@ -383,7 +397,8 @@ export default function SpreadsheetPage() {
 
             <div className="spreadsheetContainer">
                 {hasLoaded && isOwner &&
-                    <WidthBar style={{width: settings.columWidths.reduce((a,b)=> a+b,0) + "px"}} onSettingsChange={handleSettingsChange} columWidths={settings.columWidths}
+                    <WidthBar style={{width: settings.columWidths.reduce((a, b) => a + b, 0) + "px"}}
+                              onSettingsChange={handleSettingsChange} columWidths={settings.columWidths}
                               settings={settings}
                               setSettings={setSettings}></WidthBar>}
                 <Spreadsheet

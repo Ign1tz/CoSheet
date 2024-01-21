@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import '../Style/SpreadsheetSettings.css';
 
 /**
  * class with all settings for spreadsheets
  */
-export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell, settingsProps, saveSpreadsheet }) {
+export default function SpreadsheetSettings({
+                                                onSettingsChange,
+                                                onApplyFormatting,
+                                                selectedCell,
+                                                settingsProps,
+                                                saveSpreadsheet
+                                            }) {
 
     // get most things from spreadsheet page with settingsProps.
     const [showSettings, setShowSettings] = useState(false);
@@ -134,28 +140,36 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
             {showSettings && (
                 <div className="ribbon-settings">
                     <div className="setting-group">
-                        <label>Title <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" /></label>
+                        <label>Title <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}
+                                            placeholder="Title"/></label>
                     </div>
                     <div className="setting-group">
-                        <label>Description <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" /></label>
+                        <label>Description <input type="text" value={description}
+                                                  onChange={(e) => setDescription(e.target.value)}
+                                                  placeholder="Description"/></label>
                     </div>
                     <div className="setting-group">
-                        <label>Columns <input type="number" min="1" max="1000" value={numColumns} onChange={(e) => setNumColumns(e.target.value)} /></label>
+                        <label>Columns <input type="number" min="1" max="1000" value={numColumns}
+                                              onChange={(e) => setNumColumns(e.target.value)}/></label>
                     </div>
                     <div className="setting-group">
-                        <label>Rows <input type="number" min="1" max="1000" value={numRows} onChange={(e) => setNumRows(e.target.value)} /></label>
+                        <label>Rows <input type="number" min="1" max="1000" value={numRows}
+                                           onChange={(e) => setNumRows(e.target.value)}/></label>
                     </div>
 
                     <div className="setting-group">
-                        <label>Headers editable<input type="checkbox" checked={columnHeadersEditable} onChange={(e) => setColumnHeadersEditable(e.target.checked)} /></label>
+                        <label>Headers editable<input type="checkbox" checked={columnHeadersEditable}
+                                                      onChange={(e) => setColumnHeadersEditable(e.target.checked)}/></label>
                     </div>
                     <div className="setting-group">
-                        <label>Only logged-in <input type="checkbox" checked={allowLoggedInEdit} onChange={(e) => setAllowLoggedInEdit(e.target.checked)} /></label>
+                        <label>Only logged-in <input type="checkbox" checked={allowLoggedInEdit}
+                                                     onChange={(e) => setAllowLoggedInEdit(e.target.checked)}/></label>
                     </div>
                     <div className="setting-group">
-                        <label>Only empty cells <input type="checkbox" checked={editEmptyOnly} onChange={(e) => setEditEmptyOnly(e.target.checked)} /></label>
+                        <label>Only empty cells <input type="checkbox" checked={editEmptyOnly}
+                                                       onChange={(e) => setEditEmptyOnly(e.target.checked)}/></label>
                     </div>
-                     <div className="setting-group">
+                    <div className="setting-group">
                         <label>Font
                             <select value={selectedFont} onChange={(e) => setSelectedFont(e.target.value)}>
                                 <option value="Arial">Arial</option>
