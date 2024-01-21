@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/SpreadsheetSettings.css';
+import '../Style/SpreadsheetSettings.css';
 
 /**
  * class with all settings for spreadsheets
  */
-export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell, settingsProps }) {
+export default function SpreadsheetSettings({ onSettingsChange, onApplyFormatting, selectedCell, settingsProps, saveSpreadsheet }) {
 
     // get most things from spreadsheet page with settingsProps.
     const [showSettings, setShowSettings] = useState(false);
@@ -107,7 +107,6 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
             alert('Invalid allow logged in edit setting.');
             return;
         }
-
         applyFormatting()
 
         onSettingsChange({
@@ -146,9 +145,7 @@ export default function SpreadsheetSettings({ onSettingsChange, onApplyFormattin
                     <div className="setting-group">
                         <label>Rows <input type="number" min="1" max="1000" value={numRows} onChange={(e) => setNumRows(e.target.value)} /></label>
                     </div>
-                    <div className="setting-group">
-                        <label>Cell Width fixed<input type="checkbox" checked={cellWidth} onChange={(e) => setCellWidth(e.target.checked)} /></label>
-                    </div>
+
                     <div className="setting-group">
                         <label>Headers editable<input type="checkbox" checked={columnHeadersEditable} onChange={(e) => setColumnHeadersEditable(e.target.checked)} /></label>
                     </div>

@@ -9,6 +9,7 @@
     display: flex;
     justify-content: center;
     padding: 1em;
+    background-color: white;
 }
 
 .ribbon-header button {
@@ -39,6 +40,7 @@
 .setting-group label {
     font-size: 0.8em;
     margin-bottom: 0.3em;
+    margin-left: 10px;
 }
 
 .setting-group input[type="text"],

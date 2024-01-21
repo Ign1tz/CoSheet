@@ -4,7 +4,7 @@ from Server.Backend.Database.Database import Database
 
 class SpreadsheetSettings:
     def __init__(self, title, cell_width, edit_empty_only, num_columns, num_rows, column_headers, description,
-                 allow_logged_in_edit):
+                 allow_logged_in_edit, columWidths):
         self.title = title  # string
         self.cell_width = cell_width  # boolean
         self.edit_empty_only = edit_empty_only  # boolean
@@ -13,6 +13,7 @@ class SpreadsheetSettings:
         self.column_headers = column_headers
         self.description = description  # string
         self.allow_logged_in_edit = allow_logged_in_edit  # boolean
+        self.columWidths = columWidths
 
     def validate_settings(self):
 
@@ -81,6 +82,7 @@ class SpreadsheetSettingsParser:
             "columnHeadersEditable": spreadsheetSettings.column_headers,
             "description": spreadsheetSettings.description,
             "allowLoggedInEdit": spreadsheetSettings.allow_logged_in_edit,
+            "columWidths": spreadsheetSettings.columWidths
         }
 
     def from_json(self, json_data):
@@ -92,7 +94,8 @@ class SpreadsheetSettingsParser:
             json_data["numRows"],
             json_data["columnHeadersEditable"],
             json_data["description"],
-            json_data["allowLoggedInEdit"]
+            json_data["allowLoggedInEdit"],
+            json_data["columWidths"]
         )
 
 

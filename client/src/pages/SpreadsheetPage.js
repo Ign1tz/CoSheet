@@ -2,8 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import SpreadsheetSettings from "../components/SpreadsheetSettings";
 import Spreadsheet from "../components/Spreadsheet";
-import '../styles/SpreadsheetPage.css';
+import WidthBar from "../components/widthBar";
+import '../Style/SpreadsheetPage.css';
 
+import Header from "../components/Header"
 import Cookies from "universal-cookie"
 
 /**
@@ -22,10 +24,11 @@ export default function SpreadsheetPage() {
         columnHeadersEditable: false,
         description: 'This is a small description for the default spreadsheet.',
         allowLoggedInEdit: false,
-        cellWidth: false,
+        cellWidth: true,
         isTextBold: false,
         cellBackgroundColor: '#FFFFFF',
         selectedFont: 'Arial',
+        columWidths: [40, 250, 250, 250, 250]
     });
 
 
@@ -45,6 +48,8 @@ export default function SpreadsheetPage() {
     const [isOwner, setIsOwner] = useState(false);
 
     const [qrCode, setQrCode] = useState()
+
+    const [hasLoaded, setHasLoaded] = useState(false)
 
     // get for each column header its own name
     const getColumnName = (columnNumber) => {
@@ -83,14 +88,16 @@ export default function SpreadsheetPage() {
         let newRows = spreadsheetRows;
         let newNumberOfColumns = newColumns.length;
         let newNumberOfRows = newSettings.numRows;
-
+        let newColumWidths = settings.columWidths
         // add columns
+        //console.log(newColumWidths)
         if (newSettings.numColumns > newNumberOfColumns) {
             for (let i = 0; i < (newSettings.numColumns - newNumberOfColumns); i++) {
                 newColumns.push(getColumnName(newNumberOfColumns + i));
                 for (let row of newRows) {
                     row.push('');
                 }
+                newColumWidths.push(250)
             }
             setColumnHeaders(newColumns);
 
@@ -101,6 +108,7 @@ export default function SpreadsheetPage() {
                 for (let row of newRows) {
                     row.pop();
                 }
+                newColumWidths.pop()
             }
         }
 
@@ -115,7 +123,8 @@ export default function SpreadsheetPage() {
         } else if (newRows.length > newNumberOfRows) {
             newRows = newRows.slice(0, newNumberOfRows);
         }
-
+        //console.log(newColumWidths)
+        newSettings.columWidths = newColumWidths
         setColumnHeaders(newColumns);
         setSpreadsheetRows(newRows)
         setSettings({...settings, ...newSettings});
@@ -142,7 +151,13 @@ export default function SpreadsheetPage() {
             if (response.status === 200) {
                 const data = await response.json();
                 let spreadsheet = data[0]
-                setIsOwner(true)
+                //console.log(spreadsheet.settings.allowLoggedInEdit)
+                if (spreadsheet.settings.allowLoggedInEdit) {
+                    if (typeof cookie.get("username") === "undefined") {
+                        window.location.href = "/"
+                        return
+                    }
+                }
                 if (cookie.get("username") === spreadsheet.owner) {
                     setIsOwner(true)
                 } else {
@@ -156,6 +171,12 @@ export default function SpreadsheetPage() {
                 //setSpreadsheetExists(false);
                 setSpreadsheetExists(true); // needed for the update method
                 createSpreadsheet()
+            }
+            setHasLoaded(true)
+            if (settings.allowLoggedInEdit) {
+                if (typeof cookie.get("username") === "undefined") {
+                    window.location.href = "/"
+                }
             }
         } catch (error) {
             console.error('Error fetching spreadsheet data:', error);
@@ -270,7 +291,7 @@ export default function SpreadsheetPage() {
     };
     const handleShareQRCode = async () => {
         let response = await fetch("http://localhost:5000/getQRCode/" + oldSpreadsheetData[0].link.split("3000/spreadsheet/")[1])
-        let res  = await response.json()
+        let res = await response.json()
         //console.log(res)
         let test = <img className={"qrcode"} src={"data:image/jpeg;base64," + res.image}></img>
         setQrCode(test)
@@ -297,18 +318,19 @@ export default function SpreadsheetPage() {
         }
         setShowShareMenu(false)
     };
-    async function sendEmails(){
+
+    async function sendEmails() {
         setShowEmailInput(false)
         let response = await fetch("http://localhost:5000/sendEmail/" + cookie.get("username"), {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json, text/plain',
-                    'Content-Type': 'application/json;charset=UTF-8'
-                },
-                body: JSON.stringify({recipients: emailList, title: settings.title})
-            })
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({recipients: emailList, title: settings.title, link: window.location.href})
+        })
     }
-    //console.log(emailList)
+
 
     return (
         <div>
@@ -324,7 +346,7 @@ export default function SpreadsheetPage() {
             </div>
             <div className="header-container">
                 <a className="goBack" href="http://localhost:3000/dashboard">Dashboard</a>
-                 {isOwner ? <div className="share-options">
+                {isOwner ? <div className="share-options">
                     <button className={"shareButton"} onClick={toggleShareMenu}>Share ☰</button>
                     {showShareMenu && (
                         <div className="share-menu">
@@ -338,39 +360,50 @@ export default function SpreadsheetPage() {
                 </div> : null}
                 {qrCode}
                 {showEmailInput && (
-                        <div className="email-share-container">
-                            <input
-                                type="email"
-                                value={emailInput}
-                                onChange={handleEmailInputChange}
-                                placeholder="Enter email address"
-                            />
-                            <button className="add" onClick={handleShareEmail}>Add Email</button>
-                            <button className="send" onClick={sendEmails}>Send !</button>
-                        </div>
+                    <div className="email-share-container">
+                        <input
+                            type="email"
+                            value={emailInput}
+                            onChange={handleEmailInputChange}
+                            placeholder="Enter email address"
+                        />
+                        <button className="add" onClick={handleShareEmail}>Add Email</button>
+                        <button className="send" onClick={sendEmails}>Send !</button>
+                    </div>
                 )}
-                <div className="email-list">
+
+                {showEmailInput && (<div className="email-list">
                     {emailList.map((email, index) => (
                         <div key={index}>{email}</div>
                     ))}
-                </div>
+                </div>)}
+
                 <button className="save-button" onClick={sendDataToBackend}>Save Spreadsheet</button>
             </div>
-            <Spreadsheet
-                numberOfRows={settings.numRows}
-                numberOfColumns={settings.numColumns}
-                onCellSelect={handleSelectCell}
-                cellFormatting={cellFormatting}
-                columnHeadersEditable={settings.columnHeadersEditable}
-                editEmptyOnly={settings.editEmptyOnly}
-                spreadsheetRows={spreadsheetRows}
-                setSpreadsheetRows={setSpreadsheetRows}
-                cellWidth={settings.cellWidth}
-                setColumnHeaders={setColumnHeaders}
-                columnHeaders={columnHeaders}
-                isLoggedIn={isLoggedIn}
-                allowLoggedInEdit={settings.allowLoggedInEdit}
-            />
+
+            <div className="spreadsheetContainer">
+                {hasLoaded && isOwner &&
+                    <WidthBar style={{width: settings.columWidths.reduce((a,b)=> a+b,0) + "px"}} onSettingsChange={handleSettingsChange} columWidths={settings.columWidths}
+                              settings={settings}
+                              setSettings={setSettings}></WidthBar>}
+                <Spreadsheet
+                    numberOfRows={settings.numRows}
+                    numberOfColumns={settings.numColumns}
+                    onCellSelect={handleSelectCell}
+                    cellFormatting={cellFormatting}
+                    columnHeadersEditable={settings.columnHeadersEditable}
+                    editEmptyOnly={settings.editEmptyOnly}
+                    spreadsheetRows={spreadsheetRows}
+                    setSpreadsheetRows={setSpreadsheetRows}
+                    cellWidth={settings.cellWidth}
+                    setColumnHeaders={setColumnHeaders}
+                    columnHeaders={columnHeaders}
+                    isLoggedIn={isLoggedIn}
+                    allowLoggedInEdit={settings.allowLoggedInEdit}
+                    columWidths={settings.columWidths}
+                />
+
+            </div>
         </div>
     );
 }

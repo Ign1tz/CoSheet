@@ -26,7 +26,7 @@ class Check:
         }
         url = 'https://api.tisane.ai/parse'
         response = requests.request("Post", url, headers=headers, data=json.dumps(data))
-        # print(response.json())
+        # #print(response.json())
         if "abuse" in response.json() and response.json()["abuse"][0]["severity"] != "low":
             #print(json.dumps(response.json()["abuse"], indent=4))
             return True
@@ -42,8 +42,8 @@ if __name__ == "__main__":
 
     with open("CoSheet logo idea.png", "rb") as file:
         a = str(file.read())
-        #print(a)
-        #print()
+        ##print(a)
+        ##print()
 
     with open("test.png", "wb") as file:
         a = a[2:-1]
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     pass
     """image = Image.open("./CoSheet logo idea.png")
     image_bytes = image.tobytes("xbm", "rgb")
-    print(image_bytes)"""
+    #print(image_bytes)"""
 
     #check = Check()
     #check.check_sreadsheet([[{"content": "test"}], [{"content": ""}]])

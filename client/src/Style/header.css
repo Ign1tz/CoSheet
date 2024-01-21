@@ -13,6 +13,9 @@
     transform: translateY(-50%);
     left: 10px;
     height: 100px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
 }
 
 .profile {

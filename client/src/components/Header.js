@@ -1,6 +1,5 @@
 import "../Style/header.css"
-import {useEffect, useState} from "react";
-import defaultProfilePicture from "./profilepicture-menews.png"
+import {useState} from "react";
 import CoSheetLogo from "./CoSheet logo idea cropped.png"
 import {Link} from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -23,10 +22,12 @@ export default function Header(props) {
 
     return (
         <div className="header">
-            <div className="CoSheet">
-                <img className={"CoSheetLogo"} src={CoSheetLogo} alt={"profliePicture"}/>
-                <p className={"Title"}>CoSheet</p>
-            </div>
+            <Link to={"/Dashboard"}>
+                <button className="CoSheet" type={"button"}>
+                    <img className={"CoSheetLogo"} src={CoSheetLogo} alt={"profliePicture"}/>
+                    <p className={"Title"}>CoSheet</p>
+                </button>
+            </Link>
             <div className="profile">
                 <button className={"settingsBtn"} type={"button"}>
                     {profilePicture}
