@@ -5,6 +5,7 @@ from Server.Backend.Encryption.Encryption import Encryption
 
 class Login:
 
+#Die Methode überprüft ob der usrname mit dem Passwort übereinstimmt
     def username_password_match(self, password, username):
         database = Database()
         encryption = Encryption()
@@ -28,7 +29,7 @@ class Login:
                 return True
         return False
 
-
+#Die Methode überprüft ob die email und das passwort eines users übereinstimmt
     def email_password_match(self, password, email):
         database = Database()
         encryption = Encryption()

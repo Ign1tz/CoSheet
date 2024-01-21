@@ -7,15 +7,17 @@ class Account:
         self.email = email
         self.profile_picture = profile_picture
         self.salt = salt
-      #  self.encryption_key = encryption_key
-      #  self.public_key = public_key
 
 class AccountParser:
     def __init__(self):
         pass
+
+    #die untere Methode wandelt einen Account zu einem Json Objekt um
     def account_to_json(self, account):
         return {"username": account.username, "email": account.email, "password": account.password,
                 "profile_picture": account.profile_picture, "salt": account.salt}
+
+    # die untere Methode wandelt ein Json Objekt  zu einem Account Objekt um
     def json_to_account(self, json):
         return Account(json["username"], json["password"], json["email"], json["profile_picture"], json["salt"])
 

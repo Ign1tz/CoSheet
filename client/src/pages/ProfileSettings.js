@@ -50,12 +50,10 @@ export default function ProfileSettings() {
 
     function logout() {
         cookie.remove("username", { path: "/"})
-        //fetch
         window.location.href = '/'
     }
 
     function handleImage(e) {
-        //console.log(e)
         let reader = new FileReader()
         reader.onloadend = function(){
             let convertedimg = reader.result.split(',')[1]
@@ -64,12 +62,11 @@ export default function ProfileSettings() {
             setPicture(<img className={"img"} src={"data:image/jpeg;base64," + convertedimg}
                         alt={"Something went wrong"}></img>)
         }
-        //console.log(e.target.files[0])
         reader.readAsDataURL(e.target.files[0])
 
     }
 
-//ToDo: after combining all sides, go back to dashboard instead of history-1 bei goback button
+
     return (
         <div className="container_profile">
             <h1 className={"h1-profile"}>Profile Settings</h1>
