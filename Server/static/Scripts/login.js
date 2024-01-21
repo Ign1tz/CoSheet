@@ -1,5 +1,5 @@
 function login_function () {
-    console.log('login function')
+    //console.log('login function')
     let xhr = new XMLHttpRequest();
     xhr.onload = async function () {
         if (xhr.status === 200) {

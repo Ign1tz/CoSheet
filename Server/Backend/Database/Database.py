@@ -17,10 +17,12 @@ class Database:
         r = requests.get("http://menews.site/get-spreadsheet",
                          data=json.dumps(key_pair), headers={
                 "Content-Type": "application/json"})
+        data = json.loads(r.text)
+        if data is None:
+            return None
         return json.loads(r.text)["spreadsheets"]
 
     def add_profile(self, profile):
-        print(type(profile))
         r = requests.post("http://menews.site/add-profile",
                           data=json.dumps(profile), headers={
                 "Content-Type": "application/json"})
@@ -29,24 +31,26 @@ class Database:
         r = requests.post("http://menews.site/add-spreadsheet",
                           data=json.dumps(spreadsheet), headers={
                 "Content-Type": "application/json"})
+        #print(r)
 
     def delete_profile(self, username, password):
         r = requests.post("http://menews.site/remove-profile",
                           data=json.dumps({"username": username, "password": password}), headers={
                 "Content-Type": "application/json"})
 
-    def delete_spreadsheet(self, title, owner):
+    def delete_spreadsheet(self, link, owner):
         r = requests.post("http://menews.site/remove-spreadsheet",
-                          data=json.dumps({"title": title, "owner": owner}), headers={
+                          data=json.dumps({"link": link, "owner": owner}), headers={
                 "Content-Type": "application/json"})
 
     def update_profile(self,  old, new):
         r = requests.post("http://menews.site/update-profile", data=json.dumps({"old": old, "new": new}), headers={
             "Content-Type": "application/json"})
+        #print(r)
 
     def update_spreadsheet(self, old, new):
         r = requests.post("http://menews.site/update-spreadsheet", data=json.dumps({"old": old, "new": new}), headers={
-                "Content-Type": "application/json"})#
+                "Content-Type": "application/json"})
     """
     deprecated
     def __init__(self):
@@ -83,5 +87,8 @@ class Database:
 
 
 if __name__ == "__main__":
-    data = Database()
-    print(data.get_profile({"username":"anna"}))
+    r = requests.post("http://menews.site/sendEmail", data=json.dumps({"recipients":["moritz.pertl@gmx.at"], "title": "testing", "username": "ignitz"}), headers={
+            "Content-Type": "application/json"})
+    #print(r)
+    #data = Database()
+    #print(data.get_spreadsheet({"link":"http://localhost:3000/spreadsheet/4115b6d9-b3cb-4610-b7b1-e32593f7375b"})[0]["spreadsheet"])

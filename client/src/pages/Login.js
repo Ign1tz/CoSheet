@@ -1,10 +1,9 @@
 import '../Style/Login.css'
 import {Link} from "react-router-dom";
 import React, {useEffect, useState} from "react";
+import Cookies from "universal-cookie"
 
 export default function Login() {
-
-    const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
 
@@ -21,14 +20,24 @@ export default function Login() {
                         'Accept': 'application/json, text/plain',
                         'Content-Type': 'application/json;charset=UTF-8'
                     },
+
                 });
 
                 const result = await request.json();
+                if (typeof result.errors !== "undefined") {
+                    window.alert(result.errors + "\nPlease try again!")
+                    setPassword("")
+                    setEmail("")
+                }else{
 
-                setData(result);
+                //console.log(result);
+                const cookie = new Cookies()
+                cookie.set("username", result.username,{path: '/'})
+                    window.location.href = "http://localhost:3000/dashboard"
+                }
 
             }
-            response();
+            response()
         } catch (error) {
             console.error("Something went wrong.", error)
             //let password_empty = document.getElementById("password")
@@ -49,7 +58,9 @@ export default function Login() {
                        placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 <span className="forgot-password"><Link
                     to="http://localhost:3000/signup">Don't have an account yet?</Link></span>
-                <input className="login-button" type="submit" value="Login" onClick={handleLogin} redir/>
+
+                <input className="login-button" type="submit" value="Login" onClick={handleLogin}/>
+
             </form>
         </div>
     )
