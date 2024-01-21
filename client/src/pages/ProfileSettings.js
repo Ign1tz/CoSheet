@@ -72,9 +72,9 @@ export default function ProfileSettings() {
 //ToDo: after combining all sides, go back to dashboard instead of history-1 bei goback button
     return (
         <div className="container_profile">
-            <h1>Profile Settings</h1>
+            <h1 className={"h1-profile"}>Profile Settings</h1>
 
-                <h3>username</h3>
+                <h3 className={"h3-profile"} >username</h3>
                 <input type="text" id="username" name="username" placeholder={userName} value={userName}
                        onChange={(e) => setUserName(e.target.value)}/>
 

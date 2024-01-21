@@ -7,14 +7,14 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+.h1-profile {
     font-size: 24px;
     color: #333;
     margin-bottom: 20px;
     font-family: helvetica, sans-serif;
 }
 
-h3 {
+.h3-profile {
     font-size: 18px;
     color: #555;
     margin-top: 15px;
