@@ -58,11 +58,13 @@ export default function Login() {
                        onChange={(e) => setEmail(e.target.value)}/>
                 <input required="" className="input" type="password" name="password" id="password"
                        placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                <span className="forgot-password"><Link
-                    to="http://localhost:3000/signup">Don't have an account yet?</Link></span>
-
                 <input className="login-button" type="submit" value="Login" onClick={handleLogin}/>
-
+                <div className="form-section">
+                    <p className={"link"}>Don't have an account yet?
+                        <br/>
+                        <Link to="http://localhost:3000/signup">Signup</Link>
+                    </p>
+                </div>
             </form>
         </div>
     )

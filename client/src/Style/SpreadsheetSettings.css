@@ -3,6 +3,7 @@
     border-bottom: 0.08em solid lightgrey;
     background-color: #f3f3f3;
     width: auto;
+    justify-content: center;
 }
 
 .ribbon-header {
@@ -13,11 +14,11 @@
 }
 
 .ribbon-header button {
-    background-color: #0078d7;
+    background-color: #008BF8;
     color: white;
     padding: 6px 12px;
     border: none;
-    border-radius: 0.15em;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
 }
@@ -51,32 +52,27 @@
     font-size: 14px;
 }
 
-.range-values {
-    font-size: 0.7em;
-    color: #666;
-    text-align: center;
-}
 
 .apply-button {
     margin-left: auto;
 }
 
 .apply-button button {
-    background-color: #4CAF50;
+    background-color: #008BF8;
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 0.15em;
     cursor: pointer;
     font-size: 0.8em;
+    border-radius: 5px;
 }
 
 .setting-group button {
-    background-color: grey;
+    background-color: #008BF8;
     color: white;
     padding: 6px 12px;
     border: none;
-    border-radius: 0.1em;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 0.9em;
     margin-top: 0.25em;
@@ -84,7 +80,7 @@
 }
 
 .setting-group button.button-active {
-    background-color: #444;
+    background-color: #054f86;
 }
 
 .setting-group input[type="color"] {
@@ -93,6 +89,10 @@
     border-radius: 0.2em;
     padding: 0;
     width: 3.8em;
+    cursor: pointer;
+}
+
+.setting-group input[type="checkbox"] {
     cursor: pointer;
 }
 

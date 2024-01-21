@@ -41,7 +41,7 @@ export default function ProfileSettings() {
                     cookie.set("username", result.username)
                 }
             }
-            response();
+            response().then(() =>window.location.reload());
         } catch (error) {
             console.error("Something went wrong.", error)
         }
@@ -78,11 +78,11 @@ export default function ProfileSettings() {
                 <input type="text" id="username" name="username" placeholder={userName} value={userName}
                        onChange={(e) => setUserName(e.target.value)}/>
 
-                <h3>email</h3>
+                <h3 className={"h3-profile"}>email</h3>
                 <input type="email" id="email" name="email" placeholder={email}  value={email}
                        onChange={(e) => setEmail(e.target.value)}/>
 
-                <h3>password</h3>
+                <h3 className={"h3-profile"}>password</h3>
                 <input type="password" id="current_password" name="confirm_password"
                        placeholder="Enter your current password" value={password}
                        onChange={(e) => setPassword(e.target.value)}/>
@@ -95,7 +95,7 @@ export default function ProfileSettings() {
                        placeholder="Confirm new password"
                         value={confirm_password} onChange={(e) => setConfirmPassword(e.target.value)}/>
 
-                <h3>profile picture</h3>
+                <h3 className={"h3-profile"}>profile picture</h3>
                 {picture}
                 <input  className={"profile_input"} type={"file"} accept={"image/png, image/gif, image/jpeg"} name={"file"} onChange={handleImage}/>
                 <button className="button saveChanges" onClick={handleProfileSettings}>

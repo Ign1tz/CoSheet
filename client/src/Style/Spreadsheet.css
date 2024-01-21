@@ -37,9 +37,11 @@
 }
 
 .spreadsheetContainer tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: lightgray;
 }
-
+.spreadsheetContainer tr:nth-child(odd) {
+    background-color: whitesmoke;
+}
 .spreadsheetContainer table tr:first-child {
     height: 1.5em;
 }

@@ -87,12 +87,13 @@ class SignUp:
         if len(username) < min_length:
             #print("Username is too short.")
             return False
-        if len(username) > max_length:
+        elif len(username) > max_length:
             #print("Username is too long.")
             return False
 
-    def email_rules(self, email):
-        ad = "Q"
+    def check_valid_email(self, email):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+        return re.fullmatch(regex, email)
 #ToDo:
 # comment code
 # add profile settings

@@ -12,7 +12,6 @@
 }
 .spreadsheet-title, .spreadsheet-description {
     margin-top: 0.8em;
-    margin-right: 2.5em;
     margin-bottom: 0.8em;
 }
 
@@ -21,16 +20,17 @@
     position: absolute;
     right: 1em;
     color: white;
-    background-color: #F86D00;
+    background-color: #008bf8;
     padding: 1em 2em;
     margin-right: 4.5em;
     border: none;
-    border-radius: 0.15em;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .save-button:active {
     transform: scale(0.95);
-    background-color: #ffb377;
+    background-color: #054f86;
 }
 
 .share-options {
@@ -69,16 +69,23 @@ background-color: lightgray;
 .shareButton {
     float: left;
     padding: 10px 15px;
-    background-color: grey;
+    background-color: #008bf8;
     color: white;
     text-decoration: none;
     border-radius: 5px;
     border: none;
+    cursor: pointer;
+}
+
+.linkText{
+    float: left;
+    margin-left: 60px;
 }
 
 .qrcode {
     float: left;
-    margin-left: 100px;
+    margin-left: 60px;
+    margin-bottom: 20px;
     height:130px;
 }
 
@@ -97,7 +104,7 @@ background-color: lightgray;
 .goBack {
     float: left;
     padding: 10px 20px;
-    background-color: grey;
+    background-color: #008bf8;
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -106,13 +113,13 @@ background-color: lightgray;
 
 .goBack:active {
     transform: scale(0.95);
-    background-color: dimgrey;
+    background-color: #054f86;
 }
 
 .add {
     display: inline-block;
     padding: 5px 7px;
-    background-color: grey;
+    background-color: #008bf8;
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -122,7 +129,7 @@ background-color: lightgray;
 .send {
     display: inline-block;
     padding: 5px 7px;
-    background-color: grey;
+    background-color: #008bf8;
     color: white;
     text-decoration: none;
     border-radius: 5px;
