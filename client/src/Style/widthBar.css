@@ -1,0 +1,23 @@
+.test {
+    position: absolute;
+    background-color: #008BF8;
+    height: 15px;
+}
+
+
+.barContainer {
+    position: relative;
+    display: block;
+    overflow-x: auto;
+}
+
+.react-resizable-handle {
+    position: relative;
+    background-color: #F86D00;
+    float: right;
+    right: -2.5px;
+    z-index: 2;
+    width: 5px;
+    height: 15px;
+    cursor: e-resize;
+}

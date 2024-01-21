@@ -4,6 +4,8 @@ import React, {useEffect, useState} from "react";
 import Cookies from "universal-cookie"
 
 export default function Login() {
+
+    const [data, setData] = useState([{}]);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
 

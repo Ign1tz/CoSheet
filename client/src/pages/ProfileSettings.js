@@ -55,13 +55,16 @@ export default function ProfileSettings() {
     }
 
     function handleImage(e) {
+        //console.log(e)
         let reader = new FileReader()
         reader.onloadend = function(){
             let convertedimg = reader.result.split(',')[1]
             setProfilePicture(convertedimg)
+            //console.log(convertedimg)
             setPicture(<img className={"img"} src={"data:image/jpeg;base64," + convertedimg}
                         alt={"Something went wrong"}></img>)
         }
+        //console.log(e.target.files[0])
         reader.readAsDataURL(e.target.files[0])
 
     }

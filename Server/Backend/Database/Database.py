@@ -87,8 +87,5 @@ class Database:
 
 
 if __name__ == "__main__":
-    r = requests.post("http://menews.site/sendEmail", data=json.dumps({"recipients":["moritz.pertl@gmx.at"], "title": "testing", "username": "ignitz"}), headers={
-            "Content-Type": "application/json"})
-    #print(r)
-    #data = Database()
-    #print(data.get_spreadsheet({"link":"http://localhost:3000/spreadsheet/4115b6d9-b3cb-4610-b7b1-e32593f7375b"})[0]["spreadsheet"])
+    data = Database()
+    print(data.get_spreadsheet({"link":"http://localhost:3000/spreadsheet/4115b6d9-b3cb-4610-b7b1-e32593f7375b"})[0]["spreadsheet"])
