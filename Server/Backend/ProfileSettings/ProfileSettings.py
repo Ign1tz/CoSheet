@@ -1,34 +1,31 @@
-
 from Server.Backend.Login.SignUp import SignUp
 from Server.Backend.Database.Database import Database
 from Server.Backend.Login.Account import Account
 from Server.Backend.Encryption.Encryption import Encryption
 from Server.Backend.Login.Account import AccountParser
+
+
 class ProfileSettings:
+    """Die meisten Methoden in dieser Klasse benutzen bereits geschriebene aus der SignUp Klasse
+    Das wurde beschlossen, um eine gewisse Logik beizubehalten
+    Neu verfasste Methoden sind mit einem '!' makiert"""
 
+    def username_already_taken(self, username):
+        sign_up = SignUp()
+        if sign_up.prohibit_double_username(username) is False:
+            return False
+        return username
 
- """Die meisten Methoden in dieser Klasse benutzen bereits geschriebene aus der SignUp Klasse
-Das wurde beschlossen, um eine gewisse Logik beizubehalten
-Neu verfasste Methoden sind mit einem '!' makiert"""
+    def username_rules(self, username):
+        sign_up = SignUp()
+        return sign_up.username_rules(username)
 
-
-def username_already_taken(self, username):
-    sign_up = SignUp()
-    if sign_up.prohibit_double_username(username) is False:
-        return False
-    return username
-
-
-def username_rules(self, username):
-    sign_up = SignUp()
-    return sign_up.username_rules(username)
-
-#!
-#Hier wird geschaut ob das alte passwort überhaupt das richtige ist (passend zum user)
-def old_password_correct_check(self, password, salt, old_password):
-    database = Database()
-    encryption = Encryption()
-    accountParser = AccountParser()
+    # !
+    # Hier wird geschaut ob das alte passwort überhaupt das richtige ist (passend zum user)
+    def old_password_correct_check(self, password, salt, old_password):
+        database = Database()
+        encryption = Encryption()
+        accountParser = AccountParser()
 
         hashed_password = str(encryption.hash_password(password, salt))
 
