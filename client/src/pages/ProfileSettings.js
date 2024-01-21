@@ -21,7 +21,6 @@ export default function ProfileSettings() {
             setPicture(<img className={"img"} src={"data:image/jpeg;base64," + return_data.profile_picture}
                             alt={"Something went wrong"}></img>);
         }))
-
     }
 
 
