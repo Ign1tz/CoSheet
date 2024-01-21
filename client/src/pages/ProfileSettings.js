@@ -72,7 +72,7 @@ export default function ProfileSettings() {
 
 //ToDo: after combining all sides, go back to dashboard instead of history-1 bei goback button
     return (
-        <div className="container">
+        <div className="container_profile">
             <h1>Profile Settings</h1>
 
                 <h3>username</h3>
@@ -98,7 +98,7 @@ export default function ProfileSettings() {
 
                 <h3>profile picture</h3>
                 {picture}
-                <input className={"profile_input"} type={"file"} name={"file"} onChange={handleImage}/>
+                <input className="profile_input" type={"file"} name={"file"} onChange={handleImage}/>
                 <button className="saveChanges" onClick={handleProfileSettings}>
                     Save Changes
                 </button>
