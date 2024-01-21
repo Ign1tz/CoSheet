@@ -13,7 +13,7 @@ export default function WidthBar(props) {
     }
     //console.log(widthBars)
     return (
-        <div className="barContainer">
+        <div className="barContainer" style={{width: widths.reduce((a,b)=> a+b,0) + 5 + "px"}}>
             {widthBars}
         </div>
     )

@@ -9,7 +9,8 @@ from Server.Backend.Login.Login import Login
 from Server.Backend.Share.ShareLogic import QRCode, MailSharing
 from Server.Backend.Filter.Check import Check
 from Server.Backend.ProfileSettings.ProfileSettings import ProfileSettings
-from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, SpreadsheetSettingsLogic
+from Server.Backend.Spreadsheet.SpreadsheetSettings import SpreadsheetSettings, SpreadsheetSettingsParser, \
+    SpreadsheetSettingsLogic
 import copy
 
 app = Flask(__name__)
@@ -303,7 +304,7 @@ def send_email(username):
     data = request.get_json()
     email = database.get_profile({"username": username})[0]["email"]
     print(data["recipients"], data["title"], email)
-    mail.send_mail(data["recipients"], data["title"], email)
+    mail.send_mail(data["recipients"], data["title"], email, data["link"])
     return Response(status=200, mimetype="application/json")
 
 

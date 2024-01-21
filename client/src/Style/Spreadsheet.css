@@ -1,14 +1,12 @@
 .spreadsheetContainer {
     margin-left: 4em;
     margin-right: 4em;
-    margin-top: 1em;
     overflow-x: auto;
-    display: flex;
     align-items: flex-start;
 }
 
 .table{
-    max-width:1750px;
+    position: relative;
 }
 
 .createButton {

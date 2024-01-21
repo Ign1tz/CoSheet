@@ -50,7 +50,6 @@ export default function Spreadsheet({
 
 
     return (
-        <div className="spreadsheetContainer">
             <table className="table" style={tableStyle} >
                 <thead >
                 <tr style={{width: 1040}}>
@@ -88,6 +87,5 @@ export default function Spreadsheet({
                 ))}
                 </tbody>
             </table>
-        </div>
     );
 }

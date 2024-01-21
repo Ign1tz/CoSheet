@@ -11,6 +11,7 @@
     "react-bootstrap-icons": "^1.10.3",
     "react-dom": "^18.2.0",
     "react-resizable": "^3.0.5",
+    "react-resizable-box": "^2.1.0",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
     "universal-cookie": "^7.0.1",

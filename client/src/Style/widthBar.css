@@ -1,27 +1,23 @@
 .test {
     position: absolute;
-    background-color: blue;
-    float: left;
+    background-color: #008BF8;
     height: 15px;
 }
 
 
 .barContainer {
+    position: relative;
     display: block;
-    margin-left: 4em;
-    margin-right: 4em;
+    overflow-x: auto;
 }
 
 .react-resizable-handle {
-    display: inline-block;
     position: relative;
-    vertical-align: top;
-    background-color: red;
+    background-color: #F86D00;
     float: right;
+    right: -2.5px;
     z-index: 2;
-    width: 10px;
+    width: 5px;
     height: 15px;
-    box-sizing: border-box;
     cursor: e-resize;
 }
-
